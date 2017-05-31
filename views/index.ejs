@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="nl">
+  <%- include partials/head -%>
+
+  <%- include partials/header -%>
+
+    <h1>Hello</h1>
+
+    <ul>
+      <% for (let i = 0; i < menu.length; i++) { %>
+        <li>
+          <a href="/<%= menu[i] %>">
+            <%= menu[i] %>
+          </a>
+        </li>
+      <% } %>
+    </ul>
+
+  <%- include partials/footer -%>
