@@ -4,7 +4,7 @@
   "description": "An informative digital platform used for events for both huge and small touchscreens",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "DEBUG=TouchCMD nodemon server.js"
   },
   "repository": {
     "type": "git",
