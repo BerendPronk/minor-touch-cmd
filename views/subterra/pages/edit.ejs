@@ -10,6 +10,7 @@
 
     <select>
       <% for (let i = 0; i < system.types.length; i++) { %>
+        // Set current page type to selected
         <option value="<%= system.types[i] %>" <%= system.types[i] === page.type ? 'selected' : '' %>>
           <%= system.types[i] %>
         </option>
@@ -29,6 +30,7 @@
     </ul>
 
     <select>
+      <option value="" disabled selected>Choose a parent page</option>
       <% for (let i = 0; i < system.menus.length; i++) { %>
         <option value="<%= system.menus[i] %>">
           <%= system.menus[i] %>
