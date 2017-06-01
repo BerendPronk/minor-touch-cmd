@@ -1,16 +1,14 @@
-<!DOCTYPE html>
-<html lang="nl">
-  <%- include ../partials/head -%>
+<%- include ../partials/head -%>
 
-  <%- include ../partials/header -%>
+<%- include ../partials/header -%>
 
-  <h1>You broke in!</h1>
+<h1>Welcome back, <%= username %>!</h1>
 
-  <ul>
-    <li><a href="/subterra/pages">Pages</a></li>
-    <li><a href="/subterra/logout">Logout</a></li>
-  </ul>
+<ul>
+  <li><a href="/subterra/pages">Pages</a></li>
+  <li><a href="/subterra/logout">Logout</a></li>
+</ul>
 
-  <a href="/subterra/pages/add">Add a page</a>
+<a href="/subterra/pages/add">Add new page</a>
 
-  <%- include ../partials/footer -%>
+<%- include ../partials/footer -%>
