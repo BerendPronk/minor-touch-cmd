@@ -42,11 +42,15 @@ app.use('/subterra', require('./routes/subterra'));
 app
   .get('/', (req, res) => {
     req.getConnection((err, connection) => {
-      connection.query('SELECT * FROM menus', [], (err, results) => {
+      connection.query(`
+        SELECT * FROM pages
+      `, [], (err, results) => {
         let menu = [];
 
         results.forEach(page => {
-          menu.push(page.slug.toLowerCase());
+          if (page.type === 'year') {
+            menu.push(page.title);
+          }
         });
 
         res.render('index', {
