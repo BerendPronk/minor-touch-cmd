@@ -15,7 +15,7 @@
       <fieldset>
         <legend>Type</legend>
 
-        <select>
+        <select name="type">
           <% for (let i = 0; i < system.types.length; i++) { %>
             // Set current page type to selected
             <option value="<%= system.types[i] %>" <%= system.types[i] === page.type ? 'selected' : '' %>>
@@ -26,18 +26,25 @@
 
       </fieldset>
       <fieldset>
+        <legend>Title</legend>
+        <input type="text" name="title" value="<%= page.title %>">
+      </fieldset>
+      <fieldset>
         <legend>Menus</legend>
 
-        <ul>
+        <ul id="pageParents">
           <% for (let i = 0; i < page.parents.length; i++) { %>
             <li>
-              <%= page.parents[i] %>
-            </li>
+              <span data-type="parent-title"><%= page.parents[i] %></span>
+              <span data-type="parent-delete">X</span>
+              </li>
           <% } %>
         </ul>
 
-        <select>
-          <option value="" disabled selected>Choose a parent page</option>
+        <input hidden="text" name="parents">
+
+        <select id="pageParentSelect">
+          <option value="" disabled selected>Add another parent</option>
           <% for (let i = 0; i < system.menus.length; i++) { %>
             <option value="<%= system.menus[i] %>">
               <%= system.menus[i] %>
@@ -49,13 +56,85 @@
       <fieldset>
         <legend>Content</legend>
 
-        <textarea>
-          <%- page.content %>
-        </textarea>
+        <textarea name="content"><%- page.content %></textarea>
 
       </fieldset>
 
       <input type="submit" value="Submit">
     </form>
+
+
+    <%# %>
+
+
+    <script>
+      const pageForm = document.querySelector('form');
+      let formSubmit = false;
+
+      const inputMenu = document.querySelector('input[name="parents"]');
+      const parentSelect = document.querySelector('#pageParentSelect');
+      const pageParentList = document.querySelector('#pageParents');
+      const pageParents = pageParentList.querySelectorAll('li');
+      let parentDeleteButtons = pageParentList.querySelectorAll('[data-type="parent-delete"]');
+      let parentArr = [];
+
+      // Apply parent pages to input, joined with a single comma
+      pageParents.forEach(parent => {
+        parentArr.push(parent.querySelector('[data-type="parent-title"]').textContent);
+      });
+      inputMenu.value = parentArr.join(',').replace(', ', ',');
+
+      // Add new parent to page's parents
+      parentSelect.addEventListener('change', () => {
+        // Check if parent is already added
+        if (parentArr.indexOf(parentSelect.value) === -1) {
+          const newParent = document.createElement('li');
+
+          newParent.insertAdjacentHTML(
+            'afterbegin',
+            `<span data-type="parent-title">${ parentSelect.value }</span>
+             <span data-type="parent-delete">X</span>`
+          );
+
+          // Add event listener to newly added parent's delete-button
+          newParent.querySelector('[data-type="parent-delete"]').addEventListener('click', removeParent);
+
+          // Append new parent to parent list
+          pageParentList.appendChild(newParent);
+
+          // Add newly added parent to input
+          parentArr.push(parentSelect.value);
+          inputMenu.value = parentArr.join(',').replace(', ', ',');
+        }
+
+        // Reset index of parent selection
+        parentSelect.selectedIndex = 0;
+      });
+
+      // Add event listener to all delete buttons
+      parentDeleteButtons.forEach(button => {
+        button.addEventListener('click', removeParent);
+      })
+
+      // Remove a parent from the parent list
+      function removeParent(event) {
+        const slug = event.target.parentNode.querySelector('[data-type="parent-title"]').textContent;
+        const slugIndex = parentArr.indexOf(slug);
+
+        // Remove slug from parent array
+        parentArr.splice(slugIndex, 1);
+
+        // Remove slug from parent list
+        pageParentList.removeChild(pageParentList.children[slugIndex]);
+
+        // Remove slug from hidden input
+        inputMenu.value = parentArr.join(',').replace(', ', ',');
+      }
+
+      // Set formSubmit to active
+      pageForm.addEventListener('submit', () => {
+        formSubmit = true;
+      });
+    </script>
 
     <%- include ../partials/footer -%>
