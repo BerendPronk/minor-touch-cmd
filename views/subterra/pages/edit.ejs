@@ -1,54 +1,61 @@
-<%- include ../../partials/head -%>
+<!DOCTYPE html>
+<html lang="nl">
+	<head>
+		<meta charset="UTF-8">
 
-<%- include ../../partials/header -%>
+		<title>Edit a page</title>
 
-<h1>Edit <%= page.title %></h1>
+    <%- include ../../partials/head -%>
 
-<form action="/pages/edit/<%= page.id %>" method="post">
-  <fieldset>
-    <legend>Type</legend>
+    <%- include ../../partials/header -%>
 
-    <select>
-      <% for (let i = 0; i < system.types.length; i++) { %>
-        // Set current page type to selected
-        <option value="<%= system.types[i] %>" <%= system.types[i] === page.type ? 'selected' : '' %>>
-          <%= system.types[i] %>
-        </option>
-      <% } %>
-    </select>
+    <h1>Edit <%= page.title %></h1>
 
-  </fieldset>
-  <fieldset>
-    <legend>Menus</legend>
+    <form action="/pages/edit/<%= page.id %>" method="post">
+      <fieldset>
+        <legend>Type</legend>
 
-    <ul>
-      <% for (let i = 0; i < page.parents.length; i++) { %>
-        <li>
-          <%= page.parents[i] %>
-        </li>
-      <% } %>
-    </ul>
+        <select>
+          <% for (let i = 0; i < system.types.length; i++) { %>
+            // Set current page type to selected
+            <option value="<%= system.types[i] %>" <%= system.types[i] === page.type ? 'selected' : '' %>>
+              <%= system.types[i] %>
+            </option>
+          <% } %>
+        </select>
 
-    <select>
-      <option value="" disabled selected>Choose a parent page</option>
-      <% for (let i = 0; i < system.menus.length; i++) { %>
-        <option value="<%= system.menus[i] %>">
-          <%= system.menus[i] %>
-        </option>
-      <% } %>
-    </select>
+      </fieldset>
+      <fieldset>
+        <legend>Menus</legend>
 
-  </fieldset>
-  <fieldset>
-    <legend>Content</legend>
+        <ul>
+          <% for (let i = 0; i < page.parents.length; i++) { %>
+            <li>
+              <%= page.parents[i] %>
+            </li>
+          <% } %>
+        </ul>
 
-    <textarea>
-      <%- page.content %>
-    </textarea>
+        <select>
+          <option value="" disabled selected>Choose a parent page</option>
+          <% for (let i = 0; i < system.menus.length; i++) { %>
+            <option value="<%= system.menus[i] %>">
+              <%= system.menus[i] %>
+            </option>
+          <% } %>
+        </select>
 
-  </fieldset>
+      </fieldset>
+      <fieldset>
+        <legend>Content</legend>
 
-  <input type="submit" value="Submit">
-</form>
+        <textarea>
+          <%- page.content %>
+        </textarea>
 
-<%- include ../../partials/footer -%>
+      </fieldset>
+
+      <input type="submit" value="Submit">
+    </form>
+
+    <%- include ../../partials/footer -%>
