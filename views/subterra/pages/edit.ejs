@@ -135,6 +135,16 @@
       pageForm.addEventListener('submit', () => {
         formSubmit = true;
       });
+      
+      // Alert user before page unload to prevent data loss
+      // window.onbeforeunload = () => {
+      //   console.log(formSubmit)
+      //   if (!formSubmit) {
+      //     return 'You may have some unsaved changes, do you really want to leave this page?';
+      //   } else {
+      //     return;
+      //   }
+      // };
     </script>
 
     <%- include ../partials/footer -%>
