@@ -1,0 +1,12 @@
+<body>
+
+  <% if (username) { %>
+    <p>Logged in as <%= username %></p>
+
+    <ul>
+      <li><a href="/subterra" <%= pathname === '/subterra' ? 'class="active"' : '' %>>Dashboard</a></li>
+      <li><a href="/subterra/types" <%= pathname === '/subterra/types' ? 'class="active"' : '' %>>Content types</a></li>
+      <li><a href="/subterra/pages" <%= pathname === '/subterra/pages' ? 'class="active"' : '' %>>Pages</a></li>
+      <li><a href="/subterra/logout">Logout</a></li>
+    </ul>
+  <% } %>

@@ -9,7 +9,8 @@ router.get('/', (req, res) => {
   // Checks if a session already exists
   if (req.session.username) {
     res.render('subterra/index', {
-      username: req.session.username
+      username: req.session.username,
+      pathname: '/subterra'
     });
   } else {
     res.redirect('/subterra/login');
@@ -26,6 +27,8 @@ router.get('/login', (req, res) => {
   } else {
     debug('Login requested');
     res.render('subterra/login', {
+      username: false,
+      pathname: '/login',
       feedback: false,
       feedbackState: false
     });
@@ -53,6 +56,8 @@ router.post('/login', (req, res) => {
         res.redirect('/subterra');
       } else {
         res.render('subterra/login', {
+          username: false,
+          pathname: '/subterra',
           feedback: 'Wrong username or password given, please try again.',
           feedbackState: 'negative'
         });
@@ -88,9 +93,16 @@ router.get('/pages', (req, res) => {
         });
       });
 
-      res.render('subterra/pages/index', {
-        pages: pages
-      });
+      // Checks if a session already exists
+      if (req.session.username) {
+        res.render('subterra/pages/index', {
+          username: req.session.username,
+          pathname: '/subterra/pages',
+          pages: pages
+        });
+      } else {
+        res.redirect('/subterra/login');
+      }
     });
   });
 
@@ -100,6 +112,12 @@ router.get('/pages', (req, res) => {
 router.get('/pages/add', (req, res) => {
   debug(`[${ req.method }] /subterra/pages/add`);
 
+  // Checks if a session already exists
+  if (req.session.username) {
+
+  } else {
+    res.redirect('/subterra/login');
+  }
 });
 
 // [GET] /subterra/pages/edit/:id
@@ -135,21 +153,29 @@ router.get('/pages/edit/:id', (req, res) => {
               system.modules.push(module.name);
             });
 
-            // Render edit page
-            res.render('subterra/pages/edit', {
-              system: {
-                menus: system.menus,
-                types: system.types,
-                modules: system.modules
-              },
-              page: {
-                id: page.id,
-                title: page.title,
-                type: page.type,
-                parents: page.parents.split(','),
-                content: page.content
-              }
-            });
+            // Checks if a session already exists
+            // if (req.session.username) {
+            if (1==1) {
+              // Render edit page
+              res.render('subterra/pages/edit', {
+                username: req.session.username,
+                pathname: '/subterra/pages',
+                system: {
+                  menus: system.menus,
+                  types: system.types,
+                  modules: system.modules
+                },
+                page: {
+                  id: page.id,
+                  title: page.title,
+                  type: page.type,
+                  parents: page.parents.split(','),
+                  content: page.content
+                }
+              });
+            } else {
+              res.redirect('/subterra/login');
+            }
           });
         });
       });
@@ -161,6 +187,72 @@ router.get('/pages/edit/:id', (req, res) => {
 router.post('/pages/edit/:id', (req, res) => {
   debug(`[${ req.method }] /subterra/pages/edit/${ req.params.id }`);
 
+  const data = {
+    type: req.body.type,
+    title: req.body.title,
+    parents: req.body.parents,
+    content: req.body.content
+  };
+
+  req.getConnection((err, connection) => {
+    let test = []
+
+    connection.query(`
+      SELECT * FROM menus
+    `, [], (err, menus) => {
+      menus.forEach(menu => {
+        let menuParents = menu.parents.split(',');
+        let menuChildren = menu.children.split(',');
+        let pageMenuItems = data.parents.split(',');
+
+        // Remove empty array values from database
+        menuParents = menuParents.filter(e => {
+          return e;
+        });
+        menuChildren = menuChildren.filter(e => {
+          return e;
+        });
+
+        pageMenuItems.forEach(slug => {
+          // Check if page in 'menus' table matches page title and if parents aren't already added to page
+          if (menu.slug === data.title && menuParents.indexOf(slug) === -1) {
+
+            // Pushes every parent from list to menuParents array
+            menuParents.push(slug);
+
+            // Add parents to page in database
+            connection.query(`
+              UPDATE menus
+              SET parents = '${ menuParents.join(',') }'
+              WHERE slug = '${ data.title }'
+            `);
+          }
+
+          // Check if parent in 'menus' table matches slug and if page isn't already added to parent
+          if (menu.slug === slug && menuChildren.indexOf(data.title) === -1) {
+            menuChildren.push(data.title);
+
+            // Add page to parent's children in database
+            connection.query(`
+              UPDATE menus
+              SET children = '${ menuChildren.join(',') }'
+              WHERE slug = '${ slug }'
+            `);
+          }
+        });
+      })
+    });
+
+    // Update data from page
+    connection.query(`
+      UPDATE pages
+      SET type = '${ data.type }', title = '${ data.title }', parents = '${ data.parents }', content = '${ data.content }'
+      WHERE id = ${ req.params.id }
+    `, [], (err, results) => {
+      // Redirect to same page with newly added data
+      res.redirect(`/subterra/pages/edit/${ req.params.id }`);
+    });
+  });
 });
 
 module.exports = router;
