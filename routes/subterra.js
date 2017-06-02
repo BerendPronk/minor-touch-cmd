@@ -9,7 +9,8 @@ router.get('/', (req, res) => {
   // Checks if a session already exists
   if (req.session.username) {
     res.render('subterra/index', {
-      username: req.session.username
+      username: req.session.username,
+      pathname: '/subterra'
     });
   } else {
     res.redirect('/subterra/login');
@@ -27,6 +28,7 @@ router.get('/login', (req, res) => {
     debug('Login requested');
     res.render('subterra/login', {
       username: false,
+      pathname: '/login',
       feedback: false,
       feedbackState: false
     });
@@ -55,6 +57,7 @@ router.post('/login', (req, res) => {
       } else {
         res.render('subterra/login', {
           username: false,
+          pathname: '/subterra',
           feedback: 'Wrong username or password given, please try again.',
           feedbackState: 'negative'
         });
@@ -94,6 +97,7 @@ router.get('/pages', (req, res) => {
       if (req.session.username) {
         res.render('subterra/pages/index', {
           username: req.session.username,
+          pathname: '/subterra/pages',
           pages: pages
         });
       } else {
@@ -154,6 +158,7 @@ router.get('/pages/edit/:id', (req, res) => {
               // Render edit page
               res.render('subterra/pages/edit', {
                 username: req.session.username,
+                pathname: '/subterra/pages',
                 system: {
                   menus: system.menus,
                   types: system.types,
@@ -181,6 +186,7 @@ router.get('/pages/edit/:id', (req, res) => {
 router.post('/pages/edit/:id', (req, res) => {
   debug(`[${ req.method }] /subterra/pages/edit/${ req.params.id }`);
 
+  res.redirect(`/subterra/pages/edit/${ req.params.id }`);
 });
 
 module.exports = router;
