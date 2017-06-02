@@ -26,6 +26,7 @@ router.get('/login', (req, res) => {
   } else {
     debug('Login requested');
     res.render('subterra/login', {
+      username: false,
       feedback: false,
       feedbackState: false
     });
@@ -53,6 +54,7 @@ router.post('/login', (req, res) => {
         res.redirect('/subterra');
       } else {
         res.render('subterra/login', {
+          username: false,
           feedback: 'Wrong username or password given, please try again.',
           feedbackState: 'negative'
         });
@@ -89,6 +91,7 @@ router.get('/pages', (req, res) => {
       });
 
       res.render('subterra/pages/index', {
+        username: req.session.username,
         pages: pages
       });
     });
@@ -100,6 +103,12 @@ router.get('/pages', (req, res) => {
 router.get('/pages/add', (req, res) => {
   debug(`[${ req.method }] /subterra/pages/add`);
 
+  // Checks if a session already exists
+  if (req.session.username) {
+
+  } else {
+    res.redirect('/subterra/login');
+  }
 });
 
 // [GET] /subterra/pages/edit/:id
@@ -135,21 +144,27 @@ router.get('/pages/edit/:id', (req, res) => {
               system.modules.push(module.name);
             });
 
-            // Render edit page
-            res.render('subterra/pages/edit', {
-              system: {
-                menus: system.menus,
-                types: system.types,
-                modules: system.modules
-              },
-              page: {
-                id: page.id,
-                title: page.title,
-                type: page.type,
-                parents: page.parents.split(','),
-                content: page.content
-              }
-            });
+            // Checks if a session already exists
+            if (req.session.username) {
+              // Render edit page
+              res.render('subterra/pages/edit', {
+                username: req.session.username,
+                system: {
+                  menus: system.menus,
+                  types: system.types,
+                  modules: system.modules
+                },
+                page: {
+                  id: page.id,
+                  title: page.title,
+                  type: page.type,
+                  parents: page.parents.split(','),
+                  content: page.content
+                }
+              });
+            } else {
+              res.redirect('/subterra/login');
+            }
           });
         });
       });
