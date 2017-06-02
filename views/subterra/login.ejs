@@ -1,25 +1,32 @@
-<%- include ../partials/head -%>
+<!DOCTYPE html>
+<html lang="nl">
+	<head>
+		<meta charset="UTF-8">
 
-<%- include ../partials/header -%>
+		<title>Login</title>
 
-<% if (feedback) { %>
-  <div id="feedback" class="<%= feedbackState %>">
-    <%= feedback %>
-  </div>
-<% } %>
+    <%- include ../partials/head -%>
 
-<form action="/subterra/login" method="post">
-  <fieldset>
-    <label>
-      Username:
-      <input type="text" name="username">
-    </label>
-    <label>
-      Password:
-      <input type="password" name="password">
-    </label>
-    <input type="submit" value="Submit">
-  </fieldset>
-</form>
+    <%- include ../partials/header -%>
 
-<%- include ../partials/footer -%>
+    <% if (feedback) { %>
+      <div id="feedback" class="<%= feedbackState %>">
+        <%= feedback %>
+      </div>
+    <% } %>
+
+    <form action="/subterra/login" method="post">
+      <fieldset>
+        <label>
+          Username:
+          <input type="text" name="username">
+        </label>
+        <label>
+          Password:
+          <input type="password" name="password">
+        </label>
+        <input type="submit" value="Submit">
+      </fieldset>
+    </form>
+
+    <%- include ../partials/footer -%>

@@ -1,17 +1,24 @@
-<%- include partials/head -%>
+<!DOCTYPE html>
+<html lang="nl">
+	<head>
+		<meta charset="UTF-8">
 
-<%- include partials/header -%>
+		<title>Curriculum CMD</title>
 
-  <h1>Hello</h1>
+    <%- include partials/head -%>
 
-  <ul>
-    <% for (let i = 0; i < menu.length; i++) { %>
-      <li>
-        <a href="/<%= menu[i] %>">
-          <%= menu[i] %>
-        </a>
-      </li>
-    <% } %>
-  </ul>
+    <%- include partials/header -%>
 
-<%- include partials/footer -%>
+      <h1>Hello</h1>
+
+      <ul>
+        <% for (let i = 0; i < menu.length; i++) { %>
+          <li>
+            <a href="/<%= menu[i] %>">
+              <%= menu[i] %>
+            </a>
+          </li>
+        <% } %>
+      </ul>
+
+    <%- include partials/footer -%>
