@@ -90,10 +90,15 @@ router.get('/pages', (req, res) => {
         });
       });
 
-      res.render('subterra/pages/index', {
-        username: req.session.username,
-        pages: pages
-      });
+      // Checks if a session already exists
+      if (req.session.username) {
+        res.render('subterra/pages/index', {
+          username: req.session.username,
+          pages: pages
+        });
+      } else {
+        res.redirect('/subterra/login');
+      }
     });
   });
 
