@@ -149,8 +149,53 @@ router.get('/pages/edit/:id', (req, res) => {
 
           // Fetch all system modules from database
           connection.query('SELECT * FROM modules', [], (err, modules) => {
-            modules.forEach(type => {
+            modules.forEach(module => {
               system.modules.push(module.name);
+            });
+
+            // Convert database string to form inputs
+            let contentFields = [];
+
+            page.content.split('|-|').forEach((field, index) => {
+              switch (field.charAt(1)) {
+                case 'H':
+                contentFields.push(`
+                  <input name="content-h-${ index }" type="text" value="${ field.replace('|H|', '') }">`);
+                  break;
+                case 'P':
+                  contentFields.push(`
+                    <textarea name="content-p-${ index }">${ field.replace('|P|', '') }</textarea>`);
+                break;
+                case 'I':
+                  contentFields.push(`
+                    <img src="${ field.replace('|I|', '') }" alt="${ page.title }">
+                    <input name="content-i-${ index }" type="file">`);
+                break;
+                case 'L':
+                  // Place all splitted items inside text-inputs
+
+                  contentFields.push(`
+                    <li>
+                      <input name="content-l-name-${ index }" type="text">
+                      <input name="content-l-${ index }" type="hidden">
+                      <ul data-list="${ index }">
+                        ${ field.replace('|L|', '').split(',').join('</li><li>') }
+                      </ul>
+                      <button data-type="addToList-${ index }">Add item</button>
+                    </li>`);
+                break;
+                case 'E':
+                  if (field.indexOf('|E-Y|') !== -1) {
+                    field.replace('|E-Y|', '');
+
+                    contentFields.push(`placeembedlinkhere`);
+                  } else if (field.indexOf('|E-V|') !== -1) {
+                    field.replace('|E-V|', '');
+
+                    contentFields.push(`placeembedlinkhere`);
+                  }
+                break;
+              }
             });
 
             // Checks if a session already exists
@@ -172,7 +217,7 @@ router.get('/pages/edit/:id', (req, res) => {
                   title: page.title,
                   type: page.type,
                   parents: page.parents.split(','),
-                  content: page.content
+                  content: contentFields
                 }
               });
             } else {
@@ -188,12 +233,36 @@ router.get('/pages/edit/:id', (req, res) => {
 // [POST] /subterra/pages/edit/:id
 router.post('/pages/edit/:id', (req, res) => {
   debug(`[${ req.method }] /subterra/pages/edit/${ req.params.id }`);
+  let contentFields = [];
+
+  // Extract all separate content fields
+  Object.keys(req.body).forEach(field => {
+    if (field.indexOf('content-') !== -1) {
+      switch (field.charAt(8)) {
+        case 'h':
+          contentFields.push(`|H|${ req.body[field] }`);
+        break;
+        case 'p':
+          contentFields.push(`|P|${ req.body[field] }`);
+        break;
+        case 'i':
+          contentFields.push(`|I|${ req.body[field] }`);
+        break;
+        case 'l':
+          // contentFields.push(`|I|${ req.body[field] }`);
+        break;
+        case 'e':
+          // contentFields.push(`|E|${ req.body[field] }`);
+        break;
+      }
+    }
+  });
 
   const data = {
     type: req.body.type,
     title: req.body.title,
     parents: req.body.parents,
-    content: req.body.content
+    content: contentFields.join('|-|')
   };
 
   req.getConnection((err, connection) => {
@@ -267,6 +336,8 @@ router.post('/pages/edit/:id', (req, res) => {
         });
       })
     });
+
+    // Convert content to proper storage
 
     // Update data from page
     connection.query(`

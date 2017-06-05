@@ -62,11 +62,31 @@
       <fieldset>
         <legend>Content</legend>
 
-        <textarea name="content"><%- page.content %></textarea>
+				<ul id="pageContent">
+					<% for (let i = 0; i < page.content.length; i++) { %>
+						<li data-order="content-<%= i %>">
+							<%- page.content[i] %>
+						</li>
+					<% } %>
+				</ul>
 
       </fieldset>
 
-      <input type="submit" value="Submit">
+			<fieldset>
+
+				<button id="moduleButton">Add Module</button>
+				<select id="moduleSelect" style="display:none;">
+					<option value="" disabled selected>Choose a module</option>
+					<% for (let i = 0; i < system.modules.length; i++) { %>
+						<option value="<%= system.modules[i] %>">
+							<%= system.modules[i] %>
+						</option>
+					<% } %>
+				</ul>
+
+			</fieldset>
+
+      <input style="display:block" type="submit" value="Submit">
     </form>
 
 
@@ -77,6 +97,9 @@
       const pageForm = document.querySelector('form');
       let formSubmit = false;
 
+			///////////////////////////////////////////////////////
+			// MOVE TO MENU EDIT VIEW
+			///////////////////////////////////////////////////////
       const inputMenu = document.querySelector('input[name="parents"]');
       const parentSelect = document.querySelector('#pageParentSelect');
       const pageParentList = document.querySelector('#pageParents');
@@ -136,6 +159,70 @@
         // Remove slug from hidden input
         inputMenu.value = parentArr.join(',').replace(', ', ',');
       }
+			///////////////////////////////////////////////////////
+
+			const pageContent = document.querySelector('#pageContent');
+			const moduleButton = document.querySelector('#moduleButton');
+			const moduleSelect = document.querySelector('#moduleSelect');
+
+			// Replace with CSS
+			moduleButton.addEventListener('click', event => {
+				moduleSelect.style.display = 'block';
+
+				event.preventDefault();
+			});
+
+			moduleSelect.addEventListener('input', () => {
+				moduleSelect.style.display = 'none';
+				const index = pageContent.children.length;
+				let newModule;
+
+				switch (moduleSelect.value) {
+					case 'heading':
+						newModule = `
+						<li>
+							<input name="content-h-${ index }" type="text">
+						</li>`;
+					break;
+					case 'paragraph':
+						newModule = `
+						<li>
+							<textarea name="content-p-${ index }"></textarea>;
+						</li>`;
+					break;
+					case 'image':
+						newModule = `
+						<li>
+							<input name="content-i-${ index }" type="file">
+						</li>`;
+					break;
+					case 'list':
+						newModule = `
+						<li>
+							<input name="content-l-name-${ index }" type="text">
+							<input name="content-l-${ index }" type="hidden">
+							<ul data-list="${ index }">
+								<li>
+									<input name="content-l-${ index }-1" type="text">
+								</li>
+							</ul>
+							<button data-type="addToList-${ index }">Add item</button>
+						</li>`;
+					break;
+					case 'embed':
+						newModule = `
+						<li>
+
+						</li>`;
+					break;
+				}
+
+				// Insert module at the end of the content list
+				pageContent.insertAdjacentHTML(
+					'beforeend',
+					newModule
+				);
+			});
 
       // Set formSubmit to active
       pageForm.addEventListener('submit', () => {
@@ -144,7 +231,6 @@
 
       // Alert user before page unload to prevent data loss
       // window.onbeforeunload = () => {
-      //   console.log(formSubmit)
       //   if (!formSubmit) {
       //     return 'You may have some unsaved changes, do you really want to leave this page?';
       //   } else {
