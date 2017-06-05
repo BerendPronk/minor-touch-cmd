@@ -160,6 +160,8 @@ router.get('/pages/edit/:id', (req, res) => {
               res.render('subterra/pages/edit', {
                 username: req.session.username,
                 pathname: '/subterra/pages',
+                feedback: false,
+                feedbackState: false,
                 system: {
                   menus: system.menus,
                   types: system.types,
@@ -213,31 +215,54 @@ router.post('/pages/edit/:id', (req, res) => {
           return e;
         });
 
-        pageMenuItems.forEach(slug => {
-          // Check if page in 'menus' table matches page title and if parents aren't already added to page
-          if (menu.slug === data.title && menuParents.indexOf(slug) === -1) {
+        // Check if slug already exists
+        if (menu.id !== req.params.id && menu.slug === data.title) {
+          debug('Slug already exists');
+        }
 
+        pageMenuItems.forEach(slug => {
+          // Check if page in 'menus' table matches page title
+          if (menu.slug === data.title) {
             // Pushes every parent from list to menuParents array
             menuParents.push(slug);
 
             // Add parents to page in database
             connection.query(`
               UPDATE menus
-              SET parents = '${ menuParents.join(',') }'
+              SET parents = '${ pageMenuItems.join(',') }'
               WHERE slug = '${ data.title }'
             `);
           }
 
-          // Check if parent in 'menus' table matches slug and if page isn't already added to parent
-          if (menu.slug === slug && menuChildren.indexOf(data.title) === -1) {
-            menuChildren.push(data.title);
+          // Check if parent in 'menus' table matches slug
+          if (menu.slug === slug) {
+            // Add slug if it isn't already added to parent
+            if (menuChildren.indexOf(data.title) === -1) {
+              menuChildren.push(data.title);
 
-            // Add page to parent's children in database
-            connection.query(`
-              UPDATE menus
-              SET children = '${ menuChildren.join(',') }'
-              WHERE slug = '${ slug }'
-            `);
+              // Add page to parent's children in database
+              connection.query(`
+                UPDATE menus
+                SET children = '${ menuChildren.join(',') }'
+                WHERE slug = '${ slug }'
+              `);
+            }
+          } else {
+            // Check if passing slug constists in pageMenuItems
+            if (pageMenuItems.indexOf(menu.slug) === -1) {
+              // Check if parent has an unwanted child
+              if (menuChildren.indexOf(data.title) !== -1) {
+                // Remove deleted child from parent's childs
+                menuChildren.splice(menuChildren.indexOf(data.title), 1);
+
+                // Add updates list of children to parent's childs
+                connection.query(`
+                  UPDATE menus
+                  SET children = '${ menuChildren.join(',') }'
+                  WHERE slug = '${ menu.slug }'
+                `);
+              }
+            }
           }
         });
       })

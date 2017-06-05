@@ -9,6 +9,12 @@
 
     <%- include ../partials/header -%>
 
+		<% if (feedback) { %>
+      <div id="feedback" class="<%= feedbackState %>">
+        <%= feedback %>
+      </div>
+    <% } %>
+
     <h1>Edit <%= page.title %></h1>
 
     <form action="/subterra/pages/edit/<%= page.id %>" method="post">
@@ -37,7 +43,7 @@
             <li>
               <span data-type="parent-title"><%= page.parents[i] %></span>
               <span data-type="parent-delete">X</span>
-              </li>
+            </li>
           <% } %>
         </ul>
 
@@ -135,7 +141,7 @@
       pageForm.addEventListener('submit', () => {
         formSubmit = true;
       });
-      
+
       // Alert user before page unload to prevent data loss
       // window.onbeforeunload = () => {
       //   console.log(formSubmit)
