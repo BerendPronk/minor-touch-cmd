@@ -42,12 +42,12 @@
           <% for (let i = 0; i < page.parents.length; i++) { %>
             <li>
               <span data-type="parent-title"><%= page.parents[i] %></span>
-              <span data-type="parent-delete">X</span>
+              <span data-type="parent-delete" onclick="removeParent()">X</span>
             </li>
           <% } %>
         </ul>
 
-        <input hidden="text" name="parents">
+        <input name="parents" type="hidden">
 
         <select id="pageParentSelect">
           <option value="" disabled selected>Add another parent</option>
@@ -109,7 +109,6 @@
       const parentSelect = document.querySelector('#pageParentSelect');
       const pageParentList = document.querySelector('#pageParents');
       const pageParents = pageParentList.querySelectorAll('li');
-      let parentDeleteButtons = pageParentList.querySelectorAll('[data-type="parent-delete"]');
       let parentArr = [];
 
       // Apply parent pages to input, joined with a single comma
@@ -127,11 +126,8 @@
           newParent.insertAdjacentHTML(
             'afterbegin',
             `<span data-type="parent-title">${ parentSelect.value }</span>
-             <span data-type="parent-delete">X</span>`
+             <span data-type="parent-delete" onclick="removeParent()">X</span>`
           );
-
-          // Add event listener to newly added parent's delete-button
-          newParent.querySelector('[data-type="parent-delete"]').addEventListener('click', removeParent);
 
           // Append new parent to parent list
           pageParentList.appendChild(newParent);
@@ -145,13 +141,8 @@
         parentSelect.selectedIndex = 0;
       });
 
-      // Add event listener to all delete buttons
-      parentDeleteButtons.forEach(button => {
-        button.addEventListener('click', removeParent);
-      })
-
       // Remove a parent from the parent list
-      function removeParent(event) {
+      function removeParent() {
         const slug = event.target.parentNode.querySelector('[data-type="parent-title"]').textContent;
         const slugIndex = parentArr.indexOf(slug);
 
@@ -287,7 +278,6 @@
 
 				listInput.value = `${ nameValue }|${ listItemValues.join(',') }`;
 			}
-
 
       // Set formSubmit to active
       pageForm.addEventListener('submit', () => {
