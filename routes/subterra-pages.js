@@ -8,7 +8,9 @@ router.get('/', (req, res) => {
 
   // Fetch all pages from database
   req.getConnection((err, connection) => {
-    connection.query('SELECT * FROM pages', [], (err, results) => {
+    connection.query(`
+      SELECT * FROM pages
+    `, [], (err, results) => {
       let pages = [];
 
       results.forEach(page => {
@@ -30,7 +32,6 @@ router.get('/', (req, res) => {
       }
     });
   });
-
 });
 
 // [GET] /subterra/pages/add
@@ -51,8 +52,9 @@ router.get('/edit/:id', (req, res) => {
 
   // Select page with ID from GET parameter
   req.getConnection((err, connection) => {
-    connection.query('SELECT * FROM pages WHERE id = ?',
-    [req.params.id], (err, results) => {
+    connection.query(`
+      SELECT * FROM pages WHERE id = ?
+    `, [req.params.id], (err, results) => {
       const page = results[0];
       let system = {
         menus: [],
@@ -61,19 +63,25 @@ router.get('/edit/:id', (req, res) => {
       };
 
       // Fetch all system page types from database
-      connection.query('SELECT * FROM types', [], (err, types) => {
+      connection.query(`
+        SELECT * FROM types
+      `, [], (err, types) => {
         types.forEach(type => {
           system.types.push(type.name);
         });
 
         // Fetch all system page menus from database
-        connection.query('SELECT * FROM menus', [], (err, menus) => {
+        connection.query(`
+          SELECT * FROM menus
+        `, [], (err, menus) => {
           menus.forEach(menu => {
             system.menus.push(menu.slug);
           });
 
           // Fetch all system modules from database
-          connection.query('SELECT * FROM modules', [], (err, modules) => {
+          connection.query(`
+            SELECT * FROM modules
+          `, [], (err, modules) => {
             modules.forEach(module => {
               system.modules.push(module.name);
             });
@@ -216,8 +224,6 @@ router.post('/edit/:id', (req, res) => {
   };
 
   req.getConnection((err, connection) => {
-    let test = []
-
     connection.query(`
       SELECT * FROM menus
     `, [], (err, menus) => {
@@ -287,15 +293,13 @@ router.post('/edit/:id', (req, res) => {
       })
     });
 
-    // Convert content to proper storage
-
     // Update data from page
     connection.query(`
       UPDATE pages
       SET type = '${ data.type }', title = '${ data.title }', parents = '${ data.parents }', content = '${ data.content }'
       WHERE id = ${ req.params.id }
     `, [], (err, results) => {
-      // Redirect to same page with newly added data
+      // Redirect to current page with newly added data
       res.redirect(`/subterra/pages/edit/${ req.params.id }`);
     });
   });
