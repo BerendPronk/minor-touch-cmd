@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="nl">
+	<head>
+		<meta charset="UTF-8">
+
+		<title>Page types</title>
+
+    <%- include ../partials/head -%>
+
+    <%- include ../partials/header -%>
+
+    <h1>Page types</h1>
+
+    <a href="/subterra/types/add">Add a page type</a>
+
+    <% if (types.length > 0) { %>
+      <ul>
+        <% for (let i = 0; i < types.length; i++) { %>
+          <li>
+            <a href="/subterra/types/edit/<%= types[i].id %>">
+              <%= types[i].name %>
+            </a>
+            | <%= types[i].modules.replace(',', ', ') %>
+          </li>
+        <% } %>
+      </ul>
+    <% } else { %>
+      <p>No page types found.</p>
+    <% } %>
+
+    <%- include ../partials/footer -%>

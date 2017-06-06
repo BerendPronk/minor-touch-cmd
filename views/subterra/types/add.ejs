@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="nl">
+	<head>
+		<meta charset="UTF-8">
+
+		<title>Add a page type</title>
+
+    <%- include ../partials/head -%>
+
+    <%- include ../partials/header -%>
+
+    <% if (feedback) { %>
+      <div id="feedback" class="<%= feedbackState %>">
+        <%= feedback %>
+      </div>
+    <% } %>
+
+    <h1>Add a page type</h1>
+
+    <form action="/subterra/types/add" method="post">
+      <fieldset>
+        <legend>Name</legend>
+
+        <input name="name" type="text">
+
+      </fieldset>
+      <fieldset>
+        <legend>Modules</legend>
+
+        <ul id="typeModules"></ul>
+
+        <input name="modules" type="hidden">
+
+        <select id="typeModuleSelect">
+          <option value="" disabled selected>Add a module</option>
+          <% for (let i = 0; i < system.modules.length; i++) { %>
+            <option value="<%= system.modules[i] %>">
+              <%= system.modules[i] %>
+            </option>
+          <% } %>
+        </select>
+
+      </fieldset>
+
+      <input type="submit" value="Submit">
+    </form>
+
+    <script>
+      const pageForm = document.querySelector('form');
+      let formSubmit = false;
+
+      const inputModules = document.querySelector('input[name="modules"]');
+      const moduleSelect = document.querySelector('#typeModuleSelect');
+      const typeModulesList = document.querySelector('#typeModules');
+      const typeModules = typeModulesList.querySelectorAll('li');
+      let moduleArr = [];
+
+      // Apply defaulModules to input, joined with a single comma
+      typeModules.forEach(module => {
+        moduleArr.push(module.querySelector('[data-type="module-name"]').textContent);
+      });
+      inputModules.value = moduleArr.join(',').replace(', ', ',');
+
+      // Add new module to type's defaultModules
+      moduleSelect.addEventListener('change', () => {
+        // Check if module is already added
+        if (moduleArr.indexOf(moduleSelect.value) === -1) {
+          const newModule = document.createElement('li');
+
+          newModule.insertAdjacentHTML(
+            'afterbegin',
+            `<span data-type="module-name">${ moduleSelect.value }</span>
+             <span data-type="module-delete" onclick="removeModule()">X</span>`
+          );
+
+          // Append new module to defaultModules
+          typeModulesList.appendChild(newModule);
+
+          // Add newly added module to input
+          moduleArr.push(moduleSelect.value);
+          inputModules.value = moduleArr.join(',').replace(', ', ',');
+        }
+
+        // Reset index of module selection
+        moduleSelect.selectedIndex = 0;
+      });
+
+      // Remove a module from the defaultModules
+      function removeModule() {
+        const slug = event.target.parentNode.querySelector('[data-type="module-name"]').textContent;
+        const slugIndex = moduleArr.indexOf(slug);
+
+        // Remove name from module array
+        moduleArr.splice(slugIndex, 1);
+
+        // Remove name from module list
+        typeModulesList.removeChild(typeModulesList.children[slugIndex]);
+
+        // Remove name from hidden input
+        inputModules.value = moduleArr.join(',').replace(', ', ',');
+      }
+
+      // Set formSubmit to active
+      pageForm.addEventListener('submit', () => {
+        formSubmit = true;
+      });
+
+      // Alert user before page unload to prevent data loss
+      // window.onbeforeunload = () => {
+      //   if (!formSubmit) {
+      //     return 'You may have some unsaved changes, do you really want to leave this page?';
+      //   } else {
+      //     return;
+      //   }
+      // };
+    </script>
+
+    <%- include ../partials/footer -%>
