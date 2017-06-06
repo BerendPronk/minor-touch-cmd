@@ -66,6 +66,11 @@
 					<% for (let i = 0; i < page.content.length; i++) { %>
 						<li data-order="content-<%= i %>">
 							<%- page.content[i] %>
+							<ul>
+								<li><span data-action="move-up">up</span></li>
+								<li><span data-action="move-down">down</span></li>
+								<li><span data-action="delete">delete</span></li>
+							</ul>
 						</li>
 					<% } %>
 				</ul>
@@ -173,56 +178,116 @@
 			});
 
 			moduleSelect.addEventListener('input', () => {
-				moduleSelect.style.display = 'none';
 				const index = pageContent.children.length;
 				let newModule;
 
-				switch (moduleSelect.value) {
+				switch (event.target.value) {
 					case 'heading':
 						newModule = `
-						<li>
+							<span class="content-tip">Heading</span>
 							<input name="content-h-${ index }" type="text">
-						</li>`;
+						`;
 					break;
 					case 'paragraph':
 						newModule = `
-						<li>
-							<textarea name="content-p-${ index }"></textarea>;
-						</li>`;
+							<span class="content-tip">Paragraph</span>
+							<textarea name="content-p-${ index }"></textarea>
+						`;
 					break;
 					case 'image':
 						newModule = `
-						<li>
+							<span class="content-tip">Image</span>
 							<input name="content-i-${ index }" type="file">
-						</li>`;
+						`;
 					break;
 					case 'list':
 						newModule = `
-						<li>
-							<input name="content-l-name-${ index }" type="text">
-							<input name="content-l-${ index }" type="hidden">
-							<ul data-list="${ index }">
+							<span class="content-tip">List name</span>
+							<input name="content-l-name-${ index }" type="text" oninput="addListName()">
+							<span class="content-tip">List items</span>
+							<input name="content-l-list-${ index }" type="hidden">
+							<ul>
 								<li>
-									<input name="content-l-${ index }-1" type="text">
+									<input type="text" oninput="addListItem()">
 								</li>
 							</ul>
-							<button data-type="addToList-${ index }">Add item</button>
-						</li>`;
+							<button data-type="addToList" onclick="addListInput()">Add item</button>
+						`;
 					break;
 					case 'embed':
 						newModule = `
-						<li>
-
-						</li>`;
+							<span class="content-tip">Embedded video (YouTube or Vimeo)</span>
+							<input name="content-e-${ index }" type="text">
+						`;
 					break;
 				}
 
 				// Insert module at the end of the content list
 				pageContent.insertAdjacentHTML(
 					'beforeend',
-					newModule
+					`<li data-order="content-${ index }">
+						${ newModule }
+						<ul>
+							<li><span data-action="move-up">up</span></li>
+							<li><span data-action="move-down">down</span></li>
+							<li><span data-action="delete">delete</span></li>
+						</ul>
+					</li>`
 				);
+
+				// Reset module selector
+				moduleSelect.style.display = 'none';
+				moduleSelect.selectedIndex = 0;
 			});
+
+			function addListInput() {
+				const list = event.target.parentElement.querySelector('ul');
+				const listIndex = list.children.length;
+
+				list.insertAdjacentHTML(
+					'beforeend',
+					`<li>
+						<input type="text" oninput="addListItem()">
+					</li>`
+				)
+
+				event.preventDefault();
+			}
+
+			function addListName() {
+				const field = event.target.parentNode;
+				const listInput = field.querySelector('input[name^="content-l-list"]');
+				const nameValue = event.target.value;
+				const list = field.querySelector('ul');
+				const listItems = list.querySelectorAll('li');
+				let listItemValues = [];
+
+				listItems.forEach(item => {
+					const value = item.querySelector('input').value;
+
+					listItemValues.push(value);
+				});
+
+				listInput.value = `${ nameValue }|${ listItemValues.join(',') }`;
+			}
+
+			function addListItem() {
+				const field = event.target.parentNode.parentNode.parentNode;
+				const listInput = field.querySelector('input[name^="content-l-list"]');
+				const nameValue = field.querySelector('input[name^="content-l-name"]').value;
+				const list = field.querySelector('ul');
+				const listItems = list.querySelectorAll('li');
+				let listItemValues = [];
+
+				listItems.forEach(item => {
+					const value = item.querySelector('input').value;
+
+					listItemValues.push(value);
+				});
+
+				listInput.value = `${ nameValue }|${ listItemValues.join(',') }`;
+			}
+
 
       // Set formSubmit to active
       pageForm.addEventListener('submit', () => {

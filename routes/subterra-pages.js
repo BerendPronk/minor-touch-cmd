@@ -78,47 +78,63 @@ router.get('/edit/:id', (req, res) => {
               system.modules.push(module.name);
             });
 
-            // Convert database string to form inputs
+            // Array of converted database strings to form inputs
             let contentFields = [];
 
             page.content.split('|-|').forEach((field, index) => {
               switch (field.charAt(1)) {
                 case 'H':
-                contentFields.push(`
-                  <input name="content-h-${ index }" type="text" value="${ field.replace('|H|', '') }">`);
-                  break;
+                  contentFields.push(`
+      							<span class="content-tip">Heading</span>
+                    <input name="content-h-${ index }" type="text" value="${ field.replace('|H|', '') }">
+                  `);
+                break;
                 case 'P':
                   contentFields.push(`
-                    <textarea name="content-p-${ index }">${ field.replace('|P|', '') }</textarea>`);
+      							<span class="content-tip">Paragraph</span>
+                    <textarea name="content-p-${ index }">${ field.replace('|P|', '') }</textarea>
+                  `);
                 break;
                 case 'I':
                   contentFields.push(`
+      							<span class="content-tip">Image</span>
                     <img src="${ field.replace('|I|', '') }" alt="${ page.title }">
-                    <input name="content-i-${ index }" type="file">`);
+                    <input name="content-i-${ index }" type="file">
+                  `);
                 break;
                 case 'L':
-                  // Place all splitted items inside text-inputs
+                  // Divide content string into separate fields
+                  const content = field.replace('|L|', '');
+                  const divider = content.indexOf('|');
+                  const fieldListName = content.substr(0, divider);
+                  const fieldList = content.substr((divider + 1), content.length).split(',');
+                  let fieldListString = '';
+
+                  // Give HTML to each item in list
+                  fieldList.forEach(item => {
+                    fieldListString += `
+                      <li>
+                        <input type="text" value="${ item }" oninput="addListItem()">
+                      </li>
+                    `;
+                  });
 
                   contentFields.push(`
-                    <li>
-                      <input name="content-l-name-${ index }" type="text">
-                      <input name="content-l-${ index }" type="hidden">
-                      <ul data-list="${ index }">
-                        ${ field.replace('|L|', '').split(',').join('</li><li>') }
-                      </ul>
-                      <button data-type="addToList-${ index }">Add item</button>
-                    </li>`);
+      							<span class="content-tip">List name</span>
+                    <input name="content-l-name-${ index }" type="text" value="${ fieldListName }" oninput="addListName()">
+      							<span class="content-tip">List items</span>
+                    <input name="content-l-list-${ index }" type="hidden">
+                    <ul>
+                      ${ fieldListString }
+                    </ul>
+                    <button data-type="addToList" onclick="addListInput()">Add item</button>
+                  `);
                 break;
                 case 'E':
-                  if (field.indexOf('|E-Y|') !== -1) {
-                    field.replace('|E-Y|', '');
-
-                    contentFields.push(`placeembedlinkhere`);
-                  } else if (field.indexOf('|E-V|') !== -1) {
-                    field.replace('|E-V|', '');
-
-                    contentFields.push(`placeembedlinkhere`);
-                  }
+                  contentFields.push(`
+      							<span class="content-tip">Embedded video (YouTube or Vimeo)</span>
+                    <input name="content-e-${ index }" type="text" value="${ field.replace('|E|', '') }">
+                  `);
                 break;
               }
             });
@@ -162,22 +178,31 @@ router.post('/edit/:id', (req, res) => {
 
   // Extract all separate content fields
   Object.keys(req.body).forEach(field => {
+    // Early exit to prevent empty fields being stored in database
+    if (req.body[field].replace(/ /g, '') === '') {
+      return;
+    }
+
+    // Switch on content fields only
     if (field.indexOf('content-') !== -1) {
-      switch (field.charAt(8)) {
-        case 'h':
+      switch (field.charAt(8).toUpperCase()) {
+        case 'H':
           contentFields.push(`|H|${ req.body[field] }`);
         break;
-        case 'p':
+        case 'P':
           contentFields.push(`|P|${ req.body[field] }`);
         break;
-        case 'i':
+        case 'I':
           contentFields.push(`|I|${ req.body[field] }`);
         break;
-        case 'l':
-          // contentFields.push(`|I|${ req.body[field] }`);
+        case 'L':
+          // Only pick grouped input
+          if (field.indexOf('content-l-list') !== -1) {
+            contentFields.push(`|L|${ req.body[field] }`);
+          }
         break;
-        case 'e':
-          // contentFields.push(`|E|${ req.body[field] }`);
+        case 'E':
+          contentFields.push(`|E|${ req.body[field] }`);
         break;
       }
     }
