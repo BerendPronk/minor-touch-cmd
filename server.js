@@ -37,28 +37,11 @@ app.use(session({
 }));
 
 // Declare app routing
+app.use('/', require('./routes/main'));
 app.use('/subterra', require('./routes/subterra'));
-
-app
-  .get('/', (req, res) => {
-    req.getConnection((err, connection) => {
-      connection.query(`
-        SELECT * FROM pages
-      `, [], (err, results) => {
-        let menu = [];
-
-        results.forEach(page => {
-          if (page.type === 'year') {
-            menu.push(page.title);
-          }
-        });
-
-        res.render('index', {
-          menu: menu
-        });
-      });
-    });
-  });
+app.use('/subterra/menus', require('./routes/subterra-menus'));
+app.use('/subterra/types', require('./routes/subterra-types'));
+app.use('/subterra/pages', require('./routes/subterra-pages'));
 
 // Run the application
 app.listen(3000, () => {
