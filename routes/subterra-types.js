@@ -80,6 +80,7 @@ router.post('/add', (req, res) => {
   };
 
   req.getConnection((err, connection) => {
+    // Add submitted data to database
     connection.query(`
       INSERT INTO types SET ?
     `, [data], (err, results) => {
