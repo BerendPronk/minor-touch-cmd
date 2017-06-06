@@ -2,8 +2,10 @@ const debug = require('debug')('TouchCMD');
 const express = require('express');
 const router = express.Router();
 
-// [GET] /
+// [GET] /index
 router.get('/', (req, res) => {
+  debug(`[${ req.method }] /index`);
+
   req.getConnection((err, connection) => {
     connection.query(`
       SELECT * FROM pages
