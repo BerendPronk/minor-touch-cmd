@@ -14,9 +14,9 @@
     <button data-add="page">Add new page</button>
 
 		<ul id="pageTypes" style="display: none;">
-			<% for (let i = 0; i < types.length; i++) { %>
+			<% for (let i = 0; i < system.types.length; i++) { %>
 				<li>
-					<a href="/subterra/pages/add/<%= types[i].name %>">Add <%= types[i].name %></a>
+					<a href="/subterra/pages/add/<%= system.types[i] %>">Add <%= system.types[i] %></a>
 				</li>
 			<% } %>
 		</ul>
