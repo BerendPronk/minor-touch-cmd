@@ -42,6 +42,7 @@ router.get('/login', (req, res) => {
     res.redirect('/subterra');
   } else {
     debug('Login requested');
+
     res.render('subterra/login', {
       username: false,
       pathname: '/login',
