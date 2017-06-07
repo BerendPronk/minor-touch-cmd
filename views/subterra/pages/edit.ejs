@@ -69,7 +69,7 @@
 							<ul>
 								<li><button data-action="move-up" onclick="orderModule('up')">up</button></li>
 								<li><button data-action="move-down" onclick="orderModule('down')">down</button></li>
-								<li><button data-action="delete">delete</button></li>
+								<li><button data-action="delete" onclick="deleteModule()">delete</button></li>
 							</ul>
 						</li>
 					<% } %>
@@ -220,7 +220,7 @@
 						<ul>
 							<li><button data-action="move-up" onclick="orderModule('up')">up</button></li>
 							<li><button data-action="move-down" onclick="orderModule('down')">down</button></li>
-							<li><button data-action="delete">delete</button></li>
+							<li><button data-action="delete" onclick="deleteModule()">delete</button></li>
 						</ul>
 					</li>`
 				);
@@ -303,6 +303,15 @@
 						field.outerHTML
 					);
 				});
+
+				event.preventDefault();
+			}
+
+			// Delete a module from the page
+			function deleteModule() {
+				const field = event.target.parentNode.parentNode.parentNode;
+
+				pageContent.removeChild(field);
 
 				event.preventDefault();
 			}
