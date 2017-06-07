@@ -11,6 +11,23 @@
 
     <h1>Curriculum CMD: Subterra</h1>
 
-    <a href="/subterra/pages/add">Add new page</a>
+    <a href="#" data-add="page">Add new page</a>
+
+		<ul id="pageTypes" style="display: none;">
+			<% for (let i = 0; i < types.length; i++) { %>
+				<li>
+					<a href="/subterra/pages/add/<%= types[i].name %>">Add <%= types[i].name %></a>
+				</li>
+			<% } %>
+		</ul>
+
+		<script>
+			const newPage = document.querySelector('[data-add="page"]');
+			const pageTypes = document.querySelector('#pageTypes');
+
+			newPage.addEventListener('click', () => {
+				pageTypes.style.display = 'block';
+			});
+		</script>
 
     <%- include partials/footer -%>

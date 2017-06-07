@@ -6,15 +6,31 @@ const router = express.Router();
 router.get('/', (req, res) => {
   debug(`[${ req.method }] /subterra/login`);
 
-  // Checks if a session already exists
-  if (req.session.username) {
-    res.render('subterra/index', {
-      username: req.session.username,
-      pathname: '/subterra'
+  // Fetch all pages from database
+  req.getConnection((err, connection) => {
+    connection.query(`
+      SELECT * FROM types
+    `, [], (err, results) => {
+      let types = [];
+
+      results.forEach(type => {
+        types.push({
+          name: type.name
+        });
+      });
+
+      // Checks if a session already exists
+      if (req.session.username) {
+        res.render('subterra/index', {
+          username: req.session.username,
+          pathname: '/subterra',
+          types: types
+        });
+      } else {
+        res.redirect('/subterra/login');
+      }
     });
-  } else {
-    res.redirect('/subterra/login');
-  }
+  });
 });
 
 // [GET] /subterra/login
