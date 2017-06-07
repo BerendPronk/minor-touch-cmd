@@ -31,12 +31,12 @@
           <% for (let i = 0; i < type.modules.length; i++) { %>
             <li>
               <span data-type="module-name"><%= type.modules[i] %></span>
-              <span data-type="module-delete" onclick="removeModule()">X</span>
+              <button data-type="module-delete" onclick="removeModule()">X</button>
             </li>
           <% } %>
         </ul>
 
-        <input name="modules" type="hidden">
+        <input name="modules" type="hidden" value="<%= type.modules %>">
 
         <select id="typeModuleSelect">
           <option value="" disabled selected>Add another module</option>
@@ -62,11 +62,10 @@
       const typeModules = typeModulesList.querySelectorAll('li');
       let moduleArr = [];
 
-      // Apply defaulModules to input, joined with a single comma
+      // Apply defaultModules to input, joined with a single comma
       typeModules.forEach(module => {
         moduleArr.push(module.querySelector('[data-type="module-name"]').textContent);
       });
-      inputModules.value = moduleArr.join(',').replace(', ', ',');
 
       // Add new module to type's defaultModules
       moduleSelect.addEventListener('change', () => {
