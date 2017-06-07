@@ -42,12 +42,12 @@
           <% for (let i = 0; i < page.parents.length; i++) { %>
             <li>
               <span data-type="parent-title"><%= page.parents[i] %></span>
-              <span data-type="parent-delete" onclick="removeParent()">X</span>
+              <button data-type="parent-delete" onclick="removeParent()">X</button>
             </li>
           <% } %>
         </ul>
 
-        <input name="parents" type="hidden">
+        <input name="parents" type="hidden" value="<%= page.parents %>">
 
         <select id="pageParentSelect">
           <option value="" disabled selected>Add another parent</option>
@@ -67,9 +67,9 @@
 						<li data-order="content-<%= i %>">
 							<%- page.content[i] %>
 							<ul>
-								<li><span data-action="move-up">up</span></li>
-								<li><span data-action="move-down">down</span></li>
-								<li><span data-action="delete">delete</span></li>
+								<li><button data-action="move-up">up</button></li>
+								<li><button data-action="move-down">down</button></li>
+								<li><button data-action="delete">delete</button></li>
 							</ul>
 						</li>
 					<% } %>
@@ -115,7 +115,6 @@
       pageParents.forEach(parent => {
         parentArr.push(parent.querySelector('[data-type="parent-title"]').textContent);
       });
-      inputMenu.value = parentArr.join(',').replace(', ', ',');
 
       // Add new parent to page's parents
       parentSelect.addEventListener('change', () => {
@@ -126,7 +125,7 @@
           newParent.insertAdjacentHTML(
             'afterbegin',
             `<span data-type="parent-title">${ parentSelect.value }</span>
-             <span data-type="parent-delete" onclick="removeParent()">X</span>`
+             <button data-type="parent-delete" onclick="removeParent()">X</button>`
           );
 
           // Append new parent to parent list
