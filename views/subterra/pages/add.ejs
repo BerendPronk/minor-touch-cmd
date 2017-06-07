@@ -59,7 +59,7 @@
 
 				<ul id="pageContent">
 					<% for (let i = 0; i < page.content.length; i++) { %>
-						<li data-order="content-<%= i %>">
+						<li data-order="<%= i %>">
 							<%- page.content[i] %>
 							<ul>
 							<li><button data-action="move-up" onclick="orderModule('up')">up</button></li>
@@ -203,7 +203,7 @@
 				// Insert module at the end of the content list
 				pageContent.insertAdjacentHTML(
 					'beforeend',
-					`<li data-order="content-${ index }">
+					`<li data-order="${ index }">
 						${ newModule }
 						<ul>
 							<li><button data-action="move-up" onclick="orderModule('up')">up</button></li>
