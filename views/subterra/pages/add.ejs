@@ -62,9 +62,9 @@
 						<li data-order="content-<%= i %>">
 							<%- page.content[i] %>
 							<ul>
-								<li><button data-action="move-up">up</button></li>
-								<li><button data-action="move-down">down</button></li>
-								<li><button data-action="delete">delete</button></li>
+							<li><button data-action="move-up" onclick="orderModule('up')">up</button></li>
+							<li><button data-action="move-down" onclick="orderModule('down')">down</button></li>
+							<li><button data-action="delete" onclick="deleteModule()">delete</button></li>
 							</ul>
 						</li>
 					<% } %>
@@ -206,9 +206,9 @@
 					`<li data-order="content-${ index }">
 						${ newModule }
 						<ul>
-							<li><button data-action="move-up">up</button></li>
-							<li><button data-action="move-down">down</button></li>
-							<li><button data-action="delete">delete</button></li>
+							<li><button data-action="move-up" onclick="orderModule('up')">up</button></li>
+							<li><button data-action="move-down" onclick="orderModule('down')">down</button></li>
+							<li><button data-action="delete" onclick="deleteModule()">delete</button></li>
 						</ul>
 					</li>`
 				);
@@ -218,6 +218,93 @@
 				moduleSelect.selectedIndex = 0;
 			});
 
+			// Set module order based on given direction
+			function orderModule(direction) {
+				const fields = pageContent.querySelectorAll('li[data-order]');
+				const targetField = event.target.parentNode.parentNode.parentNode;
+				const curPos = Number(targetField.getAttribute('data-order'));
+				let newPos;
+				let newOrder = [];
+
+				// Add content fields to editable array
+				fields.forEach(field => {
+					newOrder.push(field);
+				});
+
+				switch (direction) {
+					case 'up':
+						// Early exit when module is already in top position
+						if (curPos === 0) {
+							break;
+						}
+
+						// Define new order to be set
+						newPos = curPos - 1;
+
+						// Reassign content field orders
+						newOrder.forEach(field => {
+							const order = Number(field.getAttribute('data-order'));
+
+							if (order === newPos) {
+								field.setAttribute('data-order', order + 1);
+							} else if (order === curPos) {
+								field.setAttribute('data-order', newPos);
+							}
+						});
+					break;
+					case 'down':
+						// Early exit when module is already in bottom position
+						if (curPos === (fields.length - 1)) {
+							break;
+						}
+
+						// Define new order to be set
+						newPos = curPos + 1;
+
+						// Reassign content field orders
+						newOrder.forEach(field => {
+							const order = Number(field.getAttribute('data-order'));
+
+							if (order === newPos) {
+								field.setAttribute('data-order', order - 1);
+							} else if (order === curPos) {
+								field.setAttribute('data-order', newPos);
+							}
+						});
+					break;
+				}
+
+				// Remove all content fields from form
+				while (pageContent.children[0]) {
+					pageContent.removeChild(pageContent.children[0]);
+				}
+
+				// Sort newOrder array
+				newOrder.sort((a, b) => {
+					return Number(a.getAttribute('data-order')) - Number(b.getAttribute('data-order'));
+				});
+
+				// Add ordered fields to form
+				newOrder.forEach(field => {
+					pageContent.insertAdjacentHTML(
+						'beforeend',
+						field.outerHTML
+					);
+				});
+
+				event.preventDefault();
+			}
+
+			// Delete a module from the page
+			function deleteModule() {
+				const field = event.target.parentNode.parentNode.parentNode;
+
+				pageContent.removeChild(field);
+
+				event.preventDefault();
+			}
+
+			// Add an empty input field to list
 			function addListInput() {
 				const list = event.target.parentElement.querySelector('ul');
 				const listIndex = list.children.length;
@@ -232,6 +319,7 @@
 				event.preventDefault();
 			}
 
+			// Add list name input to hidden input field
 			function addListName() {
 				const field = event.target.parentNode;
 				const listInput = field.querySelector('input[name^="content-l-list"]');
@@ -249,6 +337,7 @@
 				listInput.value = `${ nameValue }|${ listItemValues.join(',') }`;
 			}
 
+			// Add list item input to hidden list input field
 			function addListItem() {
 				const field = event.target.parentNode.parentNode.parentNode;
 				const listInput = field.querySelector('input[name^="content-l-list"]');
