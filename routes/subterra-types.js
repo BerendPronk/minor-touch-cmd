@@ -97,8 +97,8 @@ router.get('/edit/:id', (req, res) => {
   // Select page with ID from GET parameter
   req.getConnection((err, connection) => {
     connection.query(`
-      SELECT * FROM types WHERE id = ?
-    `, [req.params.id], (err, results) => {
+      SELECT * FROM types WHERE id = '${ req.params.id }'
+    `, [], (err, results) => {
       const type = results[0];
       let system = {
         modules: []
