@@ -9,6 +9,112 @@
 
     <%- include ../partials/header -%>
 
-    <h1>Edit <%= menu.name %></h1>
+    <h1>Edit menu '<%= menu.name %>'</h1>
+
+		<form action="/subterra/menus/edit/<%= menu.id %>" method="post">
+      <fieldset>
+        <legend>Name</legend>
+
+        <input name="name" type="text" value="<%= menu.name %>">
+
+      </fieldset>
+      <fieldset>
+        <legend>Modules</legend>
+
+        <ul id="menuChildren">
+          <% for (let i = 0; i < menu.children.length; i++) { %>
+            <li>
+              <span data-type="child-name"><%= menu.children[i] %></span>
+              <button data-type="child-delete" onclick="removeChildItem()">X</button>
+            </li>
+          <% } %>
+        </ul>
+
+        <input name="children" type="hidden" value="<%= menu.children %>">
+
+        <select id="childSelect">
+          <option value="" disabled selected>Add another page</option>
+          <% for (let i = 0; i < system.pages.length; i++) { %>
+            <option value="<%= system.pages[i] %>">
+              <%= system.pages[i] %>
+            </option>
+          <% } %>
+        </select>
+
+      </fieldset>
+
+      <input type="submit" value="Submit">
+    </form>
+
+		<%# %>
+
+		<script>
+      const pageForm = document.querySelector('form');
+      let formSubmit = false;
+
+      const inputChildren = document.querySelector('input[name="children"]');
+      const childSelect = document.querySelector('#childSelect');
+      const menuChildrenList = document.querySelector('#menuChildren');
+      const menuChildren = menuChildrenList.querySelectorAll('li');
+      let childArr = [];
+
+      // Apply defaulModules to input, joined with a single comma
+      menuChildren.forEach(child => {
+        childArr.push(child.querySelector('[data-type="child-name"]').textContent);
+      });
+
+      // Add new child to menu's children
+      childSelect.addEventListener('change', () => {
+        // Check if child is already added
+        if (childArr.indexOf(childSelect.value) === -1) {
+          const newChild = document.createElement('li');
+
+          newChild.insertAdjacentHTML(
+            'afterbegin',
+            `<span data-type="child-name">${ childSelect.value }</span>
+             <button data-type="child-delete" onclick="removeChildItem()">X</button>`
+          );
+
+          // Append new child to list
+          menuChildrenList.appendChild(newChild);
+
+          // Add newly added child to input
+          childArr.push(childSelect.value);
+          inputChildren.value = childArr.join(',').replace(', ', ',');
+        }
+
+        // Reset index of child selection
+        childSelect.selectedIndex = 0;
+      });
+
+      // Remove a child from the menu's children
+      function removeChildItem() {
+        const slug = event.target.parentNode.querySelector('[data-type="child-name"]').textContent;
+        const slugIndex = childArr.indexOf(slug);
+
+        // Remove name from child array
+        childArr.splice(slugIndex, 1);
+
+        // Remove name from child list
+        menuChildrenList.removeChild(menuChildrenList.children[slugIndex]);
+
+        // Remove name from hidden input
+        inputChildren.value = childArr.join(',').replace(', ', ',');
+      }
+
+      // Set formSubmit to active
+      pageForm.addEventListener('submit', () => {
+        formSubmit = true;
+      });
+
+      // Alert user before page unload to prevent data loss
+      // window.onbeforeunload = () => {
+      //   if (!formSubmit) {
+      //     return 'You may have some unsaved changes, do you really want to leave this page?';
+      //   } else {
+      //     return;
+      //   }
+      // };
+    </script>
 
     <%- include ../partials/footer -%>

@@ -11,4 +11,21 @@
 
     <h1>Menus</h1>
 
+		<a href="/subterra/menus/add">Add a menu</a>
+
+		<% if (menus.length > 0) { %>
+			<ul>
+				<% for (let i = 0; i < menus.length; i++) { %>
+					<li>
+						<a href="/subterra/menus/edit/<%= menus[i].id %>">
+							<%= menus[i].name %>
+						</a>
+						| <%= menus[i].children.replace(',', ', ') %>
+					</li>
+				<% } %>
+			</ul>
+		<% } else { %>
+			<p>No menus found.</p>
+		<% } %>
+
     <%- include ../partials/footer -%>
