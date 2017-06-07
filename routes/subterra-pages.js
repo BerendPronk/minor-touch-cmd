@@ -16,7 +16,8 @@ router.get('/', (req, res) => {
       results.forEach(page => {
         pages.push({
           id: page.id,
-          title: page.title
+          title: page.title,
+          type: page.type
         });
       });
 
