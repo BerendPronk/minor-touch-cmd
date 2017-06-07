@@ -323,7 +323,10 @@ router.get('/edit/:id', (req, res) => {
                   id: page.id,
                   title: page.title,
                   type: page.type,
-                  parents: page.parents.split(','),
+                  parents: page.parents.split(',').filter(e => {
+                    // Removes empty data fields
+                    return e;
+                  }),
                   content: contentFields
                 }
               });

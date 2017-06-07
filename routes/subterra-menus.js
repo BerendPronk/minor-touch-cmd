@@ -125,7 +125,10 @@ router.get('/edit/:id', (req, res) => {
             menu: {
               id: menu.id,
               name: menu.name,
-              children: menu.children.split(',')
+              children: menu.children.split(',').filter(e => {
+                // Removes empty data fields
+                return e;
+              })
             }
           });
         } else {

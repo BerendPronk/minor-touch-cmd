@@ -125,7 +125,10 @@ router.get('/edit/:id', (req, res) => {
             type: {
               id: type.id,
               name: type.name,
-              modules: type.defaultModules.split(',')
+              modules: type.defaultModules.split(',').filter(e => {
+                // Removes empty data fields
+                return e;
+              })
             }
           });
         } else {
