@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="nl">
+	<head>
+		<meta charset="UTF-8">
+
+		<title>Add a menu</title>
+
+    <%- include ../partials/head -%>
+
+    <%- include ../partials/header -%>
+
+    <h1>Add a new menu</h1>
+
+		<form action="/subterra/menus/add" method="post">
+      <fieldset>
+        <legend>Name</legend>
+
+        <input name="name" type="text" required>
+
+      </fieldset>
+      <fieldset>
+        <legend>Children</legend>
+
+        <ul id="menuChildren"></ul>
+
+        <input name="children" type="hidden">
+
+        <select id="childSelect">
+          <option value="" disabled selected>Add a child</option>
+          <% for (let i = 0; i < system.pages.length; i++) { %>
+            <option value="<%= system.pages[i] %>">
+              <%= system.pages[i] %>
+            </option>
+          <% } %>
+        </select>
+
+      </fieldset>
+
+      <input type="submit" value="Submit">
+    </form>
+
+		<script>
+      const pageForm = document.querySelector('form');
+      let formSubmit = false;
+
+      const inputChildren = document.querySelector('input[name="children"]');
+      const childSelect = document.querySelector('#childSelect');
+      const menuChildrenList = document.querySelector('#menuChildren');
+      const menuChildren = menuChildrenList.querySelectorAll('li');
+      let childArr = [];
+
+      // Add new child to menu's children
+      childSelect.addEventListener('change', () => {
+        // Check if child is already added
+        if (childArr.indexOf(childSelect.value) === -1) {
+          const newChild = document.createElement('li');
+
+          newChild.insertAdjacentHTML(
+            'afterbegin',
+            `<span data-type="child-name">${ childSelect.value }</span>
+             <button data-type="child-delete" onclick="removeChildItem()">X</button>`
+          );
+
+          // Append new child to list
+          menuChildrenList.appendChild(newChild);
+
+          // Add newly added child to input
+          childArr.push(childSelect.value);
+          inputChildren.value = childArr.join(',').replace(', ', ',');
+        }
+
+        // Reset index of child selection
+        childSelect.selectedIndex = 0;
+      });
+
+      // Remove a child from the menu's children
+      function removeChildItem() {
+        const slug = event.target.parentNode.querySelector('[data-type="child-name"]').textContent;
+        const slugIndex = childArr.indexOf(slug);
+
+        // Remove name from child array
+        childArr.splice(slugIndex, 1);
+
+        // Remove name from child list
+        menuChildrenList.removeChild(menuChildrenList.children[slugIndex]);
+
+        // Remove name from hidden input
+        inputChildren.value = childArr.join(',').replace(', ', ',');
+      }
+
+      // Set formSubmit to active
+      pageForm.addEventListener('submit', () => {
+        formSubmit = true;
+      });
+
+      // Alert user before page unload to prevent data loss
+      // window.onbeforeunload = () => {
+      //   if (!formSubmit) {
+      //     return 'You may have some unsaved changes, do you really want to leave this page?';
+      //   } else {
+      //     return;
+      //   }
+      // };
+    </script>
+
+    <%- include ../partials/footer -%>

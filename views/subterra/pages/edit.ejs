@@ -3,13 +3,21 @@
 	<head>
 		<meta charset="UTF-8">
 
-		<title>Edit a page</title>
+		<title>Edit page '<%= page.title %>'</title>
 
     <%- include ../partials/head -%>
 
     <%- include ../partials/header -%>
 
-    <h1>Edit <%= page.title %></h1>
+		<% if (feedback) { %>
+      <div id="feedback" class="<%= feedbackState %>">
+        <%= feedback %>
+      </div>
+    <% } %>
+
+    <h1>Edit '<%= page.title %>'</h1>
+
+		<button data-action="delete page" onclick="deleteItem('pages', <%= page.id %>)">Delete <%= page.title %></button>
 
     <form action="/subterra/pages/edit/<%= page.id %>" method="post">
       <fieldset>
@@ -27,24 +35,24 @@
       </fieldset>
       <fieldset>
         <legend>Title</legend>
-        <input type="text" name="title" value="<%= page.title %>">
+        <input type="text" name="title" value="<%= page.title %>" required>
       </fieldset>
       <fieldset>
         <legend>Menus</legend>
 
-        <ul id="pageParents">
-          <% for (let i = 0; i < page.parents.length; i++) { %>
+        <ul id="pageMenus">
+          <% for (let i = 0; i < page.menus.length; i++) { %>
             <li>
-              <span data-type="parent-title"><%= page.parents[i] %></span>
-              <span data-type="parent-delete">X</span>
-              </li>
+              <span data-type="menu-title"><%= page.menus[i] %></span>
+              <button data-type="menu-delete" onclick="removeMenu()">X</button>
+            </li>
           <% } %>
         </ul>
 
-        <input hidden="text" name="parents">
+        <input name="menus" type="hidden" value="<%= page.menus %>">
 
-        <select id="pageParentSelect">
-          <option value="" disabled selected>Add another parent</option>
+        <select id="menuSelect">
+          <option value="" disabled selected>Add another menu</option>
           <% for (let i = 0; i < system.menus.length; i++) { %>
             <option value="<%= system.menus[i] %>">
               <%= system.menus[i] %>
@@ -56,11 +64,36 @@
       <fieldset>
         <legend>Content</legend>
 
-        <textarea name="content"><%- page.content %></textarea>
+				<ul id="pageContent">
+					<% for (let i = 0; i < page.content.length; i++) { %>
+						<li data-order="<%= i %>">
+							<%- page.content[i] %>
+							<ul>
+								<li><button data-action="move-up" onclick="orderModule('up')">up</button></li>
+								<li><button data-action="move-down" onclick="orderModule('down')">down</button></li>
+								<li><button data-action="delete" onclick="deleteModule()">delete</button></li>
+							</ul>
+						</li>
+					<% } %>
+				</ul>
 
       </fieldset>
 
-      <input type="submit" value="Submit">
+			<fieldset>
+
+				<button id="moduleButton">Add Module</button>
+				<select id="moduleSelect" style="display:none;">
+					<option value="" disabled selected>Choose a module</option>
+					<% for (let i = 0; i < system.modules.length; i++) { %>
+						<option value="<%= system.modules[i] %>">
+							<%= system.modules[i] %>
+						</option>
+					<% } %>
+				</ul>
+
+			</fieldset>
+
+      <input style="display:block" type="submit" value="Submit">
     </form>
 
 
@@ -71,74 +104,283 @@
       const pageForm = document.querySelector('form');
       let formSubmit = false;
 
-      const inputMenu = document.querySelector('input[name="parents"]');
-      const parentSelect = document.querySelector('#pageParentSelect');
-      const pageParentList = document.querySelector('#pageParents');
-      const pageParents = pageParentList.querySelectorAll('li');
-      let parentDeleteButtons = pageParentList.querySelectorAll('[data-type="parent-delete"]');
-      let parentArr = [];
+			///////////////////////////////////////////////////////
+      const inputMenu = document.querySelector('input[name="menus"]');
+      const menuSelect = document.querySelector('#menuSelect');
+      const pageMenuList = document.querySelector('#pageMenus');
+      const pageMenus = pageMenuList.querySelectorAll('li');
+      let menuArr = [];
 
-      // Apply parent pages to input, joined with a single comma
-      pageParents.forEach(parent => {
-        parentArr.push(parent.querySelector('[data-type="parent-title"]').textContent);
+      // Apply page's menus to input, joined with a single comma
+      pageMenus.forEach(menu => {
+        menuArr.push(menu.querySelector('[data-type="menu-title"]').textContent);
       });
-      inputMenu.value = parentArr.join(',').replace(', ', ',');
 
-      // Add new parent to page's parents
-      parentSelect.addEventListener('change', () => {
-        // Check if parent is already added
-        if (parentArr.indexOf(parentSelect.value) === -1) {
-          const newParent = document.createElement('li');
+      // Add new menu to page's menus
+      menuSelect.addEventListener('change', () => {
+        // Check if menu is already added
+        if (menuArr.indexOf(menuSelect.value) === -1) {
+          const newMenu = document.createElement('li');
 
-          newParent.insertAdjacentHTML(
+          newMenu.insertAdjacentHTML(
             'afterbegin',
-            `<span data-type="parent-title">${ parentSelect.value }</span>
-             <span data-type="parent-delete">X</span>`
+            `<span data-type="menu-title">${ menuSelect.value }</span>
+             <button data-type="menu-delete" onclick="removeMenu()">X</button>`
           );
 
-          // Add event listener to newly added parent's delete-button
-          newParent.querySelector('[data-type="parent-delete"]').addEventListener('click', removeParent);
+          // Append new menu to menus list
+          pageMenuList.appendChild(newMenu);
 
-          // Append new parent to parent list
-          pageParentList.appendChild(newParent);
-
-          // Add newly added parent to input
-          parentArr.push(parentSelect.value);
-          inputMenu.value = parentArr.join(',').replace(', ', ',');
+          // Add newly added menu to input
+          menuArr.push(menuSelect.value);
+          inputMenu.value = menuArr.join(',').replace(', ', ',');
         }
 
-        // Reset index of parent selection
-        parentSelect.selectedIndex = 0;
+        // Reset index of menu selection
+        menuSelect.selectedIndex = 0;
       });
 
-      // Add event listener to all delete buttons
-      parentDeleteButtons.forEach(button => {
-        button.addEventListener('click', removeParent);
-      })
+      // Remove a menu from the menu list
+      function removeMenu() {
+        const slug = event.target.parentNode.querySelector('[data-type="menu-title"]').textContent;
+        const slugIndex = menuArr.indexOf(slug);
 
-      // Remove a parent from the parent list
-      function removeParent(event) {
-        const slug = event.target.parentNode.querySelector('[data-type="parent-title"]').textContent;
-        const slugIndex = parentArr.indexOf(slug);
+        // Remove menu from menu array
+        menuArr.splice(slugIndex, 1);
 
-        // Remove slug from parent array
-        parentArr.splice(slugIndex, 1);
+        // Remove menu from menu list
+        pageMenuList.removeChild(pageMenuList.children[slugIndex]);
 
-        // Remove slug from parent list
-        pageParentList.removeChild(pageParentList.children[slugIndex]);
-
-        // Remove slug from hidden input
-        inputMenu.value = parentArr.join(',').replace(', ', ',');
+        // Remove menu from hidden input
+        inputMenu.value = menuArr.join(',').replace(', ', ',');
       }
+			///////////////////////////////////////////////////////
+
+			const pageContent = document.querySelector('#pageContent');
+			const moduleButton = document.querySelector('#moduleButton');
+			const moduleSelect = document.querySelector('#moduleSelect');
+
+			// Replace with CSS
+			moduleButton.addEventListener('click', event => {
+				moduleSelect.style.display = 'block';
+
+				event.preventDefault();
+			});
+
+			moduleSelect.addEventListener('input', () => {
+				const index = pageContent.children.length;
+				let newModule;
+
+				switch (event.target.value) {
+					case 'heading':
+						newModule = `
+							<span class="content-tip">Heading</span>
+							<input name="content-h-${ index }" type="text">
+						`;
+					break;
+					case 'paragraph':
+						newModule = `
+							<span class="content-tip">Paragraph</span>
+							<textarea name="content-p-${ index }"></textarea>
+						`;
+					break;
+					case 'image':
+						newModule = `
+							<span class="content-tip">Image</span>
+							<input name="content-i-${ index }" type="file">
+						`;
+					break;
+					case 'list':
+						newModule = `
+							<span class="content-tip">List name</span>
+							<input name="content-l-name-${ index }" type="text" oninput="addListName()">
+							<span class="content-tip">List items</span>
+							<input name="content-l-list-${ index }" type="hidden">
+							<ul>
+								<li>
+									<input type="text" oninput="addListItem()">
+								</li>
+							</ul>
+							<button data-type="addToList" onclick="addListInput()">Add item</button>
+						`;
+					break;
+					case 'embed':
+						newModule = `
+							<span class="content-tip">Embedded video (YouTube or Vimeo)</span>
+							<input name="content-e-${ index }" type="text">
+						`;
+					break;
+				}
+
+				// Insert module at the end of the content list
+				pageContent.insertAdjacentHTML(
+					'beforeend',
+					`<li data-order="${ index }">
+						${ newModule }
+						<ul>
+							<li><button data-action="move-up" onclick="orderModule('up')">up</button></li>
+							<li><button data-action="move-down" onclick="orderModule('down')">down</button></li>
+							<li><button data-action="delete" onclick="deleteModule()">delete</button></li>
+						</ul>
+					</li>`
+				);
+
+				// Reset module selector
+				moduleSelect.style.display = 'none';
+				moduleSelect.selectedIndex = 0;
+			});
+
+			// Set module order based on given direction
+			function orderModule(direction) {
+				const fields = pageContent.querySelectorAll('li[data-order]');
+				const targetField = event.target.parentNode.parentNode.parentNode;
+				const curPos = Number(targetField.getAttribute('data-order'));
+				let newPos;
+				let newOrder = [];
+
+				// Add content fields to editable array
+				fields.forEach(field => {
+					newOrder.push(field);
+				});
+
+				switch (direction) {
+					case 'up':
+						// Early exit when module is already in top position
+						if (curPos === 0) {
+							break;
+						}
+
+						// Define new order to be set
+						newPos = curPos - 1;
+
+						// Reassign content field orders
+						newOrder.forEach(field => {
+							const order = Number(field.getAttribute('data-order'));
+
+							if (order === newPos) {
+								field.setAttribute('data-order', order + 1);
+							} else if (order === curPos) {
+								field.setAttribute('data-order', newPos);
+							}
+						});
+					break;
+					case 'down':
+						// Early exit when module is already in bottom position
+						if (curPos === (fields.length - 1)) {
+							break;
+						}
+
+						// Define new order to be set
+						newPos = curPos + 1;
+
+						// Reassign content field orders
+						newOrder.forEach(field => {
+							const order = Number(field.getAttribute('data-order'));
+
+							if (order === newPos) {
+								field.setAttribute('data-order', order - 1);
+							} else if (order === curPos) {
+								field.setAttribute('data-order', newPos);
+							}
+						});
+					break;
+				}
+
+				// Remove all content fields from form
+				while (pageContent.children[0]) {
+					pageContent.removeChild(pageContent.children[0]);
+				}
+
+				// Sort newOrder array
+				newOrder.sort((a, b) => {
+					return Number(a.getAttribute('data-order')) - Number(b.getAttribute('data-order'));
+				});
+
+				// Add ordered fields to form
+				newOrder.forEach(field => {
+					pageContent.insertAdjacentHTML(
+						'beforeend',
+						field.outerHTML
+					);
+				});
+
+				event.preventDefault();
+			}
+
+			// Delete a module from the page
+			function deleteModule() {
+				const field = event.target.parentNode.parentNode.parentNode;
+
+				pageContent.removeChild(field);
+
+				event.preventDefault();
+			}
+
+			// Add an empty input field to list
+			function addListInput() {
+				const list = event.target.parentElement.querySelector('ul');
+				const listIndex = list.children.length;
+
+				list.insertAdjacentHTML(
+					'beforeend',
+					`<li>
+						<input type="text" oninput="addListItem()">
+					</li>`
+				)
+
+				event.preventDefault();
+			}
+
+			// Add list name input to hidden input field
+			function addListName() {
+				const field = event.target.parentNode;
+				const listInput = field.querySelector('input[name^="content-l-list"]');
+				const nameValue = event.target.value;
+				const list = field.querySelector('ul');
+				const listItems = list.querySelectorAll('li');
+				let listItemValues = [];
+
+				listItems.forEach(item => {
+					const value = item.querySelector('input').value;
+
+					listItemValues.push(value);
+				});
+
+				listInput.value = `${ nameValue }|${ listItemValues.join(',') }`;
+			}
+
+			// Add list item input to hidden list input field
+			function addListItem() {
+				const field = event.target.parentNode.parentNode.parentNode;
+				const listInput = field.querySelector('input[name^="content-l-list"]');
+				const nameValue = field.querySelector('input[name^="content-l-name"]').value;
+				const list = field.querySelector('ul');
+				const listItems = list.querySelectorAll('li');
+				let listItemValues = [];
+
+				listItems.forEach(item => {
+					const value = item.querySelector('input').value;
+
+					listItemValues.push(value);
+				});
+
+				listInput.value = `${ nameValue }|${ listItemValues.join(',') }`;
+			}
+
+			// Delete item from database
+			function deleteItem(category, id) {
+				if (confirm('Are you sure you want to delete this?') === true) {
+					window.location = `/subterra/${ category }/delete/${ id }`;
+				}
+			}
 
       // Set formSubmit to active
       pageForm.addEventListener('submit', () => {
         formSubmit = true;
       });
-      
+
       // Alert user before page unload to prevent data loss
       // window.onbeforeunload = () => {
-      //   console.log(formSubmit)
       //   if (!formSubmit) {
       //     return 'You may have some unsaved changes, do you really want to leave this page?';
       //   } else {

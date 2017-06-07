@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="nl">
+	<head>
+		<meta charset="UTF-8">
+
+		<title>Menus</title>
+
+    <%- include ../partials/head -%>
+
+    <%- include ../partials/header -%>
+
+    <h1>Menus</h1>
+
+		<a href="/subterra/menus/add">Add a menu</a>
+
+		<% if (system.menus.length > 0) { %>
+			<ul>
+				<% for (let i = 0; i < system.menus.length; i++) { %>
+					<li>
+						<a href="/subterra/menus/edit/<%= system.menus[i].id %>">
+							<%= system.menus[i].name %>
+						</a>
+						| <%= system.menus[i].children.replace(',', ', ') %>
+						<button data-action="delete menu" onclick="deleteItem('menus', <%= system.menus[i].id %>)">delete</button>
+					</li>
+				<% } %>
+			</ul>
+		<% } else { %>
+			<p>No menus found.</p>
+		<% } %>
+
+		<script>
+			// Delete item from database
+			function deleteItem(category, id) {
+				if (confirm('Are you sure you want to delete this?') === true) {
+					window.location = `/subterra/${ category }/delete/${ id }`;
+				}
+			}
+		</script>
+
+    <%- include ../partials/footer -%>
