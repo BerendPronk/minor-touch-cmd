@@ -40,7 +40,18 @@
       <fieldset>
         <legend>Menus</legend>
 
-				<%# Menus for loop %>
+				<ul id="pageMenus"></ul>
+
+				<input name="menus" type="hidden">
+
+				<select id="menuSelect">
+					<option value="" disabled selected>Add another menu</option>
+					<% for (let i = 0; i < system.menus.length; i++) { %>
+						<option value="<%= system.menus[i] %>">
+							<%= system.menus[i] %>
+						</option>
+					<% } %>
+				</select>
 
       </fieldset>
       <fieldset>
@@ -85,6 +96,53 @@
 		<script>
 			const pageForm = document.querySelector('form');
 			let formSubmit = false;
+
+			///////////////////////////////////////////////////////
+			const inputMenu = document.querySelector('input[name="menus"]');
+			const menuSelect = document.querySelector('#menuSelect');
+			const pageMenuList = document.querySelector('#pageMenus');
+			const pageMenus = pageMenuList.querySelectorAll('li');
+			let menuArr = [];
+
+			// Add new menu to page's menus
+			menuSelect.addEventListener('change', () => {
+				// Check if menu is already added
+				if (menuArr.indexOf(menuSelect.value) === -1) {
+					const newMenu = document.createElement('li');
+
+					newMenu.insertAdjacentHTML(
+						'afterbegin',
+						`<span data-type="menu-title">${ menuSelect.value }</span>
+						 <button data-type="menu-delete" onclick="removeMenu()">X</button>`
+					);
+
+					// Append new menu to menus list
+					pageMenuList.appendChild(newMenu);
+
+					// Add newly added menu to input
+					menuArr.push(menuSelect.value);
+					inputMenu.value = menuArr.join(',').replace(', ', ',');
+				}
+
+				// Reset index of menu selection
+				menuSelect.selectedIndex = 0;
+			});
+
+			// Remove a menu from the menu list
+			function removeMenu() {
+				const slug = event.target.parentNode.querySelector('[data-type="menu-title"]').textContent;
+				const slugIndex = menuArr.indexOf(slug);
+
+				// Remove menu from menu array
+				menuArr.splice(slugIndex, 1);
+
+				// Remove menu from menu list
+				pageMenuList.removeChild(pageMenuList.children[slugIndex]);
+
+				// Remove menu from hidden input
+				inputMenu.value = menuArr.join(',').replace(', ', ',');
+			}
+			///////////////////////////////////////////////////////
 
 			const pageContent = document.querySelector('#pageContent');
 			const moduleButton = document.querySelector('#moduleButton');

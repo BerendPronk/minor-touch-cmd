@@ -38,19 +38,19 @@
       <fieldset>
         <legend>Menus</legend>
 
-        <ul id="pageParents">
-          <% for (let i = 0; i < page.parents.length; i++) { %>
+        <ul id="pageMenus">
+          <% for (let i = 0; i < page.menus.length; i++) { %>
             <li>
-              <span data-type="parent-title"><%= page.parents[i] %></span>
-              <button data-type="parent-delete" onclick="removeParent()">X</button>
+              <span data-type="menu-title"><%= page.menus[i] %></span>
+              <button data-type="menu-delete" onclick="removeMenu()">X</button>
             </li>
           <% } %>
         </ul>
 
-        <input name="parents" type="hidden" value="<%= page.parents %>">
+        <input name="menus" type="hidden" value="<%= page.menus %>">
 
-        <select id="pageParentSelect">
-          <option value="" disabled selected>Add another parent</option>
+        <select id="menuSelect">
+          <option value="" disabled selected>Add another menu</option>
           <% for (let i = 0; i < system.menus.length; i++) { %>
             <option value="<%= system.menus[i] %>">
               <%= system.menus[i] %>
@@ -103,56 +103,54 @@
       let formSubmit = false;
 
 			///////////////////////////////////////////////////////
-			// MOVE TO MENU EDIT VIEW
-			///////////////////////////////////////////////////////
-      const inputMenu = document.querySelector('input[name="parents"]');
-      const parentSelect = document.querySelector('#pageParentSelect');
-      const pageParentList = document.querySelector('#pageParents');
-      const pageParents = pageParentList.querySelectorAll('li');
-      let parentArr = [];
+      const inputMenu = document.querySelector('input[name="menus"]');
+      const menuSelect = document.querySelector('#menuSelect');
+      const pageMenuList = document.querySelector('#pageMenus');
+      const pageMenus = pageMenuList.querySelectorAll('li');
+      let menuArr = [];
 
-      // Apply parent pages to input, joined with a single comma
-      pageParents.forEach(parent => {
-        parentArr.push(parent.querySelector('[data-type="parent-title"]').textContent);
+      // Apply page's menus to input, joined with a single comma
+      pageMenus.forEach(menu => {
+        menuArr.push(menu.querySelector('[data-type="menu-title"]').textContent);
       });
 
-      // Add new parent to page's parents
-      parentSelect.addEventListener('change', () => {
-        // Check if parent is already added
-        if (parentArr.indexOf(parentSelect.value) === -1) {
-          const newParent = document.createElement('li');
+      // Add new menu to page's menus
+      menuSelect.addEventListener('change', () => {
+        // Check if menu is already added
+        if (menuArr.indexOf(menuSelect.value) === -1) {
+          const newMenu = document.createElement('li');
 
-          newParent.insertAdjacentHTML(
+          newMenu.insertAdjacentHTML(
             'afterbegin',
-            `<span data-type="parent-title">${ parentSelect.value }</span>
-             <button data-type="parent-delete" onclick="removeParent()">X</button>`
+            `<span data-type="menu-title">${ menuSelect.value }</span>
+             <button data-type="menu-delete" onclick="removeMenu()">X</button>`
           );
 
-          // Append new parent to parent list
-          pageParentList.appendChild(newParent);
+          // Append new menu to menus list
+          pageMenuList.appendChild(newMenu);
 
-          // Add newly added parent to input
-          parentArr.push(parentSelect.value);
-          inputMenu.value = parentArr.join(',').replace(', ', ',');
+          // Add newly added menu to input
+          menuArr.push(menuSelect.value);
+          inputMenu.value = menuArr.join(',').replace(', ', ',');
         }
 
-        // Reset index of parent selection
-        parentSelect.selectedIndex = 0;
+        // Reset index of menu selection
+        menuSelect.selectedIndex = 0;
       });
 
-      // Remove a parent from the parent list
-      function removeParent() {
-        const slug = event.target.parentNode.querySelector('[data-type="parent-title"]').textContent;
-        const slugIndex = parentArr.indexOf(slug);
+      // Remove a menu from the menu list
+      function removeMenu() {
+        const slug = event.target.parentNode.querySelector('[data-type="menu-title"]').textContent;
+        const slugIndex = menuArr.indexOf(slug);
 
-        // Remove slug from parent array
-        parentArr.splice(slugIndex, 1);
+        // Remove menu from menu array
+        menuArr.splice(slugIndex, 1);
 
-        // Remove slug from parent list
-        pageParentList.removeChild(pageParentList.children[slugIndex]);
+        // Remove menu from menu list
+        pageMenuList.removeChild(pageMenuList.children[slugIndex]);
 
-        // Remove slug from hidden input
-        inputMenu.value = parentArr.join(',').replace(', ', ',');
+        // Remove menu from hidden input
+        inputMenu.value = menuArr.join(',').replace(', ', ',');
       }
 			///////////////////////////////////////////////////////
 

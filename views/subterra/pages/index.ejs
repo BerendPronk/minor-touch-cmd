@@ -11,19 +11,38 @@
 
     <h1>Pages</h1>
 
-    <% if (pages.length > 0) { %>
+		<button data-add="page">Add new page</button>
+
+		<ul id="pageTypes" style="display: none;">
+			<% for (let i = 0; i < system.types.length; i++) { %>
+				<li>
+					<a href="/subterra/pages/add/<%= system.types[i] %>">Add <%= system.types[i] %></a>
+				</li>
+			<% } %>
+		</ul>
+
+    <% if (system.pages.length > 0) { %>
       <ul>
-        <% for (let i = 0; i < pages.length; i++) { %>
+        <% for (let i = 0; i < system.pages.length; i++) { %>
           <li>
-            <a href="/subterra/pages/edit/<%= pages[i].id %>">
-              <%= pages[i].title %>
+            <a href="/subterra/pages/edit/<%= system.pages[i].id %>">
+              <%= system.pages[i].title %>
             </a>
-						| <%= pages[i].type %>
+						| <%= system.pages[i].type %>
           </li>
         <% } %>
       </ul>
     <% } else { %>
       <p>No pages found.</p>
     <% } %>
+
+		<script>
+			const newPage = document.querySelector('[data-add="page"]');
+			const pageTypes = document.querySelector('#pageTypes');
+
+			newPage.addEventListener('click', () => {
+				pageTypes.style.display = 'block';
+			});
+		</script>
 
     <%- include ../partials/footer -%>
