@@ -13,14 +13,14 @@
 
     <a href="/subterra/types/add">Add a page type</a>
 
-    <% if (types.length > 0) { %>
+    <% if (system.types.length > 0) { %>
       <ul>
-        <% for (let i = 0; i < types.length; i++) { %>
+        <% for (let i = 0; i < system.types.length; i++) { %>
           <li>
-            <a href="/subterra/types/edit/<%= types[i].id %>">
-              <%= types[i].name %>
+            <a href="/subterra/types/edit/<%= system.types[i].id %>">
+              <%= system.types[i].name %>
             </a>
-            | <%= types[i].modules.replace(',', ', ') %>
+            | <%= system.types[i].modules.replace(',', ', ') %>
           </li>
         <% } %>
       </ul>

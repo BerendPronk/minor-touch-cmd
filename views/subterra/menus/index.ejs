@@ -13,14 +13,14 @@
 
 		<a href="/subterra/menus/add">Add a menu</a>
 
-		<% if (menus.length > 0) { %>
+		<% if (system.menus.length > 0) { %>
 			<ul>
-				<% for (let i = 0; i < menus.length; i++) { %>
+				<% for (let i = 0; i < system.menus.length; i++) { %>
 					<li>
-						<a href="/subterra/menus/edit/<%= menus[i].id %>">
-							<%= menus[i].name %>
+						<a href="/subterra/menus/edit/<%= system.menus[i].id %>">
+							<%= system.menus[i].name %>
 						</a>
-						| <%= menus[i].children.replace(',', ', ') %>
+						| <%= system.menus[i].children.replace(',', ', ') %>
 					</li>
 				<% } %>
 			</ul>

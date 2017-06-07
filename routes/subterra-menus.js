@@ -6,15 +6,19 @@ const router = express.Router();
 router.get('/', (req, res) => {
   debug(`[${ req.method }] /subterra/menus`);
 
+  // Object containing system data, after MySQL queries
+  let system = {
+    menus: []
+  };
+
   // Fetch all pages from database
   req.getConnection((err, connection) => {
     connection.query(`
       SELECT * FROM menus
     `, [], (err, results) => {
-      let menus = [];
-
+      // Push menus in system object
       results.forEach(menu => {
-        menus.push({
+        system.menus.push({
           id: menu.id,
           name: menu.name,
           children: menu.children
@@ -26,7 +30,9 @@ router.get('/', (req, res) => {
         res.render('subterra/menus/index', {
           username: req.session.username,
           pathname: '/subterra/menus',
-          menus: menus
+          system: {
+            menus: system.menus
+          }
         });
       } else {
         res.redirect('/subterra/login');
@@ -39,6 +45,7 @@ router.get('/', (req, res) => {
 router.get('/add', (req, res) => {
   debug(`[${ req.method }] /subterra/menus/add`);
 
+  // Object containing system data, after MySQL queries
   let system = {
     pages: []
   };
@@ -94,15 +101,17 @@ router.post('/add', (req, res) => {
 router.get('/edit/:id', (req, res) => {
   debug(`[${ req.method }] /subterra/menus/edit/${ req.params.id }`);
 
+  // Object containing system data, after MySQL queries
+  let system = {
+    pages: []
+  };
+
   // Select page with ID from GET parameter
   req.getConnection((err, connection) => {
     connection.query(`
       SELECT * FROM menus WHERE id = '${ req.params.id }'
     `, [], (err, results) => {
       const menu = results[0];
-      let system = {
-        pages: []
-      };
 
       // Fetch all system page modules from database
       connection.query(`

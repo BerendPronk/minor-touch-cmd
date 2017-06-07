@@ -6,15 +6,19 @@ const router = express.Router();
 router.get('/', (req, res) => {
   debug(`[${ req.method }] /subterra/types`);
 
+  // Object containing system data, after MySQL queries
+  let system = {
+    types: []
+  };
+
   // Fetch all pages from database
   req.getConnection((err, connection) => {
     connection.query(`
       SELECT * FROM types
     `, [], (err, results) => {
-      let types = [];
-
+      // Push types in system object
       results.forEach(type => {
-        types.push({
+        system.types.push({
           id: type.id,
           name: type.name,
           modules: type.defaultModules
@@ -26,7 +30,9 @@ router.get('/', (req, res) => {
         res.render('subterra/types/index', {
           username: req.session.username,
           pathname: '/subterra/types',
-          types: types
+          system: {
+            types: system.types
+          }
         });
       } else {
         res.redirect('/subterra/login');
@@ -39,6 +45,7 @@ router.get('/', (req, res) => {
 router.get('/add', (req, res) => {
   debug(`[${ req.method }] /subterra/types/add`);
 
+  // Object containing system data, after MySQL queries
   let system = {
     modules: []
   };
@@ -94,15 +101,17 @@ router.post('/add', (req, res) => {
 router.get('/edit/:id', (req, res) => {
   debug(`[${ req.method }] /subterra/types/edit/${ req.params.id }`);
 
+  // Object containing system data, after MySQL queries
+  let system = {
+    modules: []
+  };
+
   // Select page with ID from GET parameter
   req.getConnection((err, connection) => {
     connection.query(`
       SELECT * FROM types WHERE id = '${ req.params.id }'
     `, [], (err, results) => {
       const type = results[0];
-      let system = {
-        modules: []
-      };
 
       // Fetch all system page modules from database
       connection.query(`
