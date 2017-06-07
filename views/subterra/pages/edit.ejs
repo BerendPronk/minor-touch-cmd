@@ -307,6 +307,7 @@
 				event.preventDefault();
 			}
 
+			// Add an empty input field to list
 			function addListInput() {
 				const list = event.target.parentElement.querySelector('ul');
 				const listIndex = list.children.length;
@@ -321,6 +322,7 @@
 				event.preventDefault();
 			}
 
+			// Add list name input to hidden input field
 			function addListName() {
 				const field = event.target.parentNode;
 				const listInput = field.querySelector('input[name^="content-l-list"]');
@@ -338,6 +340,7 @@
 				listInput.value = `${ nameValue }|${ listItemValues.join(',') }`;
 			}
 
+			// Add list item input to hidden list input field
 			function addListItem() {
 				const field = event.target.parentNode.parentNode.parentNode;
 				const listInput = field.querySelector('input[name^="content-l-list"]');
