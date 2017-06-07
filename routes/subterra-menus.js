@@ -170,4 +170,20 @@ router.post('/edit/:id', (req, res) => {
   });
 });
 
+// [GET] /subterra/menus/delete/:id
+router.get('/delete/:id', (req, res) => {
+  debug(`[${ req.method }] /subterra/menus/delete/${ req.params.id }`);
+
+  // Remove menu from database
+  req.getConnection((err, connection) => {
+    connection.query(`
+      DELETE FROM menus
+      WHERE id = ${ req.params.id }
+    `, [], (err, results) => {
+      // Redirect to menu overview page
+    });
+    res.redirect('/subterra/menus');
+  });
+});
+
 module.exports = router;

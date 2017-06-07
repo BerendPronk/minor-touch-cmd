@@ -410,7 +410,7 @@ router.post('/edit/:id', (req, res) => {
   };
 
   req.getConnection((err, connection) => {
-    
+
     // Update data from page
     connection.query(`
       UPDATE pages
@@ -420,6 +420,22 @@ router.post('/edit/:id', (req, res) => {
       // Redirect to current page with newly added data
       res.redirect(`/subterra/pages/edit/${ req.params.id }`);
     });
+  });
+});
+
+// [GET] /subterra/pages/delete/:id
+router.get('/delete/:id', (req, res) => {
+  debug(`[${ req.method }] /subterra/pages/delete/${ req.params.id }`);
+
+  // Remove page from database
+  req.getConnection((err, connection) => {
+    connection.query(`
+      DELETE FROM pages
+      WHERE id = ${ req.params.id }
+    `, [], (err, results) => {
+      // Redirect to page overview page
+    });
+    res.redirect('/subterra/pages');
   });
 });
 

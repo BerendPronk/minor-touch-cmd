@@ -170,4 +170,20 @@ router.post('/edit/:id', (req, res) => {
   });
 });
 
+// [GET] /subterra/types/delete/:id
+router.get('/delete/:id', (req, res) => {
+  debug(`[${ req.method }] /subterra/types/delete/${ req.params.id }`);
+
+  // Remove page from database
+  req.getConnection((err, connection) => {
+    connection.query(`
+      DELETE FROM types
+      WHERE id = ${ req.params.id }
+    `, [], (err, results) => {
+      // Redirect to type overview page
+    });
+    res.redirect('/subterra/types');
+  });
+});
+
 module.exports = router;
