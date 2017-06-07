@@ -29,6 +29,7 @@
               <%= system.pages[i].title %>
             </a>
 						| <%= system.pages[i].type %>
+						<button data-action="delete page" onclick="deleteItem('pages', <%= system.pages[i].id %>)">delete</button>
           </li>
         <% } %>
       </ul>
@@ -43,6 +44,13 @@
 			newPage.addEventListener('click', () => {
 				pageTypes.style.display = 'block';
 			});
+
+			// Delete item from database
+			function deleteItem(category, id) {
+				if (confirm('Are you sure you want to delete this?') === true) {
+					window.location = `/subterra/${ category }/delete/${ id }`;
+				}
+			}
 		</script>
 
     <%- include ../partials/footer -%>

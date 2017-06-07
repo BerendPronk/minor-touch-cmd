@@ -21,11 +21,21 @@
 							<%= system.menus[i].name %>
 						</a>
 						| <%= system.menus[i].children.replace(',', ', ') %>
+						<button data-action="delete menu" onclick="deleteItem('menus', <%= system.menus[i].id %>)">delete</button>
 					</li>
 				<% } %>
 			</ul>
 		<% } else { %>
 			<p>No menus found.</p>
 		<% } %>
+
+		<script>
+			// Delete item from database
+			function deleteItem(category, id) {
+				if (confirm('Are you sure you want to delete this?') === true) {
+					window.location = `/subterra/${ category }/delete/${ id }`;
+				}
+			}
+		</script>
 
     <%- include ../partials/footer -%>

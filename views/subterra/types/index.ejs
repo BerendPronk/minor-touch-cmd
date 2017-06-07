@@ -21,11 +21,21 @@
               <%= system.types[i].name %>
             </a>
             | <%= system.types[i].modules.replace(',', ', ') %>
+						<button data-action="delete type" onclick="deleteItem('types', <%= system.types[i].id %>)">delete</button>
           </li>
         <% } %>
       </ul>
     <% } else { %>
       <p>No page types found.</p>
     <% } %>
+
+		<script>
+			// Delete item from database
+			function deleteItem(category, id) {
+				if (confirm('Are you sure you want to delete this?') === true) {
+					window.location = `/subterra/${ category }/delete/${ id }`;
+				}
+			}
+		</script>
 
     <%- include ../partials/footer -%>

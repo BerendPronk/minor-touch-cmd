@@ -17,6 +17,8 @@
 
     <h1>Edit page type '<%= type.name %>'</h1>
 
+		<button data-action="delete type" onclick="deleteItem('types', <%= type.id %>)">Delete <%= type.name %></button>
+
     <form action="/subterra/types/edit/<%= type.id %>" method="post">
       <fieldset>
         <legend>Name</legend>
@@ -105,6 +107,13 @@
         // Remove name from hidden input
         inputModules.value = moduleArr.join(',').replace(', ', ',');
       }
+
+			// Delete item from database
+			function deleteItem(category, id) {
+				if (confirm('Are you sure you want to delete this?') === true) {
+					window.location = `/subterra/${ category }/delete/${ id }`;
+				}
+			}
 
       // Set formSubmit to active
       pageForm.addEventListener('submit', () => {
