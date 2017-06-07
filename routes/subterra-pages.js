@@ -289,7 +289,7 @@ router.get('/edit/:id', (req, res) => {
       							<span class="content-tip">List name</span>
                     <input name="content-l-name-${ index }" type="text" value="${ fieldListName }" oninput="addListName()">
       							<span class="content-tip">List items</span>
-                    <input name="content-l-list-${ index }" type="hidden">
+                    <input name="content-l-list-${ index }" type="hidden" value="${ content }">
                     <ul>
                       ${ fieldListString }
                     </ul>
