@@ -2,9 +2,14 @@
 const compression = require('compression');
 const debug = require('debug')('TouchCMD');
 const path = require('path');
+
 const bodyParser = require('body-parser');
+const fs = require('fs');
+const multer = require('multer');
+
 const mySQL = require('mysql');
 const myConnection = require('express-myconnection');
+
 const session = require('express-session');
 const express = require('express');
 const app = express();
@@ -36,12 +41,25 @@ app.use(session({
   resave: false
 }));
 
+const storage = multer.diskStorage({
+  destination: function (req, file, callBack) {
+    callBack(null, path.join(__dirname, 'assets/media'));
+  },
+  filename: function (req, file, callBack) {
+    callBack(null, file.originalname);
+  }
+});
+
+const upload = multer({
+  storage: storage
+});
+
 // Declare app routing
 app.use('/', require('./routes/main'));
 app.use('/subterra', require('./routes/subterra'));
 app.use('/subterra/menus', require('./routes/subterra-menus'));
 app.use('/subterra/types', require('./routes/subterra-types'));
-app.use('/subterra/pages', require('./routes/subterra-pages'));
+app.use('/subterra/pages', upload.any(), require('./routes/subterra-pages'));
 
 // Run the application
 app.listen(3000, () => {

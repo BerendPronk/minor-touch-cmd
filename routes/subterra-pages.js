@@ -116,7 +116,8 @@ router.get('/add/:type', (req, res) => {
                 case 'image':
                   contentFields.push(`
                     <span class="content-tip">Image</span>
-                    <input name="content-i-${ index }" type="file" onblur="setInput()">
+                    <input name="content-i-name-${ index }" type="hidden">
+                    <input name="content-i-${ index }" type="file" accept="image/*" onblur="setImageName()">
                   `);
                 break;
                 case 'list':
@@ -193,7 +194,10 @@ router.post('/add', (req, res) => {
           contentFields.push(`|P|${ req.body[field] }`);
         break;
         case 'I':
-          contentFields.push(`|I|${ req.body[field] }`);
+          // Only pick image name input
+          if (field.indexOf('content-i-name') !== -1) {
+            contentFields.push(`|I|${ req.body[field] }`);
+          }
         break;
         case 'L':
           // Only pick grouped input
@@ -288,8 +292,9 @@ router.get('/edit/:id', (req, res) => {
                 case 'I':
                   contentFields.push(`
       							<span class="content-tip">Image</span>
-                    <img src="${ field.replace('|I|', '') }" alt="${ page.title }">
-                    <input name="content-i-${ index }" type="file" onblur="setInput()" value="">
+                    <img src="/assets/media/${ field.replace('|I|', '') }" alt="Image about ${ page.title }">
+                    <input name="content-i-name-${ index }" type="hidden" value="${ field.replace('|I|', '') }">
+                    <input name="content-i-${ index }" type="file" accept="image/*" onblur="setImageName()">
                   `);
                 break;
                 case 'L':
@@ -387,7 +392,10 @@ router.post('/edit/:id', (req, res) => {
           contentFields.push(`|P|${ req.body[field] }`);
         break;
         case 'I':
-          contentFields.push(`|I|${ req.body[field] }`);
+          // Only pick image name input
+          if (field.indexOf('content-i-name') !== -1) {
+            contentFields.push(`|I|${ req.body[field] }`);
+          }
         break;
         case 'L':
           // Only pick grouped input

@@ -19,7 +19,7 @@
 
 		<button data-action="delete page" onclick="deleteItem('pages', <%= page.id %>)">Delete <%= page.title %></button>
 
-    <form action="/subterra/pages/edit/<%= page.id %>" method="post">
+    <form enctype="multipart/form-data" action="/subterra/pages/edit/<%= page.id %>" method="post">
       <fieldset>
         <legend>Type</legend>
 
@@ -187,7 +187,8 @@
 					case 'image':
 						newModule = `
 							<span class="content-tip">Image</span>
-							<input name="content-i-${ index }" type="file" onblur="setInput()">
+							<input name="content-i-name-${ index }" type="hidden">
+							<input name="content-i-${ index }" type="file" accept="image/*" onblur="setImageName()">
 						`;
 					break;
 					case 'list':
@@ -328,6 +329,14 @@
 				pageContent.removeChild(field);
 
 				event.preventDefault();
+			}
+
+			// Add image name to hidden input field
+			function setImageName() {
+				const field = event.target.parentNode;
+				const nameInput = field.querySelector('input[name^="content-i-name"]');
+
+				nameInput.value = event.target.value.replace('C:\\fakepath\\', '');
 			}
 
 			// Add an empty input field to list
