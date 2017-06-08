@@ -104,30 +104,30 @@ router.get('/add/:type', (req, res) => {
                 case 'heading':
                   contentFields.push(`
                     <span class="content-tip">Heading</span>
-      							<input name="content-h-${ index }" type="text">
+      							<input name="content-h-${ index }" type="text" onblur="setInput()">
                   `);
                 break;
                 case 'paragraph':
                   contentFields.push(`
                     <span class="content-tip">Paragraph</span>
-      							<textarea name="content-p-${ index }"></textarea>
+      							<textarea name="content-p-${ index }" onblur="setInput()"></textarea>
                   `);
                 break;
                 case 'image':
                   contentFields.push(`
                     <span class="content-tip">Image</span>
-                    <input name="content-i-${ index }" type="file">
+                    <input name="content-i-${ index }" type="file" onblur="setInput()">
                   `);
                 break;
                 case 'list':
                   contentFields.push(`
                     <span class="content-tip">List name</span>
-      							<input name="content-l-name-${ index }" type="text" oninput="addListName()">
+      							<input name="content-l-name-${ index }" type="text" oninput="addListName()" onblur="setInput()">
       							<span class="content-tip">List items</span>
       							<input name="content-l-list-${ index }" type="hidden">
                     <ul>
       								<li>
-      									<input type="text" oninput="addListItem()">
+      									<input type="text" oninput="addListItem()" onblur="setInput()">
       								</li>
       							</ul>
                     <button data-type="addToList" onclick="addListInput()">Add item</button>
@@ -136,7 +136,7 @@ router.get('/add/:type', (req, res) => {
                 case 'embed':
                   contentFields.push(`
       							<span class="content-tip">Embedded video (YouTube or Vimeo)</span>
-                    <input name="content-e-${ index }" type="text">
+                    <input name="content-e-${ index }" type="text" onblur="setInput()">
                   `);
                 break;
               }
@@ -276,20 +276,20 @@ router.get('/edit/:id', (req, res) => {
                 case 'H':
                   contentFields.push(`
       							<span class="content-tip">Heading</span>
-                    <input name="content-h-${ index }" type="text" value="${ field.replace('|H|', '') }">
+                    <input name="content-h-${ index }" type="text" onblur="setInput()" value="${ field.replace('|H|', '') }">
                   `);
                 break;
                 case 'P':
                   contentFields.push(`
       							<span class="content-tip">Paragraph</span>
-                    <textarea name="content-p-${ index }">${ field.replace('|P|', '') }</textarea>
+                    <textarea name="content-p-${ index }" onblur="setInput()">${ field.replace('|P|', '') }</textarea>
                   `);
                 break;
                 case 'I':
                   contentFields.push(`
       							<span class="content-tip">Image</span>
                     <img src="${ field.replace('|I|', '') }" alt="${ page.title }">
-                    <input name="content-i-${ index }" type="file">
+                    <input name="content-i-${ index }" type="file" onblur="setInput()" value="">
                   `);
                 break;
                 case 'L':
@@ -304,16 +304,16 @@ router.get('/edit/:id', (req, res) => {
                   fieldList.forEach(item => {
                     fieldListString += `
                       <li>
-                        <input type="text" value="${ item }" oninput="addListItem()">
+                        <input type="text" oninput="addListItem()" onblur="setInput()" value="${ item }">
                       </li>
                     `;
                   });
 
                   contentFields.push(`
       							<span class="content-tip">List name</span>
-                    <input name="content-l-name-${ index }" type="text" value="${ fieldListName }" oninput="addListName()">
+                    <input name="content-l-name-${ index }" type="text" oninput="addListName()" onblur="setInput()" value="${ fieldListName }">
       							<span class="content-tip">List items</span>
-                    <input name="content-l-list-${ index }" type="hidden" value="${ content }">
+                    <input name="content-l-list-${ index }" type="hidden" onblur="setInput()" value="${ content }">
                     <ul>
                       ${ fieldListString }
                     </ul>
@@ -323,7 +323,7 @@ router.get('/edit/:id', (req, res) => {
                 case 'E':
                   contentFields.push(`
       							<span class="content-tip">Embedded video (YouTube or Vimeo)</span>
-                    <input name="content-e-${ index }" type="text" value="${ field.replace('|E|', '') }">
+                    <input name="content-e-${ index }" type="text" onblur="setInput()" value="${ field.replace('|E|', '') }">
                   `);
                 break;
               }

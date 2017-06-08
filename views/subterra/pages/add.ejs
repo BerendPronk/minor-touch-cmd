@@ -163,30 +163,30 @@
 					case 'heading':
 						newModule = `
 							<span class="content-tip">Heading</span>
-							<input name="content-h-${ index }" type="text">
+							<input name="content-h-${ index }" type="text" onblur="setInput()">
 						`;
 					break;
 					case 'paragraph':
 						newModule = `
 							<span class="content-tip">Paragraph</span>
-							<textarea name="content-p-${ index }"></textarea>
+							<textarea name="content-p-${ index }" onblur="setInput()"></textarea>
 						`;
 					break;
 					case 'image':
 						newModule = `
 							<span class="content-tip">Image</span>
-							<input name="content-i-${ index }" type="file">
+							<input name="content-i-${ index }" type="file" onblur="setInput()">
 						`;
 					break;
 					case 'list':
 						newModule = `
 							<span class="content-tip">List name</span>
-							<input name="content-l-name-${ index }" type="text" oninput="addListName()">
+							<input name="content-l-name-${ index }" type="text" oninput="addListName()" onblur="setInput()">
 							<span class="content-tip">List items</span>
 							<input name="content-l-list-${ index }" type="hidden">
 							<ul>
 								<li>
-									<input type="text" oninput="addListItem()">
+									<input type="text" oninput="addListItem()" onblur="setInput()">
 								</li>
 							</ul>
 							<button data-type="addToList" onclick="addListInput()">Add item</button>
@@ -195,7 +195,7 @@
 					case 'embed':
 						newModule = `
 							<span class="content-tip">Embedded video (YouTube or Vimeo)</span>
-							<input name="content-e-${ index }" type="text">
+							<input name="content-e-${ index }" type="text" onblur="setInput()">
 						`;
 					break;
 				}
@@ -217,6 +217,20 @@
 				moduleSelect.style.display = 'none';
 				moduleSelect.selectedIndex = 0;
 			});
+
+			// Set value to input/textarea based on target
+			function setInput() {
+				switch (event.target.nodeName.toLowerCase()) {
+					case 'input':
+						event.target.setAttribute('value', event.target.value);
+						// Unfortunately this doens't work for images, since browsers are unable to receive image path
+						// Source: https://stackoverflow.com/questions/4851595/how-to-resolve-the-c-fakepath
+					break;
+					case 'textarea':
+						event.target.textContent = event.target.value;
+					break;
+				}
+			}
 
 			// Set module order based on given direction
 			function orderModule(direction) {
@@ -312,7 +326,7 @@
 				list.insertAdjacentHTML(
 					'beforeend',
 					`<li>
-						<input type="text" oninput="addListItem()">
+						<input type="text" oninput="addListItem()" onblur="setInput()">
 					</li>`
 				)
 
