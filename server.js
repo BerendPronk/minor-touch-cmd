@@ -16,6 +16,7 @@ const app = express();
 app
   .use(compression())
   .use('/assets', express.static(__dirname + '/assets'))
+  .use('/media', express.static(__dirname + '/media'))
   .use('/subterra/assets', express.static(__dirname + '/subterra/assets'))
   .use(bodyParser.urlencoded({ extended: false }));
 

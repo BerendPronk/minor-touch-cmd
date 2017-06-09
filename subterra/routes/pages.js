@@ -349,7 +349,7 @@ router.get('/edit/:id', (req, res) => {
                   case 'I':
                     contentFields.push(`
                       <span class="content-tip">Image</span>
-                      <img src="/assets/media/${ field.replace('|I|', '') }" alt="Image about ${ page.title }">
+                      <img src="/media/${ field.replace('|I|', '') }" alt="Image about ${ page.title }">
                       <input name="content-i-name-${ index }" type="hidden" value="${ field.replace('|I|', '') }">
                       <input name="content-i-${ index }" type="file" accept="image/*" onblur="setImageName()">
                     `);

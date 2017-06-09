@@ -1,4 +1,5 @@
 const debug = require('debug')('TouchCMD');
+const path = require('path');
 const multer = require('multer');
 const express = require('express');
 const router = express.Router();
@@ -6,7 +7,7 @@ const router = express.Router();
 // Initialize multer storage
 const storage = multer.diskStorage({
   destination: function (req, file, callBack) {
-    callBack(null,  __dirname + '/assets/media');
+    callBack(null, path.dirname(require.main.filename) + '/media');
   },
   filename: function (req, file, callBack) {
     callBack(null, file.originalname);
