@@ -6,7 +6,7 @@ const router = express.Router();
 // Initialize multer storage
 const storage = multer.diskStorage({
   destination: function (req, file, callBack) {
-    callBack(null, path.join(__dirname, 'assets/media'));
+    callBack(null,  __dirname + '/assets/media');
   },
   filename: function (req, file, callBack) {
     callBack(null, file.originalname);
@@ -25,7 +25,7 @@ router.use('/pages', upload.any(), require('./pages'));
 
 // [GET] /subterra
 router.get('/', (req, res) => {
-  debug(`[${ req.method }] /subterra/login`);
+  debug(`[${ req.method }] /subterra`);
 
   // Object containing system data, after MySQL queries
   let system = {
@@ -43,7 +43,7 @@ router.get('/', (req, res) => {
 
       // Checks if a session already exists
       if (req.session.username) {
-        res.render('subterra/index', {
+        res.render('dashboard', {
           username: req.session.username,
           pathname: '/subterra',
           system: {
@@ -65,9 +65,9 @@ router.get('/login', (req, res) => {
   if (req.session.username) {
     res.redirect('/subterra');
   } else {
-    debug('Login requested');
+    debug(`Login requested`);
 
-    res.render('subterra/login', {
+    res.render('login', {
       username: false,
       pathname: '/login',
       feedback: false,
@@ -96,7 +96,7 @@ router.post('/login', (req, res) => {
 
         res.redirect('/subterra');
       } else {
-        res.render('subterra/login', {
+        res.render('login', {
           username: false,
           pathname: '/subterra',
           feedback: 'Wrong username or password given, please try again.',

@@ -36,7 +36,7 @@ router.get('/', (req, res) => {
 
         // Checks if a session already exists
         if (req.session.username) {
-          res.render('subterra/pages/index', {
+          res.render('pages/index', {
             username: req.session.username,
             pathname: '/subterra/pages',
             system: {
@@ -181,7 +181,7 @@ router.get('/add/:type', (req, res) => {
 
               // Checks if a session already exists
               if (req.session.username) {
-                res.render('subterra/pages/add', {
+                res.render('pages/add', {
                   username: req.session.username,
                   pathname: '/subterra/pages',
                   feedback: false,
@@ -422,7 +422,7 @@ router.get('/edit/:id', (req, res) => {
               // Checks if a session already exists
               if (req.session.username) {
                 // Render edit page
-                res.render('subterra/pages/edit', {
+                res.render('pages/edit', {
                   username: req.session.username,
                   pathname: '/subterra/pages',
                   feedback: false,

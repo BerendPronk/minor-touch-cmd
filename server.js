@@ -1,7 +1,6 @@
 // Defines used packages
 const compression = require('compression');
 const debug = require('debug')('TouchCMD');
-const path = require('path');
 
 const bodyParser = require('body-parser');
 const fs = require('fs');
@@ -16,13 +15,14 @@ const app = express();
 // Declare which server functionalities the app must use
 app
   .use(compression())
-  .use('/assets', express.static(path.join(__dirname, 'assets')))
+  .use('/assets', express.static(__dirname + '/assets'))
+  .use('/subterra/assets', express.static(__dirname + '/subterra/assets'))
   .use(bodyParser.urlencoded({ extended: false }));
 
 // Set EJS view engine
 app
   .set('view engine', 'ejs')
-  .set('views', path.join(__dirname, 'views'));
+  .set('views', [__dirname + '/views', __dirname + '/subterra/views']);
 
 // Create connection to MySQL database
 app.use(myConnection(mySQL, {
@@ -42,7 +42,7 @@ app.use(session({
 
 // Declare app routing
 app.use('/', require('./routes/main'));
-app.use('/subterra', require('./routes/subterra/main'));
+app.use('/subterra', require('./subterra/routes/main'));
 
 // Run the application
 app.listen(3000, () => {

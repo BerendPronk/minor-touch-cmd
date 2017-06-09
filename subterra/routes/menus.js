@@ -2,36 +2,36 @@ const debug = require('debug')('TouchCMD');
 const express = require('express');
 const router = express.Router();
 
-// [GET] /subterra/types
+// [GET] /subterra/menus
 router.get('/', (req, res) => {
-  debug(`[${ req.method }] /subterra/types`);
+  debug(`[${ req.method }] /subterra/menus`);
 
   // Object containing system data, after MySQL queries
   let system = {
-    types: []
+    menus: []
   };
 
   // Fetch all pages from database
   req.getConnection((err, connection) => {
     connection.query(`
-      SELECT * FROM types
+      SELECT * FROM menus
     `, [], (err, results) => {
-      // Push types in system object
-      results.forEach(type => {
-        system.types.push({
-          id: type.id,
-          name: type.name,
-          modules: type.defaultModules
+      // Push menus in system object
+      results.forEach(menu => {
+        system.menus.push({
+          id: menu.id,
+          name: menu.name,
+          children: menu.children
         });
       });
 
       // Checks if a session already exists
       if (req.session.username) {
-        res.render('subterra/types/index', {
+        res.render('menus/index', {
           username: req.session.username,
-          pathname: '/subterra/types',
+          pathname: '/subterra/menus',
           system: {
-            types: system.types
+            menus: system.menus
           }
         });
       } else {
@@ -41,33 +41,33 @@ router.get('/', (req, res) => {
   });
 });
 
-// [GET] /subterra/types/add
+// [GET] /subterra/menus/add
 router.get('/add', (req, res) => {
-  debug(`[${ req.method }] /subterra/types/add`);
+  debug(`[${ req.method }] /subterra/menus/add`);
 
   // Object containing system data, after MySQL queries
   let system = {
-    modules: []
+    pages: []
   };
 
   req.getConnection((err, connection) => {
     // Fetch all system page modules from database
     connection.query(`
-      SELECT * FROM modules
-    `, [], (err, modules) => {
-      modules.forEach(module => {
-        system.modules.push(module.name);
+      SELECT * FROM pages
+    `, [], (err, pages) => {
+      pages.forEach(page => {
+        system.pages.push(page.title);
       });
 
       // Checks if a session already exists
       if (req.session.username) {
-        res.render('subterra/types/add', {
+        res.render('menus/add', {
           username: req.session.username,
-          pathname: '/subterra/types',
+          pathname: '/subterra/menus',
           feedback: false,
           feedbackState: false,
           system: {
-            modules: system.modules
+            pages: system.pages
           }
         });
       } else {
@@ -77,64 +77,64 @@ router.get('/add', (req, res) => {
   });
 });
 
-// [POST] /subterra/types/add
+// [POST] /subterra/menus/add
 router.post('/add', (req, res) => {
-  debug(`[${ req.method }] /subterra/types/add`);
+  debug(`[${ req.method }] /subterra/menus/add`);
 
   const data = {
     name: req.body.name.replace(/'/, '"'),
-    defaultModules: req.body.modules
+    children: req.body.children
   };
 
   req.getConnection((err, connection) => {
     // Add submitted data to database
     connection.query(`
-      INSERT INTO types SET ?
+      INSERT INTO menus SET ?
     `, [data], (err, results) => {
-      // Navigate to /subterra/types overview
-      res.redirect('/subterra/types');
+      // Navigate to /subterra/menus overview
+      res.redirect('/subterra/menus');
     });
   });
 });
 
-// [GET] /subterra/types/edit/:id
+// [GET] /subterra/menus/edit/:id
 router.get('/edit/:id', (req, res) => {
-  debug(`[${ req.method }] /subterra/types/edit/${ req.params.id }`);
+  debug(`[${ req.method }] /subterra/menus/edit/${ req.params.id }`);
 
   // Object containing system data, after MySQL queries
   let system = {
-    modules: []
+    pages: []
   };
 
   // Select page with ID from GET parameter
   req.getConnection((err, connection) => {
     connection.query(`
-      SELECT * FROM types WHERE id = '${ req.params.id }'
+      SELECT * FROM menus WHERE id = '${ req.params.id }'
     `, [], (err, results) => {
-      const type = results[0];
+      const menu = results[0];
 
       // Fetch all system page modules from database
       connection.query(`
-        SELECT * FROM modules
-      `, [], (err, modules) => {
-        modules.forEach(module => {
-          system.modules.push(module.name);
+        SELECT * FROM pages
+      `, [], (err, pages) => {
+        pages.forEach(page => {
+          system.pages.push(page.title);
         });
 
         // Checks if a session already exists
         if (req.session.username) {
-          res.render('subterra/types/edit', {
+          res.render('menus/edit', {
             username: req.session.username,
-            pathname: '/subterra/types',
+            pathname: '/subterra/menus',
             feedback: false,
             feedbackState: false,
             system: {
-              modules: system.modules
+              pages: system.pages
             },
-            type: {
-              id: type.id,
-              name: type.name,
-              modules: type.defaultModules.split(',').filter(e => {
+            menu: {
+              id: menu.id,
+              name: menu.name,
+              children: menu.children.split(',').filter(e => {
                 // Removes empty data fields
                 return e;
               })
@@ -148,41 +148,41 @@ router.get('/edit/:id', (req, res) => {
   });
 });
 
-// [POST] /subterra/types/edit/:id
+// [POST] /subterra/menus/edit/:id
 router.post('/edit/:id', (req, res) => {
-  debug(`[${ req.method }] /subterra/types/edit/${ req.params.id }`);
+  debug(`[${ req.method }] /subterra/menus/edit/${ req.params.id }`);
 
   const data = {
     name: req.body.name.replace(/'/, '"'),
-    modules: req.body.modules
+    children: req.body.children
   };
 
-  // Update type in database
+  // Update menu in database
   req.getConnection((err, connection) => {
     connection.query(`
-      UPDATE types
-      SET name = '${ data.name }', defaultModules = '${ data.modules }'
+      UPDATE menus
+      SET name = '${ data.name }', children = '${ data.children }'
       WHERE id = ${ req.params.id }
     `, [], (err, results) => {
       // Redirect to same page with newly added data
-      res.redirect(`/subterra/types/edit/${ req.params.id }`);
+      res.redirect(`/subterra/menus/edit/${ req.params.id }`);
     });
   });
 });
 
-// [GET] /subterra/types/delete/:id
+// [GET] /subterra/menus/delete/:id
 router.get('/delete/:id', (req, res) => {
-  debug(`[${ req.method }] /subterra/types/delete/${ req.params.id }`);
+  debug(`[${ req.method }] /subterra/menus/delete/${ req.params.id }`);
 
-  // Remove page from database
+  // Remove menu from database
   req.getConnection((err, connection) => {
     connection.query(`
-      DELETE FROM types
+      DELETE FROM menus
       WHERE id = ${ req.params.id }
     `, [], (err, results) => {
-      // Redirect to type overview page
+      // Redirect to menu overview page
     });
-    res.redirect('/subterra/types');
+    res.redirect('/subterra/menus');
   });
 });
 
