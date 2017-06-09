@@ -258,9 +258,9 @@ router.post('/add', (req, res) => {
 
   const data = {
     type: req.body.type,
-    title: req.body.title,
+    title: req.body.title.replace(/'/, '"'),
     menus: req.body.menus,
-    content: contentFields.join('|-|')
+    content: contentFields.join('|-|').replace(/'/, '"')
   };
 
   req.getConnection((err, connection) => {
@@ -331,6 +331,7 @@ router.get('/edit/:id', (req, res) => {
               // Array of converted database strings to form inputs
               let contentFields = [];
 
+              // Process output to content fields
               page.content.split('|-|').forEach((field, index) => {
                 switch (field.charAt(1)) {
                   case 'H':
@@ -467,7 +468,6 @@ router.post('/edit/:id', (req, res) => {
     if (req.body[field].replace(/ /g, '') === '') {
       return;
     }
-
     // Switch on content fields only
     if (field.indexOf('content-') !== -1) {
       switch (field.charAt(8).toUpperCase()) {
@@ -504,9 +504,9 @@ router.post('/edit/:id', (req, res) => {
 
   const data = {
     type: req.body.type,
-    title: req.body.title,
+    title: req.body.title.replace(/'/, '"'),
     menus: req.body.menus,
-    content: contentFields.join('|-|')
+    content: contentFields.join('|-|').replace(/'/, '"')
   };
 
   req.getConnection((err, connection) => {
