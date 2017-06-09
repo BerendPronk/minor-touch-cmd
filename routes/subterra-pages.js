@@ -58,8 +58,9 @@ router.get('/add/:type', (req, res) => {
 
   // Object containing system data, after MySQL queries
   let system = {
-    menus: [],
     types: [],
+    menus: [],
+    pages: [],
     modules: []
   };
 
@@ -82,87 +83,124 @@ router.get('/add/:type', (req, res) => {
           system.menus.push(menu.name);
         });
 
-        // Fetch all system modules from database
+        // Fetch all system pages from database
         connection.query(`
-          SELECT * FROM modules
-        `, [], (err, modules) => {
-          // Push modules in system object
-          modules.forEach(module => {
-            system.modules.push(module.name);
+          SELECT * FROM pages
+        `, [], (err, pages) => {
+          // Push pages in system object
+          pages.forEach(page => {
+            system.pages.push(`${ page.id }-${ page.title }`);
           });
 
-          // Fetch defaultModules from page type
+          // Fetch all system modules from database
           connection.query(`
-            SELECT * FROM types
-            WHERE name = '${ req.params.type }'
-          `, [], (err, type) => {
-            const defaultModules = type[0].defaultModules;
-            let contentFields = [];
-
-            defaultModules.split(',').forEach((module, index) => {
-              switch (module) {
-                case 'heading':
-                  contentFields.push(`
-                    <span class="content-tip">Heading</span>
-      							<input name="content-h-${ index }" type="text" onblur="setInput()">
-                  `);
-                break;
-                case 'paragraph':
-                  contentFields.push(`
-                    <span class="content-tip">Paragraph</span>
-      							<textarea name="content-p-${ index }" onblur="setInput()"></textarea>
-                  `);
-                break;
-                case 'image':
-                  contentFields.push(`
-                    <span class="content-tip">Image</span>
-                    <input name="content-i-name-${ index }" type="hidden">
-                    <input name="content-i-${ index }" type="file" accept="image/*" onblur="setImageName()">
-                  `);
-                break;
-                case 'list':
-                  contentFields.push(`
-                    <span class="content-tip">List name</span>
-      							<input name="content-l-name-${ index }" type="text" oninput="addListName()" onblur="setInput()">
-      							<span class="content-tip">List items</span>
-      							<input name="content-l-list-${ index }" type="hidden">
-                    <ul>
-      								<li>
-      									<input type="text" oninput="addListItem()" onblur="setInput()">
-      								</li>
-      							</ul>
-                    <button data-type="addToList" onclick="addListInput()">Add item</button>
-                  `);
-                break;
-                case 'embed':
-                  contentFields.push(`
-      							<span class="content-tip">Embedded video (YouTube or Vimeo)</span>
-                    <input name="content-e-${ index }" type="text" onblur="setInput()">
-                  `);
-                break;
-              }
+            SELECT * FROM modules
+          `, [], (err, modules) => {
+            // Push modules in system object
+            modules.forEach(module => {
+              system.modules.push(module.name);
             });
 
-            // Checks if a session already exists
-            if (req.session.username) {
-              res.render('subterra/pages/add', {
-                username: req.session.username,
-                pathname: '/subterra/pages',
-                feedback: false,
-                feedbackState: false,
-                system: {
-                  menus: system.menus,
-                  types: system.types,
-                  modules: system.modules
-                },
-                page: {
-                  type: req.params.type,
-                  content: contentFields
+            // Fetch defaultModules from page type
+            connection.query(`
+              SELECT * FROM types
+              WHERE name = '${ req.params.type }'
+            `, [], (err, type) => {
+              const defaultModules = type[0].defaultModules;
+              let contentFields = [];
+
+              // Apply default modules to content string
+              defaultModules.split(',').forEach((module, index) => {
+                switch (module) {
+                  case 'heading':
+                    contentFields.push(`
+                      <span class="content-tip">Heading</span>
+                      <input name="content-h-${ index }" type="text" onblur="setInput()">
+                    `);
+                  break;
+                  case 'paragraph':
+                    contentFields.push(`
+                      <span class="content-tip">Paragraph</span>
+                      <textarea name="content-p-${ index }" onblur="setInput()"></textarea>
+                    `);
+                  break;
+                  case 'image':
+                    contentFields.push(`
+                      <span class="content-tip">Image</span>
+                      <input name="content-i-name-${ index }" type="hidden">
+                      <input name="content-i-${ index }" type="file" accept="image/*" onblur="setImageName()">
+                    `);
+                  break;
+                  case 'list':
+                    contentFields.push(`
+                      <span class="content-tip">List name</span>
+                      <input name="content-l-name-${ index }" type="text" oninput="addListName()" onblur="setInput()">
+                      <span class="content-tip">List items</span>
+                      <input name="content-l-list-${ index }" type="hidden">
+                      <ul>
+                        <li>
+                          <input type="text" oninput="addListItem()" onblur="setInput()">
+                        </li>
+                      </ul>
+                      <button data-type="addToList" onclick="addListInput()">Add item</button>
+                    `);
+                  break;
+                  case 'embed':
+                    contentFields.push(`
+                      <span class="content-tip">Embedded video (YouTube or Vimeo)</span>
+                      <input name="content-e-${ index }" type="text" onblur="setInput()">
+                    `);
+                  break;
+                  case 'button':
+                    let systemPagesString;
+
+                    system.pages.forEach(page => {
+                      const pageTitle = page.split('-')[1];
+
+                      systemPagesString = `
+                        ${ systemPagesString }
+                        <option value="${ page }">
+                          ${ pageTitle }
+                        </option>
+                      `;
+                    });
+
+                    contentFields.push(`
+                      <span class="content-tip">Button name</span>
+                      <input name="content-b-name-${ index }" type="text" oninput="setButtonName()">
+                      <span class="content-tip">Button link</span>
+                      <input name="content-b-link-${ index }" type="hidden">
+                      <select name="content-b-anchor-${ index }" oninput="setButtonAnchor()">
+                        <option value="" disabled selected>Select a page</option>
+                        ${ systemPagesString }
+                      </select>
+                    `);
+                  break;
                 }
               });
-            } else {
-              res.redirect('/subterra/login');
-            }
+
+              // Checks if a session already exists
+              if (req.session.username) {
+                res.render('subterra/pages/add', {
+                  username: req.session.username,
+                  pathname: '/subterra/pages',
+                  feedback: false,
+                  feedbackState: false,
+                  system: {
+                    types: system.types,
+                    menus: system.menus,
+                    pages: system.pages,
+                    modules: system.modules
+                  },
+                  page: {
+                    type: req.params.type,
+                    content: contentFields
+                  }
+                });
+              } else {
+                res.redirect('/subterra/login');
+              }
+            });
           });
         });
       });
@@ -208,6 +246,12 @@ router.post('/add', (req, res) => {
         case 'E':
           contentFields.push(`|E|${ req.body[field] }`);
         break;
+        case 'B':
+          // Only pick grouped input
+          if (field.indexOf('content-b-link') !== -1) {
+            contentFields.push(`|B|${ req.body[field] }`);
+          }
+        break;
       }
     }
   });
@@ -236,8 +280,9 @@ router.get('/edit/:id', (req, res) => {
 
   // Object containing system data, after MySQL queries
   let system = {
-    menus: [],
     types: [],
+    menus: [],
+    pages: [],
     modules: []
   };
 
@@ -252,6 +297,7 @@ router.get('/edit/:id', (req, res) => {
       connection.query(`
         SELECT * FROM types
       `, [], (err, types) => {
+        // Push types in system object
         types.forEach(type => {
           system.types.push(type.name);
         });
@@ -260,107 +306,147 @@ router.get('/edit/:id', (req, res) => {
         connection.query(`
           SELECT * FROM menus
         `, [], (err, menus) => {
+          // Push menus in system object
           menus.forEach(menu => {
             system.menus.push(menu.name);
           });
 
-          // Fetch all system modules from database
           connection.query(`
-            SELECT * FROM modules
-          `, [], (err, modules) => {
-            modules.forEach(module => {
-              system.modules.push(module.name);
+            SELECT * FROM pages
+          `, [], (err, pages) => {
+            // Push pages in system object
+            pages.forEach(page => {
+              system.pages.push(`${ page.id }-${ page.title }`);
             });
 
-            // Array of converted database strings to form inputs
-            let contentFields = [];
+            // Fetch all system modules from database
+            connection.query(`
+              SELECT * FROM modules
+            `, [], (err, modules) => {
+              // Push modules in system object
+              modules.forEach(module => {
+                system.modules.push(module.name);
+              });
 
-            page.content.split('|-|').forEach((field, index) => {
-              switch (field.charAt(1)) {
-                case 'H':
-                  contentFields.push(`
-      							<span class="content-tip">Heading</span>
-                    <input name="content-h-${ index }" type="text" onblur="setInput()" value="${ field.replace('|H|', '') }">
-                  `);
-                break;
-                case 'P':
-                  contentFields.push(`
-      							<span class="content-tip">Paragraph</span>
-                    <textarea name="content-p-${ index }" onblur="setInput()">${ field.replace('|P|', '') }</textarea>
-                  `);
-                break;
-                case 'I':
-                  contentFields.push(`
-      							<span class="content-tip">Image</span>
-                    <img src="/assets/media/${ field.replace('|I|', '') }" alt="Image about ${ page.title }">
-                    <input name="content-i-name-${ index }" type="hidden" value="${ field.replace('|I|', '') }">
-                    <input name="content-i-${ index }" type="file" accept="image/*" onblur="setImageName()">
-                  `);
-                break;
-                case 'L':
-                  // Divide content string into separate fields
-                  const content = field.replace('|L|', '');
-                  const divider = content.indexOf('|');
-                  const fieldListName = content.substr(0, divider);
-                  const fieldList = content.substr((divider + 1), content.length).split(',');
-                  let fieldListString = '';
+              // Array of converted database strings to form inputs
+              let contentFields = [];
 
-                  // Give HTML to each item in list
-                  fieldList.forEach(item => {
-                    fieldListString += `
+              page.content.split('|-|').forEach((field, index) => {
+                switch (field.charAt(1)) {
+                  case 'H':
+                    contentFields.push(`
+                      <span class="content-tip">Heading</span>
+                      <input name="content-h-${ index }" type="text" onblur="setInput()" value="${ field.replace('|H|', '') }">
+                    `);
+                  break;
+                  case 'P':
+                    contentFields.push(`
+                      <span class="content-tip">Paragraph</span>
+                      <textarea name="content-p-${ index }" onblur="setInput()">${ field.replace('|P|', '') }</textarea>
+                    `);
+                  break;
+                  case 'I':
+                    contentFields.push(`
+                      <span class="content-tip">Image</span>
+                      <img src="/assets/media/${ field.replace('|I|', '') }" alt="Image about ${ page.title }">
+                      <input name="content-i-name-${ index }" type="hidden" value="${ field.replace('|I|', '') }">
+                      <input name="content-i-${ index }" type="file" accept="image/*" onblur="setImageName()">
+                    `);
+                  break;
+                  case 'L':
+                    // Divide content string into separate fields
+                    const content = field.replace('|L|', '');
+                    const divider = content.indexOf('|');
+                    const fieldListName = content.substr(0, divider);
+                    const fieldList = content.substr((divider + 1), content.length).split(',');
+                    let fieldListString = '';
+
+                    // Give HTML to each item in list
+                    fieldList.forEach(item => {
+                      fieldListString += `
                       <li>
                         <input type="text" oninput="addListItem()" onblur="setInput()" value="${ item }">
                       </li>
-                    `;
-                  });
+                      `;
+                    });
 
-                  contentFields.push(`
-      							<span class="content-tip">List name</span>
-                    <input name="content-l-name-${ index }" type="text" oninput="addListName()" onblur="setInput()" value="${ fieldListName }">
-      							<span class="content-tip">List items</span>
-                    <input name="content-l-list-${ index }" type="hidden" onblur="setInput()" value="${ content }">
-                    <ul>
-                      ${ fieldListString }
-                    </ul>
-                    <button data-type="addToList" onclick="addListInput()">Add item</button>
-                  `);
-                break;
-                case 'E':
-                  contentFields.push(`
-      							<span class="content-tip">Embedded video (YouTube or Vimeo)</span>
-                    <input name="content-e-${ index }" type="text" onblur="setInput()" value="${ field.replace('|E|', '') }">
-                  `);
-                break;
-              }
-            });
+                    contentFields.push(`
+                      <span class="content-tip">List name</span>
+                      <input name="content-l-name-${ index }" type="text" oninput="addListName()" onblur="setInput()" value="${ fieldListName }">
+                      <span class="content-tip">List items</span>
+                      <input name="content-l-list-${ index }" type="hidden" onblur="setInput()" value="${ content }">
+                      <ul>
+                        ${ fieldListString }
+                      </ul>
+                      <button data-type="addToList" onclick="addListInput()">Add item</button>
+                    `);
+                  break;
+                  case 'E':
+                    contentFields.push(`
+                      <span class="content-tip">Embedded video (YouTube or Vimeo)</span>
+                      <input name="content-e-${ index }" type="text" onblur="setInput()" value="${ field.replace('|E|', '') }">
+                    `);
+                  break;
+                  case 'B':
+                    let systemPagesString;
+                    const fieldButtonName = field.replace('|B|', '').split('|')[0];
+                    const fieldButtonAnchor =  field.replace('|B|', '').split('|')[1].split('-')[1];
 
-            // Checks if a session already exists
-            if (req.session.username) {
-              // Render edit page
-              res.render('subterra/pages/edit', {
-                username: req.session.username,
-                pathname: '/subterra/pages',
-                feedback: false,
-                feedbackState: false,
-                system: {
-                  menus: system.menus,
-                  types: system.types,
-                  modules: system.modules
-                },
-                page: {
-                  id: page.id,
-                  type: page.type,
-                  title: page.title,
-                  menus: page.menus.split(',').filter(e => {
-                    // Removes empty data fields
-                    return e;
-                  }),
-                  content: contentFields
+                    system.pages.forEach(page => {
+                      const pageTitle = page.split('-')[1];
+
+                      systemPagesString = `
+                        ${ systemPagesString }
+                        <option value="${ page }" ${ fieldButtonAnchor === pageTitle ? 'selected' : '' }>
+                          ${ pageTitle }
+                        </option>
+                      `;
+                    });
+
+                    contentFields.push(`
+                      <span class="content-tip">Button name</span>
+                      <input name="content-b-name-${ index }" type="text" oninput="setButtonName()" value="${ fieldButtonName }">
+                      <span class="content-tip">Button link</span>
+                      <input name="content-b-link-${ index }" type="hidden">
+                      <select name="content-b-anchor-${ index }" oninput="setButtonAnchor()">
+                        <option value="" disabled selected>Select a page</option>
+                        ${ systemPagesString }
+                      </select>
+                    `);
+                  break;
+                  break;
                 }
               });
-            } else {
-              res.redirect('/subterra/login');
-            }
+
+              // Checks if a session already exists
+              if (req.session.username) {
+                // Render edit page
+                res.render('subterra/pages/edit', {
+                  username: req.session.username,
+                  pathname: '/subterra/pages',
+                  feedback: false,
+                  feedbackState: false,
+                  system: {
+                    types: system.types,
+                    menus: system.menus,
+                    pages: system.pages,
+                    modules: system.modules
+                  },
+                  page: {
+                    id: page.id,
+                    type: page.type,
+                    title: page.title,
+                    menus: page.menus.split(',').filter(e => {
+                      // Removes empty data fields
+                      return e;
+                    }),
+                    content: contentFields
+                  }
+                });
+              } else {
+                res.redirect('/subterra/login');
+              }
+            });
           });
         });
       });
@@ -405,6 +491,12 @@ router.post('/edit/:id', (req, res) => {
         break;
         case 'E':
           contentFields.push(`|E|${ req.body[field] }`);
+        break;
+        case 'B':
+          // Only pick grouped input
+          if (field.indexOf('content-b-link') !== -1) {
+            contentFields.push(`|B|${ req.body[field] }`);
+          }
         break;
       }
     }

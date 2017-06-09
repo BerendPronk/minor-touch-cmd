@@ -96,6 +96,7 @@
       <input style="display:block" type="submit" value="Submit">
     </form>
 
+		<p id="systemPages"><%= system.pages %></p>
 
     <%# %>
 
@@ -209,6 +210,33 @@
 						newModule = `
 							<span class="content-tip">Embedded video (YouTube or Vimeo)</span>
 							<input name="content-e-${ index }" type="text" onblur="setInput()">
+						`;
+					break;
+					case 'button':
+						const systemPages = document.querySelector('#systemPages').textContent.split(',');
+						let systemPagesString = null;
+
+						// 'page' notation 'id-title'
+						systemPages.forEach(page => {
+							const pageTitle = page.split('-')[1];
+
+							systemPagesString = `
+								${ systemPagesString }
+								<option value="${ page }">
+									${ pageTitle }
+								</option>
+							`;
+						});
+
+						newModule = `
+							<span class="content-tip">Button name</span>
+							<input name="content-b-name-${ index }" type="text" oninput="setButtonName()">
+							<span class="content-tip">Button link</span>
+							<input name="content-b-link-${ index }" type="text">
+							<select name="content-b-anchor-${ index }" oninput="setButtonAnchor()">
+								<option value="" disabled selected>Select a page</option>
+								${ systemPagesString }
+							</select>
 						`;
 					break;
 				}
@@ -395,6 +423,30 @@
 				if (confirm('Are you sure you want to delete this?') === true) {
 					window.location = `/subterra/${ category }/delete/${ id }`;
 				}
+			}
+
+			// Add button name to hidden input field
+			function setButtonName() {
+				const field = event.target.parentNode;
+				const buttonName = event.target.value;
+				const buttonAnchor = field.querySelector('select[name^="content-b-anchor"]').value;
+				const buttonInput = field.querySelector('input[name^="content-b-link"]');
+
+				if (buttonAnchor.value) {
+					buttonInput.value = `${ buttonName }|${ buttonAnchor }`;
+				} else {
+					buttonInput.value = `${ buttonName }|`;
+				}
+			}
+
+			// Add button anchor to hidden input field
+			function setButtonAnchor() {
+				const field = event.target.parentNode;
+				const buttonName = field.querySelector('input[name^="content-b-name"]').value;
+				const buttonAnchor = event.target.value;
+				const buttonInput = field.querySelector('input[name^="content-b-link"]');
+
+				buttonInput.value = `${ buttonName }|${ buttonAnchor }`;
 			}
 
       // Set formSubmit to active
