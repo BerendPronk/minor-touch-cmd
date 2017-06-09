@@ -56,10 +56,10 @@ const upload = multer({
 
 // Declare app routing
 app.use('/', require('./routes/main'));
-app.use('/subterra', require('./routes/subterra'));
-app.use('/subterra/menus', require('./routes/subterra-menus'));
-app.use('/subterra/types', require('./routes/subterra-types'));
-app.use('/subterra/pages', upload.any(), require('./routes/subterra-pages'));
+app.use('/subterra', require('./routes/subterra/main'));
+app.use('/subterra/menus', require('./routes/subterra/menus'));
+app.use('/subterra/types', require('./routes/subterra/types'));
+app.use('/subterra/pages', upload.any(), require('./routes/subterra/pages'));
 
 // Run the application
 app.listen(3000, () => {
