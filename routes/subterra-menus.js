@@ -82,7 +82,7 @@ router.post('/add', (req, res) => {
   debug(`[${ req.method }] /subterra/menus/add`);
 
   const data = {
-    name: req.body.name,
+    name: req.body.name.replace(/'/, '"'),
     children: req.body.children
   };
 
@@ -153,7 +153,7 @@ router.post('/edit/:id', (req, res) => {
   debug(`[${ req.method }] /subterra/menus/edit/${ req.params.id }`);
 
   const data = {
-    name: req.body.name,
+    name: req.body.name.replace(/'/, '"'),
     children: req.body.children
   };
 
