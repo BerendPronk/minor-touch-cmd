@@ -408,7 +408,7 @@ router.get('/edit/:id', (req, res) => {
                       <span class="content-tip">Button name</span>
                       <input name="content-b-name-${ index }" type="text" oninput="setButtonName()" value="${ fieldButtonName }">
                       <span class="content-tip">Button link</span>
-                      <input name="content-b-link-${ index }" type="hidden">
+                      <input name="content-b-link-${ index }" type="hidden" value="${ field.replace('|B|', '') }">
                       <select name="content-b-anchor-${ index }" oninput="setButtonAnchor()">
                         <option value="" disabled selected>Select a page</option>
                         ${ systemPagesString }

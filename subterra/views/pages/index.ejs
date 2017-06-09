@@ -11,9 +11,9 @@
 
     <h1>Pages</h1>
 
-		<button data-add="page">Add new page</button>
+		<button data-add="page" onclick="toggleShow('#pageTypes')">Add new page</button>
 
-		<ul id="pageTypes" style="display: none;">
+		<ul id="pageTypes" class="hidden">
 			<% for (let i = 0; i < system.types.length; i++) { %>
 				<li>
 					<a href="/subterra/pages/add/<%= system.types[i] %>">Add <%= system.types[i] %></a>
@@ -37,20 +37,7 @@
       <p>No pages found.</p>
     <% } %>
 
-		<script>
-			const newPage = document.querySelector('[data-add="page"]');
-			const pageTypes = document.querySelector('#pageTypes');
 
-			newPage.addEventListener('click', () => {
-				pageTypes.style.display = 'block';
-			});
-
-			// Delete item from database
-			function deleteItem(category, id) {
-				if (confirm('Are you sure you want to delete this?') === true) {
-					window.location = `/subterra/${ category }/delete/${ id }`;
-				}
-			}
-		</script>
+		<script src="/subterra/assets/script/page.js"></script>
 
     <%- include ../partials/footer -%>
