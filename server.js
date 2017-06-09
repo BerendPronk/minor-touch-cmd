@@ -1,11 +1,9 @@
 // Defines used packages
 const compression = require('compression');
 const debug = require('debug')('TouchCMD');
-const path = require('path');
 
 const bodyParser = require('body-parser');
 const fs = require('fs');
-const multer = require('multer');
 
 const mySQL = require('mysql');
 const myConnection = require('express-myconnection');
@@ -17,13 +15,15 @@ const app = express();
 // Declare which server functionalities the app must use
 app
   .use(compression())
-  .use('/assets', express.static(path.join(__dirname, 'assets')))
+  .use('/assets', express.static(__dirname + '/assets'))
+  .use('/media', express.static(__dirname + '/media'))
+  .use('/subterra/assets', express.static(__dirname + '/subterra/assets'))
   .use(bodyParser.urlencoded({ extended: false }));
 
 // Set EJS view engine
 app
   .set('view engine', 'ejs')
-  .set('views', path.join(__dirname, 'views'));
+  .set('views', [__dirname + '/views', __dirname + '/subterra/views']);
 
 // Create connection to MySQL database
 app.use(myConnection(mySQL, {
@@ -41,25 +41,9 @@ app.use(session({
   resave: false
 }));
 
-const storage = multer.diskStorage({
-  destination: function (req, file, callBack) {
-    callBack(null, path.join(__dirname, 'assets/media'));
-  },
-  filename: function (req, file, callBack) {
-    callBack(null, file.originalname);
-  }
-});
-
-const upload = multer({
-  storage: storage
-});
-
 // Declare app routing
 app.use('/', require('./routes/main'));
-app.use('/subterra', require('./routes/subterra'));
-app.use('/subterra/menus', require('./routes/subterra-menus'));
-app.use('/subterra/types', require('./routes/subterra-types'));
-app.use('/subterra/pages', upload.any(), require('./routes/subterra-pages'));
+app.use('/subterra', require('./subterra/routes/main'));
 
 // Run the application
 app.listen(3000, () => {

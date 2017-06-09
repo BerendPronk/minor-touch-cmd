@@ -36,7 +36,7 @@ router.get('/', (req, res) => {
 
         // Checks if a session already exists
         if (req.session.username) {
-          res.render('subterra/pages/index', {
+          res.render('pages/index', {
             username: req.session.username,
             pathname: '/subterra/pages',
             system: {
@@ -181,7 +181,7 @@ router.get('/add/:type', (req, res) => {
 
               // Checks if a session already exists
               if (req.session.username) {
-                res.render('subterra/pages/add', {
+                res.render('pages/add', {
                   username: req.session.username,
                   pathname: '/subterra/pages',
                   feedback: false,
@@ -349,7 +349,7 @@ router.get('/edit/:id', (req, res) => {
                   case 'I':
                     contentFields.push(`
                       <span class="content-tip">Image</span>
-                      <img src="/assets/media/${ field.replace('|I|', '') }" alt="Image about ${ page.title }">
+                      <img src="/media/${ field.replace('|I|', '') }" alt="Image about ${ page.title }">
                       <input name="content-i-name-${ index }" type="hidden" value="${ field.replace('|I|', '') }">
                       <input name="content-i-${ index }" type="file" accept="image/*" onblur="setImageName()">
                     `);
@@ -422,7 +422,7 @@ router.get('/edit/:id', (req, res) => {
               // Checks if a session already exists
               if (req.session.username) {
                 // Render edit page
-                res.render('subterra/pages/edit', {
+                res.render('pages/edit', {
                   username: req.session.username,
                   pathname: '/subterra/pages',
                   feedback: false,
