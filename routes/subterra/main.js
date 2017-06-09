@@ -1,11 +1,32 @@
 const debug = require('debug')('TouchCMD');
+const multer = require('multer');
 const express = require('express');
 const router = express.Router();
+
+// Initialize multer storage
+const storage = multer.diskStorage({
+  destination: function (req, file, callBack) {
+    callBack(null, path.join(__dirname, 'assets/media'));
+  },
+  filename: function (req, file, callBack) {
+    callBack(null, file.originalname);
+  }
+});
+
+// Apply initialized storage to multer
+const upload = multer({
+  storage: storage
+});
+
+// Declare subterra routing
+router.use('/menus', require('./menus'));
+router.use('/types', require('./types'));
+router.use('/pages', upload.any(), require('./pages'));
 
 // [GET] /subterra
 router.get('/', (req, res) => {
   debug(`[${ req.method }] /subterra/login`);
-  
+
   // Object containing system data, after MySQL queries
   let system = {
     types: []
