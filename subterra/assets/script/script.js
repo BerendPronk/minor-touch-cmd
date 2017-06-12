@@ -1,70 +1,67 @@
-const pageForm = document.querySelector('form');
 let formSubmit = false;
 
-///////////////////////////////////////////////////////
-const inputMenu = document.querySelector('input[name="menus"]');
-const menuSelect = document.querySelector('#menuSelect');
-const pageMenuList = document.querySelector('#pageMenus');
-const pageMenus = pageMenuList.querySelectorAll('li');
-let menuArr = [];
+// Add new list item to given type
+function addSelectList(type) {
+  const formInput = document.querySelector(`input[name="${ type }"]`);
+  const formSelect = event.target;
+  const typeList = event.target.parentNode.querySelector('ul');
+  const typeListItems = typeList.querySelectorAll('li');
+  const currentItems = formInput.value.split(',').filter(e => {
+    // Removes empty data fields
+    return e;
+  });
 
-// Apply page's menus to input, joined with a single comma
-pageMenus.forEach(menu => {
-  menuArr.push(menu.querySelector('[data-type="menu-title"]').textContent);
-});
+  // Check if type has already been added
+  if (currentItems.indexOf(formSelect.value) === -1) {
+    const newItem = document.createElement('li');
 
-// Add new menu to page's menus
-menuSelect.addEventListener('change', () => {
-  // Check if menu is already added
-  if (menuArr.indexOf(menuSelect.value) === -1) {
-    const newMenu = document.createElement('li');
-
-    newMenu.insertAdjacentHTML(
+    newItem.insertAdjacentHTML(
       'afterbegin',
-      `<span data-type="menu-title">${ menuSelect.value }</span>
-       <button data-type="menu-delete" onclick="removeMenu()">X</button>`
+      `<span data-type="${ type }-name">${ formSelect.value }</span>
+      <button data-type="${ type }-delete" onclick="removeSelectList('${ type }')">X</button>`
     );
 
-    // Append new menu to menus list
-    pageMenuList.appendChild(newMenu);
+    // Append new type to list
+    typeList.appendChild(newItem);
 
-    // Add newly added menu to input
-    menuArr.push(menuSelect.value);
-    inputMenu.value = menuArr.join(',').replace(', ', ',');
+    // Add newly added type to input
+    currentItems.push(formSelect.value);
+
+    if (currentItems.length === 1) {
+      formInput.value = formSelect.value;
+    } else {
+      formInput.value = currentItems.join(',').replace(', ', ',');
+    }
   }
 
-  // Reset index of menu selection
-  menuSelect.selectedIndex = 0;
-});
-
-// Remove a menu from the menu list
-function removeMenu() {
-  const slug = event.target.parentNode.querySelector('[data-type="menu-title"]').textContent;
-  const slugIndex = menuArr.indexOf(slug);
-
-  // Remove menu from menu array
-  menuArr.splice(slugIndex, 1);
-
-  // Remove menu from menu list
-  pageMenuList.removeChild(pageMenuList.children[slugIndex]);
-
-  // Remove menu from hidden input
-  inputMenu.value = menuArr.join(',').replace(', ', ',');
+  // Reset index of type selection
+  formSelect.selectedIndex = 0;
 }
-///////////////////////////////////////////////////////
 
-const pageContent = document.querySelector('#pageContent');
-const moduleButton = document.querySelector('#moduleButton');
-const moduleSelect = document.querySelector('#moduleSelect');
-
-// Replace with CSS
-moduleButton.addEventListener('click', event => {
-  moduleSelect.style.display = 'block';
-
+// Remove a type from the list
+function removeSelectList(type) {
   event.preventDefault();
-});
+  const field = event.target.parentNode.parentNode.parentNode;
+  const formInput = field.querySelector(`input[name="${ type }"]`);
+  const typeList = field.querySelector(`ul`);
+  const currentItems = formInput.value.split(',');
 
-moduleSelect.addEventListener('input', () => {
+  const content = event.target.parentNode.querySelector(`[data-type="${ type }-name"]`).textContent;
+  const contentIndex = currentItems.indexOf(content);
+
+  // Remove type from input values
+  currentItems.splice(contentIndex, 1);
+
+  // Remove type from DOM list
+  typeList.removeChild(typeList.children[contentIndex]);
+
+  // Remove type from hidden input
+  formInput.value = currentItems.join(',').replace(', ', ',');
+}
+
+// Add an empty module to the page content fields
+function addModule() {
+  const pageContent = document.querySelector('#pageContent');
   const index = pageContent.children.length;
   let newModule;
 
@@ -126,10 +123,10 @@ moduleSelect.addEventListener('input', () => {
 
       newModule = `
         <span class="content-tip">Button name</span>
-        <input name="content-b-name-${ index }" type="text" oninput="setButtonName()">
+        <input name="content-b-name-${ index }" type="text" oninput="setButtonName()" onblur="setInput()">
         <span class="content-tip">Button link</span>
         <input name="content-b-link-${ index }" type="hidden">
-        <select name="content-b-anchor-${ index }" oninput="setButtonAnchor()">
+        <select name="content-b-anchor-${ index }" oninput="setButtonAnchor()" onblur="setInput()">
           <option value="" disabled selected>Select a page</option>
           ${ systemPagesString }
         </select>
@@ -151,26 +148,13 @@ moduleSelect.addEventListener('input', () => {
   );
 
   // Reset module selector
-  moduleSelect.style.display = 'none';
-  moduleSelect.selectedIndex = 0;
-});
-
-// Set value to input/textarea based on target
-function setInput() {
-  switch (event.target.nodeName.toLowerCase()) {
-    case 'input':
-      event.target.setAttribute('value', event.target.value);
-      // Unfortunately this doens't work for images, since browsers are unable to receive image path
-      // Source: https://stackoverflow.com/questions/4851595/how-to-resolve-the-c-fakepath
-    break;
-    case 'textarea':
-      event.target.textContent = event.target.value;
-    break;
-  }
+  event.target.classList.add('hidden');
+  event.target.selectedIndex = 0;
 }
 
 // Set module order based on given direction
 function orderModule(direction) {
+  const pageContent = document.querySelector('#pageContent');
   const fields = pageContent.querySelectorAll('li[data-order]');
   const targetField = event.target.parentNode.parentNode.parentNode;
   const curPos = Number(targetField.getAttribute('data-order'));
@@ -246,8 +230,32 @@ function orderModule(direction) {
   event.preventDefault();
 }
 
+// Set value to input/textarea based on target
+function setInput() {
+  switch (event.target.nodeName.toLowerCase()) {
+    case 'input':
+      event.target.setAttribute('value', event.target.value);
+      // Unfortunately this doens't work for images, since browsers are unable to receive image path
+      // Source: https://stackoverflow.com/questions/4851595/how-to-resolve-the-c-fakepath
+    break;
+    case 'textarea':
+      event.target.textContent = event.target.value;
+    break;
+    case 'select':
+      event.target.setAttribute('value', event.target.value);
+      
+      event.target.querySelectorAll('option').forEach(option => {
+        if (option.value === event.target.value) {
+          option.setAttribute('selected', true);
+        }
+      })
+    break;
+  }
+}
+
 // Delete a module from the page
 function deleteModule() {
+  const pageContent = document.querySelector('#pageContent');
   const field = event.target.parentNode.parentNode.parentNode;
 
   pageContent.removeChild(field);
@@ -346,9 +354,9 @@ function setButtonAnchor() {
 }
 
 // Set formSubmit to active
-pageForm.addEventListener('submit', () => {
+function submitForm() {
   formSubmit = true;
-});
+}
 
 // Hide/show an element
 function toggleShow(element) {
@@ -359,6 +367,8 @@ function toggleShow(element) {
   } else {
     toToggle.classList.add('hidden');
   }
+
+  event.preventDefault();
 }
 
 // Alert user before page unload to prevent data loss
