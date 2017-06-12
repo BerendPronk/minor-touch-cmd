@@ -12,8 +12,8 @@ router.get('/', (req, res) => {
     types: []
   };
 
-  // Fetch all pages from database
   req.getConnection((err, connection) => {
+    // Fetch all pages from database
     connection.query(`
       SELECT * FROM pages
     `, [], (err, results) => {
@@ -258,9 +258,9 @@ router.post('/add', (req, res) => {
 
   const data = {
     type: req.body.type,
-    title: req.body.title.replace(/'/, '"'),
+    title: req.body.title.replace(/'/g, '"'),
     menus: req.body.menus,
-    content: contentFields.join('|-|').replace(/'/, '"')
+    content: contentFields.join('|-|').replace(/'/g, '"')
   };
 
   req.getConnection((err, connection) => {
@@ -286,8 +286,8 @@ router.get('/edit/:id', (req, res) => {
     modules: []
   };
 
-  // Select page with ID from GET parameter
   req.getConnection((err, connection) => {
+    // Select page with ID from GET parameter
     connection.query(`
       SELECT * FROM pages WHERE id = '${ req.params.id }'
     `, [], (err, results) => {
@@ -504,13 +504,12 @@ router.post('/edit/:id', (req, res) => {
 
   const data = {
     type: req.body.type,
-    title: req.body.title.replace(/'/, '"'),
+    title: req.body.title.replace(/'/g, '"'),
     menus: req.body.menus,
-    content: contentFields.join('|-|').replace(/'/, '"')
+    content: contentFields.join('|-|').replace(/'/g, '"')
   };
 
   req.getConnection((err, connection) => {
-
     // Update data from page
     connection.query(`
       UPDATE pages
@@ -527,7 +526,6 @@ router.post('/edit/:id', (req, res) => {
 router.get('/delete/:id', (req, res) => {
   debug(`[${ req.method }] /subterra/pages/delete/${ req.params.id }`);
 
-  // Remove page from database
   req.getConnection((err, connection) => {
     // Retrieve page name
     connection.query(`
@@ -548,6 +546,7 @@ router.get('/delete/:id', (req, res) => {
           SET courses = REPLACE(REPLACE(REPLACE(courses, ',${ page }', ''), '${ page },', ''), '${ page }', '')
         `, [], (err, portfolio) => {
 
+          // Remove page from database
           connection.query(`
             DELETE FROM pages
             WHERE id = ${ req.params.id }

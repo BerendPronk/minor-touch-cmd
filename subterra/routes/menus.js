@@ -11,8 +11,8 @@ router.get('/', (req, res) => {
     menus: []
   };
 
-  // Fetch all menus from database
   req.getConnection((err, connection) => {
+    // Fetch all menus from database
     connection.query(`
       SELECT * FROM menus
     `, [], (err, results) => {
@@ -106,10 +106,11 @@ router.get('/edit/:id', (req, res) => {
     pages: []
   };
 
-  // Select page with ID from GET parameter
   req.getConnection((err, connection) => {
+    // Select menu with ID from GET parameter
     connection.query(`
-      SELECT * FROM menus WHERE id = '${ req.params.id }'
+      SELECT * FROM menus
+      WHERE id = '${ req.params.id }'
     `, [], (err, results) => {
       const menu = results[0];
 
@@ -157,8 +158,8 @@ router.post('/edit/:id', (req, res) => {
     children: req.body.children
   };
 
-  // Update menu in database
   req.getConnection((err, connection) => {
+    // Update menu in database
     connection.query(`
       UPDATE menus
       SET name = '${ data.name }', children = '${ data.children }'

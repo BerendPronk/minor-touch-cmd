@@ -38,7 +38,6 @@ function addSelectList(type) {
 
 // Remove a type from the list
 function removeSelectList(type) {
-  event.preventDefault();
   const field = event.target.parentNode.parentNode.parentNode;
   const formInput = field.querySelector(`input[name="${ type }"]`);
   const typeList = field.querySelector(`ul`);
