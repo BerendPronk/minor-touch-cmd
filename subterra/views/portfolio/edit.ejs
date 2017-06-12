@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="nl">
+	<head>
+		<meta charset="UTF-8">
+
+		<title>Edit portfolio item '<%= item.title %>'</title>
+
+    <%- include ../partials/head -%>
+
+    <%- include ../partials/header -%>
+
+    <% if (feedback) { %>
+      <div id="feedback" class="<%= feedbackState %>">
+        <%= feedback %>
+      </div>
+    <% } %>
+
+    <h1>Edit portfolio item '<%= item.title %>'</h1>
+
+		<button data-action="delete type" onclick="deleteItem('portfolio', <%= item.id %>)">Delete <%= item.title %></button>
+
+    <form enctype="multipart/form-data" action="/subterra/portfolio/edit/<%= item.id %>" method="post" onsubmit="submitForm()">
+      <fieldset>
+        <legend>Title</legend>
+
+        <input name="title" type="text" value="<%= item.title %>" required>
+      </fieldset>
+      <fieldset>
+        <legend>Modules</legend>
+
+        <ul id="itemCourses">
+          <% for (let i = 0; i < item.courses.length; i++) { %>
+            <li>
+              <span data-type="courses-name"><%= item.courses[i] %></span>
+              <button data-type="courses-delete" onclick="removeSelectList('courses')">X</button>
+            </li>
+          <% } %>
+        </ul>
+
+        <input name="courses" type="hidden" value="<%= item.courses %>">
+
+        <select id="itemCourseSelect" onchange="addSelectList('courses')">
+          <option value="" disabled selected>Add to course</option>
+          <% for (let i = 0; i < system.courses.length; i++) { %>
+            <option value="<%= system.courses[i] %>">
+              <%= system.courses[i] %>
+            </option>
+          <% } %>
+        </select>
+      </fieldset>
+			<fieldset>
+				<legend>Content</legend>
+
+				<ul id="pageContent">
+					<li>
+						<span class="content-tip">Paragraph</span>
+						<textarea name="content-p"><%= item.paragraph %></textarea>
+					</li>
+					<li>
+						<span class="content-tip">Image</span>
+						<% if (item.image) { %>
+							<img src="/media/<%= item.image %>" alt="Image about <% item.image %>">
+						<% } %>
+						<input name="content-i-name" type="hidden" value="<%= item.image %>">
+						<input name="content-" type="file" accept="image/*" onblur="setImageName()">
+					</li>
+					<li>
+						<span class="content-tip">Embedded video (YouTube or Vimeo)</span>
+						<input name="content-e" type="text" value="<%= item.video %>">
+					</li>
+				</ul>
+			</fieldset>
+
+      <input type="submit" value="Submit">
+    </form>
+
+		<%- include ../partials/footer -%>

@@ -23,6 +23,7 @@ const upload = multer({
 router.use('/menus', require('./menus'));
 router.use('/types', require('./types'));
 router.use('/pages', upload.any(), require('./pages'));
+router.use('/portfolio', upload.any(), require('./portfolio'));
 
 // [GET] /subterra
 router.get('/', (req, res) => {
@@ -33,8 +34,8 @@ router.get('/', (req, res) => {
     types: []
   };
 
-  // Fetch all pages from database
   req.getConnection((err, connection) => {
+    // Fetch all pages from database
     connection.query(`
       SELECT * FROM types
     `, [], (err, results) => {
@@ -86,8 +87,8 @@ router.post('/login', (req, res) => {
     password: req.body.password
   };
 
-  // Select user from database based on submitted form
   req.getConnection((err, connection) => {
+    // Select user from database based on submitted form
     connection.query('SELECT * FROM users WHERE username = ? AND password = ?',
       [data.username, data.password], (err, results) => {
       if (results.length > 0) {
