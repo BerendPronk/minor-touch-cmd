@@ -11,8 +11,8 @@ router.get('/', (req, res) => {
     types: []
   };
 
-  // Fetch all types from database
   req.getConnection((err, connection) => {
+    // Fetch all types from database
     connection.query(`
       SELECT * FROM types
     `, [], (err, results) => {
@@ -106,10 +106,11 @@ router.get('/edit/:id', (req, res) => {
     modules: []
   };
 
-  // Select page with ID from GET parameter
   req.getConnection((err, connection) => {
+    // Select type with ID from GET parameter
     connection.query(`
-      SELECT * FROM types WHERE id = '${ req.params.id }'
+      SELECT * FROM types
+      WHERE id = '${ req.params.id }'
     `, [], (err, results) => {
       const type = results[0];
 
@@ -157,8 +158,8 @@ router.post('/edit/:id', (req, res) => {
     modules: req.body.modules
   };
 
-  // Update type in database
   req.getConnection((err, connection) => {
+    // Update type in database
     connection.query(`
       UPDATE types
       SET name = '${ data.name }', defaultModules = '${ data.modules }'
@@ -174,8 +175,8 @@ router.post('/edit/:id', (req, res) => {
 router.get('/delete/:id', (req, res) => {
   debug(`[${ req.method }] /subterra/types/delete/${ req.params.id }`);
 
-  // Remove page from database
   req.getConnection((err, connection) => {
+    // Remove page from database
     connection.query(`
       DELETE FROM types
       WHERE id = ${ req.params.id }
