@@ -529,13 +529,35 @@ router.get('/delete/:id', (req, res) => {
 
   // Remove page from database
   req.getConnection((err, connection) => {
+    // Retrieve page name
     connection.query(`
-      DELETE FROM pages
+      SELECT * FROM pages
       WHERE id = ${ req.params.id }
-    `, [], (err, results) => {
-      // Redirect to page overview page
+    `, [], (err, pages) => {
+      const page = pages[0].title;
+
+      // Remove page included in menus table (',page' - 'page,' - 'page')
+      connection.query(`
+        UPDATE menus
+        SET children = REPLACE(REPLACE(REPLACE(children, ',${ page }', ''), '${ page },', ''), '${ page }', '')
+      `, [], (err, menus) => {
+
+        // Remove page included in portfolio table (',page' - 'page,' - 'page')
+        connection.query(`
+          UPDATE portfolio
+          SET courses = REPLACE(REPLACE(REPLACE(courses, ',${ page }', ''), '${ page },', ''), '${ page }', '')
+        `, [], (err, portfolio) => {
+
+          connection.query(`
+            DELETE FROM pages
+            WHERE id = ${ req.params.id }
+            `, [], (err, results) => {
+              // Redirect to page overview page
+              res.redirect('/subterra/pages');
+            });
+        });
+      });
     });
-    res.redirect('/subterra/pages');
   });
 });
 

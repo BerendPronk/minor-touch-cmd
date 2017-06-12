@@ -181,8 +181,8 @@ router.get('/delete/:id', (req, res) => {
       WHERE id = ${ req.params.id }
     `, [], (err, results) => {
       // Redirect to type overview page
+      res.redirect('/subterra/types');
     });
-    res.redirect('/subterra/types');
   });
 });
 

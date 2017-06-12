@@ -174,15 +174,30 @@ router.post('/edit/:id', (req, res) => {
 router.get('/delete/:id', (req, res) => {
   debug(`[${ req.method }] /subterra/menus/delete/${ req.params.id }`);
 
-  // Remove menu from database
   req.getConnection((err, connection) => {
+    // Retrieve menu name
     connection.query(`
-      DELETE FROM menus
+      SELECT * FROM menus
       WHERE id = ${ req.params.id }
-    `, [], (err, results) => {
-      // Redirect to menu overview page
+    `, [], (err, menus) => {
+      const menu = menus[0].name;
+
+      // Remove menu included in pages table (',menu' - 'menu,' - 'menu')
+      connection.query(`
+        UPDATE pages
+        SET menus = REPLACE(REPLACE(REPLACE(menus, ',${ menu }', ''), '${ menu },', ''), '${ menu }', '')
+      `, [], (err, pages) => {
+
+        // Remove menu from it's own table in database
+        connection.query(`
+          DELETE FROM menus
+          WHERE id = ${ req.params.id }
+          `, [], (err, results) => {
+            // Redirect to menu overview page
+            res.redirect('/subterra/menus');
+          });
+      });
     });
-    res.redirect('/subterra/menus');
   });
 });
 
