@@ -1,5 +1,3 @@
-let formSubmit = false;
-
 // Add new list item to given type
 function addSelectList(type) {
   const formInput = document.querySelector(`input[name="${ type }"]`);
@@ -243,7 +241,7 @@ function setInput() {
     break;
     case 'select':
       event.target.setAttribute('value', event.target.value);
-      
+
       event.target.querySelectorAll('option').forEach(option => {
         if (option.value === event.target.value) {
           option.setAttribute('selected', true);
@@ -353,11 +351,6 @@ function setButtonAnchor() {
   buttonInput.value = `${ buttonName }|${ buttonAnchor }`;
 }
 
-// Set formSubmit to active
-function submitForm() {
-  formSubmit = true;
-}
-
 // Hide/show an element
 function toggleShow(element) {
   const toToggle = document.querySelector(element);
@@ -371,11 +364,24 @@ function toggleShow(element) {
   event.preventDefault();
 }
 
-// Alert user before page unload to prevent data loss
-// window.onbeforeunload = () => {
-//   if (!formSubmit) {
-//     return 'You may have some unsaved changes, do you really want to leave this page?';
-//   } else {
-//     return;
-//   }
-// };
+let formSubmit = false;
+const disabledPaths = [
+  '/subterra',
+  '/subterra/login'
+];
+
+// Set formSubmit to active
+function submitForm() {
+  formSubmit = true;
+}
+
+if (disabledPaths.indexOf(location.pathname) === -1) {
+  // Alert user before page unload to prevent data loss
+  window.onbeforeunload = () => {
+    if (!formSubmit) {
+      return 'You may have some unsaved changes, do you really want to leave this page?';
+    } else {
+      return;
+    }
+  };
+}

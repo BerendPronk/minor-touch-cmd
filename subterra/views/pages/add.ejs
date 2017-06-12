@@ -22,6 +22,7 @@
 				<legend>Type</legend>
 
 				<select name="type">
+					<option value="" disabled selected>Select a page type</option>
 					<% for (let i = 0; i < system.types.length; i++) { %>
 						// Set current page type to selected
 						<option value="<%= system.types[i] %>" <%= system.types[i] === page.type ? 'selected' : '' %>>
