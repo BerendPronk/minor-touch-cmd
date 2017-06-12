@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
     types: []
   };
 
-  // Fetch all pages from database
+  // Fetch all types from database
   req.getConnection((err, connection) => {
     connection.query(`
       SELECT * FROM types

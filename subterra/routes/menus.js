@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
     menus: []
   };
 
-  // Fetch all pages from database
+  // Fetch all menus from database
   req.getConnection((err, connection) => {
     connection.query(`
       SELECT * FROM menus
