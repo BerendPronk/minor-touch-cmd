@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="nl">
+	<head>
+		<meta charset="UTF-8">
+
+		<title>Portfolio</title>
+
+    <%- include ../partials/head -%>
+
+    <%- include ../partials/header -%>
+
+    <h1>Portfolio</h1>
+
+    <a href="/subterra/portfolio/add">Add a portfolio item</a>
+
+    <% if (system.portfolio.length > 0) { %>
+      <ul>
+        <% for (let i = 0; i < system.portfolio.length; i++) { %>
+          <li>
+            <a href="/subterra/portfolio/edit/<%= system.portfolio[i].id %>">
+              <%= system.portfolio[i].title %>
+            </a>
+            | <%= system.portfolio[i].courses.replace(',', ', ') %>
+						<button data-action="delete type" onclick="deleteItem('portfolio', <%= system.portfolio[i].id %>)">delete</button>
+          </li>
+        <% } %>
+      </ul>
+    <% } else { %>
+      <p>No portfolio items found.</p>
+    <% } %>
+
+		<%- include ../partials/footer -%>
