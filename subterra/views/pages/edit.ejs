@@ -24,6 +24,7 @@
 				<legend>Type</legend>
 
 				<select name="type">
+					<option value="" disabled selected>Select a page type</option>
 					<% for (let i = 0; i < system.types.length; i++) { %>
 						// Set current page type to selected
 						<option value="<%= system.types[i] %>" <%= system.types[i] === page.type ? 'selected' : '' %>>
@@ -49,7 +50,7 @@
 					<% } %>
 				</ul>
 
-				<input name="menus" type="text" value="<%= page.menus %>">
+				<input name="menus" type="hidden" value="<%= page.menus %>">
 
 				<select id="menuSelect" onchange="addSelectList('menus')">
 					<option value="" disabled selected>Add another menu</option>
