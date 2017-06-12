@@ -19,7 +19,7 @@
 
 		<button data-action="delete page" onclick="deleteItem('pages', <%= page.id %>)">Delete <%= page.title %></button>
 
-		<form enctype="multipart/form-data" action="/subterra/pages/edit/<%= page.id %>" method="post">
+		<form enctype="multipart/form-data" action="/subterra/pages/edit/<%= page.id %>" method="post" onsubmit="submitForm()">
 			<fieldset>
 				<legend>Type</legend>
 
@@ -34,7 +34,7 @@
 			</fieldset>
 			<fieldset>
 				<legend>Title</legend>
-				
+
 				<input type="text" name="title" value="<%= page.title %>" required>
       </fieldset>
 			<fieldset>
@@ -43,15 +43,15 @@
 				<ul id="pageMenus">
 					<% for (let i = 0; i < page.menus.length; i++) { %>
 						<li>
-							<span data-type="menu-title"><%= page.menus[i] %></span>
-							<button data-type="menu-delete" onclick="removeMenu()">X</button
+							<span data-type="menus-name"><%= page.menus[i] %></span>
+							<button data-type="menus-delete" onclick="removeSelectList('menus')">X</button
 						</li>
 					<% } %>
 				</ul>
 
-				<input name="menus" type="hidden" value="<%= page.menus %>">
+				<input name="menus" type="text" value="<%= page.menus %>">
 
-				<select id="menuSelect">
+				<select id="menuSelect" onchange="addSelectList('menus')">
 					<option value="" disabled selected>Add another menu</option>
 					<% for (let i = 0; i < system.menus.length; i++) { %>
 						<option value="<%= system.menus[i] %>">
@@ -78,8 +78,9 @@
 			</fieldset>
 
 			<fieldset>
-				<button id="moduleButton">Add Module</button>
-				<select id="moduleSelect" style="display:none;">
+				<button id="moduleButton" onclick="toggleShow('#moduleSelect')">Add Module</button>
+
+				<select id="moduleSelect" class="hidden" onchange="addModule()">
 					<option value="" disabled selected>Choose a module</option>
 					<% for (let i = 0; i < system.modules.length; i++) { %>
 						<option value="<%= system.modules[i] %>">
@@ -93,8 +94,5 @@
     </form>
 
 		<p id="systemPages" class="hidden"><%= system.pages %></p>
-
-
-		<script src="/subterra/assets/script/page.js"></script>
 
 		<%- include ../partials/footer -%>
