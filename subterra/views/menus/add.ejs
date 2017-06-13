@@ -9,6 +9,12 @@
 
     <%- include ../partials/header -%>
 
+		<% if (feedback) { %>
+			<div id="feedback" class="<%= feedbackState %>">
+				<%= feedback %>
+			</div>
+		<% } %>
+
     <h1>Add a new menu</h1>
 
 		<form action="/subterra/menus/add" method="post" onsubmit="submitForm()">

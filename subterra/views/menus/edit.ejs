@@ -9,6 +9,12 @@
 
     <%- include ../partials/header -%>
 
+		<% if (feedback) { %>
+			<div id="feedback" class="<%= feedbackState %>">
+				<%= feedback %>
+			</div>
+		<% } %>
+
     <h1>Edit menu '<%= menu.name %>'</h1>
 
 		<button data-action="delete menu" onclick="deleteItem('menus', <%= menu.id %>)">Delete <%= menu.name %></button>

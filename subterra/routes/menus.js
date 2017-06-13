@@ -55,6 +55,7 @@ router.get('/add', (req, res) => {
     connection.query(`
       SELECT * FROM pages
     `, [], (err, pages) => {
+      // Push pages in system object
       pages.forEach(page => {
         system.pages.push(page.title);
       });
@@ -81,18 +82,59 @@ router.get('/add', (req, res) => {
 router.post('/add', (req, res) => {
   debug(`[${ req.method }] /subterra/menus/add`);
 
+  // Object containing system data, after MySQL queries
+  let system = {
+    pages: []
+  };
+
   const data = {
     name: req.body.name.replace(/'/, '"'),
     children: req.body.children
   };
 
   req.getConnection((err, connection) => {
-    // Add submitted data to database
+    // Fetch all menus from database
     connection.query(`
-      INSERT INTO menus SET ?
-    `, [data], (err, results) => {
-      // Navigate to /subterra/menus overview
-      res.redirect('/subterra/menus');
+      SELECT * FROM menus
+    `, [], (err, menus) => {
+      let exists;
+
+      // Check if menu name already exists
+      menus.forEach(menu => {
+        if (menu.name === data.name) {
+          exists = true;
+        }
+      });
+
+      if (!exists) {
+        // Add submitted data to database
+        connection.query(`
+          INSERT INTO menus SET ?
+        `, [data], (err, results) => {
+          // Navigate to /subterra/menus overview
+          res.redirect('/subterra/menus');
+        });
+      } else {
+        // Fetch all system page modules from database
+        connection.query(`
+          SELECT * FROM pages
+        `, [], (err, pages) => {
+          // Push pages in system object
+          pages.forEach(page => {
+            system.pages.push(page.title);
+          });
+
+          res.render('menus/add', {
+            username: req.session.username,
+            pathname: '/subterra/menus',
+            feedback: `Menu name '${ data.name }' already exists.`,
+            feedbackState: 'negative',
+            system: {
+              pages: system.pages
+            }
+          });
+        });
+      }
     });
   });
 });
@@ -118,6 +160,7 @@ router.get('/edit/:id', (req, res) => {
       connection.query(`
         SELECT * FROM pages
       `, [], (err, pages) => {
+        // Push pages in system object
         pages.forEach(page => {
           system.pages.push(page.title);
         });
@@ -153,20 +196,77 @@ router.get('/edit/:id', (req, res) => {
 router.post('/edit/:id', (req, res) => {
   debug(`[${ req.method }] /subterra/menus/edit/${ req.params.id }`);
 
+  // Object containing system data, after MySQL queries
+  let system = {
+    pages: []
+  };
+
   const data = {
     name: req.body.name.replace(/'/, '"'),
     children: req.body.children
   };
 
   req.getConnection((err, connection) => {
-    // Update menu in database
+    // Fetch all menus from database
     connection.query(`
-      UPDATE menus
-      SET name = '${ data.name }', children = '${ data.children }'
-      WHERE id = ${ req.params.id }
-    `, [], (err, results) => {
-      // Navigate to /subterra/menus overview
-      res.redirect('/subterra/menus');
+      SELECT * FROM menus
+    `, [], (err, menus) => {
+      let exists;
+
+      // Check if menu name already exists
+      menus.forEach(menu => {
+        if (menu.id !== req.params.id && menu.name === data.name) {
+          exists = true;
+        }
+      });
+
+      if (!exists) {
+        // Update menu in database
+        connection.query(`
+          UPDATE menus
+          SET name = '${ data.name }', children = '${ data.children }'
+          WHERE id = ${ req.params.id }
+        `, [], (err, results) => {
+          // Navigate to /subterra/menus overview
+          res.redirect('/subterra/menus');
+        });
+      } else {
+        // Select menu with ID from GET parameter
+        connection.query(`
+          SELECT * FROM menus
+          WHERE id = '${ req.params.id }'
+        `, [], (err, results) => {
+          const menu = results[0];
+
+          // Fetch all system page modules from database
+          connection.query(`
+            SELECT * FROM pages
+          `, [], (err, pages) => {
+            // Push pages in system object
+            pages.forEach(page => {
+              system.pages.push(page.title);
+            });
+
+            res.render('menus/edit', {
+              username: req.session.username,
+              pathname: '/subterra/menus',
+              feedback: `Menu name '${ data.name }' already exists.`,
+              feedbackState: 'negative',
+              system: {
+                pages: system.pages
+              },
+              menu: {
+                id: menu.id,
+                name: menu.name,
+                children: menu.children.split(',').filter(e => {
+                  // Removes empty data fields
+                  return e;
+                })
+              }
+            });
+          });
+        });
+      }
     });
   });
 });
