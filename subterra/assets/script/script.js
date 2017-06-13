@@ -367,7 +367,10 @@ let formSubmit = false;
 const disabledPaths = [
   '/subterra',
   '/subterra/login',
-  '/subterra/search/'
+  '/subterra/search/',
+  '/subterra/types',
+  '/subterra/pages',
+  '/subterra/portfolio',
 ];
 
 // Set formSubmit to active
