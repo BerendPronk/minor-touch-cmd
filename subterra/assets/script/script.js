@@ -369,6 +369,7 @@ const disabledPaths = [
   '/subterra/login',
   '/subterra/search/',
   '/subterra/types',
+  '/subterra/menus',
   '/subterra/pages',
   '/subterra/portfolio'
 ];
