@@ -176,8 +176,8 @@ router.post('/edit/:id', (req, res) => {
       SET ?
       WHERE id = ${ req.params.id }
     `, [data], (err, results) => {
-      // Redirect to same page with newly added data
-      res.redirect(`/subterra/portfolio/edit/${ req.params.id }`);
+      // Navigate to /subterra/portfolio overview
+      res.redirect('/subterra/portfolio');
     });
   });
 });

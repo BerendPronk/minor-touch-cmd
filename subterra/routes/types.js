@@ -165,8 +165,8 @@ router.post('/edit/:id', (req, res) => {
       SET name = '${ data.name }', defaultModules = '${ data.modules }'
       WHERE id = ${ req.params.id }
     `, [], (err, results) => {
-      // Redirect to same page with newly added data
-      res.redirect(`/subterra/types/edit/${ req.params.id }`);
+      // Navigate to /subterra/types overview
+      res.redirect('/subterra/types');
     });
   });
 });

@@ -516,8 +516,8 @@ router.post('/edit/:id', (req, res) => {
       SET type = '${ data.type }', title = '${ data.title }', menus = '${ data.menus }', content = '${ data.content }'
       WHERE id = ${ req.params.id }
     `, [], (err, results) => {
-      // Redirect to current page with newly added data
-      res.redirect(`/subterra/pages/edit/${ req.params.id }`);
+      // Navigate to /subterra/pages overview
+      res.redirect('/subterra/pages');
     });
   });
 });

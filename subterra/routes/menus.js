@@ -165,8 +165,8 @@ router.post('/edit/:id', (req, res) => {
       SET name = '${ data.name }', children = '${ data.children }'
       WHERE id = ${ req.params.id }
     `, [], (err, results) => {
-      // Redirect to same page with newly added data
-      res.redirect(`/subterra/menus/edit/${ req.params.id }`);
+      // Navigate to /subterra/menus overview
+      res.redirect('/subterra/menus');
     });
   });
 });
