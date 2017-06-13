@@ -366,7 +366,8 @@ function toggleShow(element) {
 let formSubmit = false;
 const disabledPaths = [
   '/subterra',
-  '/subterra/login'
+  '/subterra/login',
+  '/subterra/search/'
 ];
 
 // Set formSubmit to active
