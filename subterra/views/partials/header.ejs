@@ -11,4 +11,9 @@
       <li><a href="/subterra/portfolio" <%= pathname === '/subterra/portfolio' ? 'class="active"' : '' %>>Portfolio</a></li>
       <li><a href="/subterra/logout">Logout</a></li>
     </ul>
+
+    <form action="/subterra/search/" method="get">
+      <input name="query" type="search">
+      <input type="submit" value="Search">
+    </form>
   <% } %>
