@@ -229,7 +229,7 @@ router.get('/delete/:id', (req, res) => {
           WHERE id = ${ req.params.id }
           `, [], (err, results) => {
             // Redirect to menu overview page and provide feedback that menu is successfully deleted
-            res.redirect(`/subterra/menus?feedback=Successfully deleted menu.&state=positive`);
+            res.redirect(`/subterra/menus?feedback=Successfully deleted the menu.&state=positive`);
           });
       });
     });

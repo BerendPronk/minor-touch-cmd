@@ -511,7 +511,7 @@ router.get('/delete/:id', (req, res) => {
             WHERE id = ${ req.params.id }
             `, [], (err, results) => {
               // Redirect to page overview page
-              res.redirect('/subterra/pages?feedback=Successfully deleted page.&state=positive');
+              res.redirect('/subterra/pages?feedback=Successfully deleted the page.&state=positive');
             });
         });
       });

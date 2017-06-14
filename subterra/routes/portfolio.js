@@ -225,7 +225,7 @@ router.get('/delete/:id', (req, res) => {
       WHERE id = ${ req.params.id }
     `, [], (err, results) => {
       // Redirect to portfolio overview page and provide feedback that portfolio item is successfully deleted
-      res.redirect(`/subterra/portfolio?feedback=Successfully deleted portfolio item.&state=positive`);
+      res.redirect(`/subterra/portfolio?feedback=Successfully deleted the portfolio item.&state=positive`);
     });
   });
 });

@@ -216,7 +216,7 @@ router.get('/delete/:id', (req, res) => {
       WHERE id = ${ req.params.id }
     `, [], (err, results) => {
       // Redirect to page type overview page and provide feedback that page type is successfully deleted
-      res.redirect(`/subterra/types?feedback=Successfully deleted page type.&state=positive`);
+      res.redirect(`/subterra/types?feedback=Successfully deleted the page type.&state=positive`);
     });
   });
 });
