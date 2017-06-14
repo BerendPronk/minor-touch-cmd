@@ -9,6 +9,12 @@
 
     <%- include ../partials/header -%>
 
+    <% if (feedback) { %>
+      <div id="feedback" class="<%= feedbackState %>">
+        <%= feedback %>
+      </div>
+    <% } %>
+
     <h1>Page types</h1>
 
     <a href="/subterra/types/add">Add a page type</a>
@@ -20,7 +26,7 @@
             <a href="/subterra/types/edit/<%= system.types[i].id %>">
               <%= system.types[i].name %>
             </a>
-            | <%= system.types[i].modules.replace(/,/g, ', ') %>
+            | <%= system.types[i].defaultModules.replace(/,/g, ', ') %>
 						<button data-action="delete type" onclick="deleteItem('types', <%= system.types[i].id %>)">delete</button>
           </li>
         <% } %>

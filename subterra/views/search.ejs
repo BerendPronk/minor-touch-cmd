@@ -9,6 +9,12 @@
 
     <%- include partials/header -%>
 
+    <% if (feedback) { %>
+      <div id="feedback" class="<%= feedbackState %>">
+        <%= feedback %>
+      </div>
+    <% } %>
+
     <h1>Results for '<%= query %>':</h1>
 
     <%# Check if category contains result%>
