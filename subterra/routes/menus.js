@@ -127,7 +127,7 @@ router.post('/add', (req, res) => {
           res.render('menus/add', {
             username: req.session.username,
             pathname: '/subterra/menus',
-            feedback: `Menu name '${ data.name }' already exists.`,
+            feedback: `Menu with name '${ data.name }' already exists.`,
             feedbackState: 'negative',
             system: {
               pages: system.pages
@@ -250,7 +250,7 @@ router.post('/edit/:id', (req, res) => {
             res.render('menus/edit', {
               username: req.session.username,
               pathname: '/subterra/menus',
-              feedback: `Menu name '${ data.name }' already exists.`,
+              feedback: `Menu with name '${ data.name }' already exists.`,
               feedbackState: 'negative',
               system: {
                 pages: system.pages

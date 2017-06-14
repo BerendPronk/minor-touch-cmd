@@ -127,7 +127,7 @@ router.post('/add', (req, res) => {
           res.render('types/add', {
             username: req.session.username,
             pathname: '/subterra/types',
-            feedback: `Type name '${ data.name }' already exists.`,
+            feedback: `Page type with name '${ data.name }' already exists.`,
             feedbackState: 'negative',
             system: {
               modules: system.modules
@@ -249,7 +249,7 @@ router.post('/edit/:id', (req, res) => {
             res.render('types/edit', {
               username: req.session.username,
               pathname: '/subterra/types',
-              feedback: `Type name '${ data.name }' already exists.`,
+              feedback: `Page type with name '${ data.name }' already exists.`,
               feedbackState: 'negative',
               system: {
                 modules: system.modules
