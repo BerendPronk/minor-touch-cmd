@@ -44,17 +44,20 @@ router.get('/', (req, res) => {
         system.types.push(type.name);
       });
 
-      // Checks if a session already exists
+      // Check if a session already exists
       if (req.session.username) {
         res.render('dashboard', {
           username: req.session.username,
           pathname: '/subterra',
+          feedback: req.query.feedback,
+          feedbackState: req.query.state,
           system: {
             types: system.types
           }
         });
       } else {
-        res.redirect('/subterra/login');
+        // Provide feedback that login session has ended
+        res.redirect(`/subterra/login?feedback=Your login session ended. Log in again below.&state=negative`);
       }
     });
   });
@@ -64,17 +67,16 @@ router.get('/', (req, res) => {
 router.get('/login', (req, res) => {
   debug(`[${ req.method }] /subterra/login`);
 
-  // Checks if a session already exists
+  // Check if a session already exists
   if (req.session.username) {
-    res.redirect('/subterra');
+    // Navigate to subterra dashboard
+    res.redirect(`/subterra'`);
   } else {
-    debug(`Login requested`);
-
     res.render('login', {
       username: false,
       pathname: '/login',
-      feedback: false,
-      feedbackState: false
+      feedback: req.query.feedback,
+      feedbackState: req.query.state,
     });
   }
 });
@@ -95,16 +97,11 @@ router.post('/login', (req, res) => {
       if (results.length > 0) {
         req.session.username = results[0].username;
 
-        debug(`Admin logged in successfully`);
-
-        res.redirect('/subterra');
+        // Navigate to subterra dashboard and provide feedback with username
+        res.redirect(`/subterra?feedback=Welcome back ${ req.session.username }!&state=positive`);
       } else {
-        res.render('login', {
-          username: false,
-          pathname: '/subterra',
-          feedback: 'Wrong username or password given, please try again.',
-          feedbackState: 'negative'
-        });
+        // Provide feedback that wrong data has been entered
+        res.redirect(`/subterra/login?feedback=Wrong username or password given, please try again.&state=negative`);
       }
     });
   });
@@ -115,8 +112,6 @@ router.get('/logout', (req, res) => {
   debug(`[${ req.method }] /subterra/logout`);
 
   req.session.destroy();
-
-  debug(`Admin logged out successfully`);
 
   res.redirect('/');
 });
@@ -195,13 +190,13 @@ router.get('/search/*', (req, res) => {
               });
             });
 
-            // Checks if a session already exists
+            // Check if a session already exists
             if (req.session.username) {
               res.render('search', {
                 username: req.session.username,
                 pathname: '/search',
-                feedback: false,
-                feedbackState: false,
+                feedback: req.query.feedback,
+                feedbackState: req.query.state,
                 query: queryString(),
                 system: {
                   types: system.types,
@@ -211,7 +206,8 @@ router.get('/search/*', (req, res) => {
                 }
               });
             } else {
-              res.redirect('/subterra/login');
+              // Provide feedback that login session has ended
+              res.redirect(`/subterra/login?feedback=Your login session ended. Log in again below.&state=negative`);
             }
           });
         });
