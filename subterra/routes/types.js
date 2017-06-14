@@ -22,21 +22,24 @@ router.get('/', (req, res) => {
         system.types.push({
           id: type.id,
           name: type.name,
-          modules: type.defaultModules
+          defaultModules: type.defaultModules
         });
       });
 
-      // Checks if a session already exists
+      // Check if a session already exists
       if (req.session.username) {
         res.render('types/index', {
           username: req.session.username,
           pathname: '/subterra/types',
+          feedback: req.query.feedback,
+          feedbackState: req.query.state,
           system: {
             types: system.types
           }
         });
       } else {
-        res.redirect('/subterra/login');
+        // Provide feedback that login session has ended
+        res.redirect(`/subterra/login?feedback=Your login session ended. Log in again below.&state=negative`);
       }
     });
   });
@@ -52,17 +55,18 @@ router.get('/add', (req, res) => {
       category: 'types',
       tables: ['modules'],
       callback: systemData => {
-        // Checks if a session already exists
+        // Check if a session already exists
         if (req.session.username) {
           res.render('types/add', {
             username: req.session.username,
             pathname: '/subterra/types',
-            feedback: false,
-            feedbackState: false,
+            feedback: req.query.feedback,
+            feedbackState: req.query.state,
             system: systemData
           });
         } else {
-          res.redirect('/subterra/login');
+          // Provide feedback that login session has ended
+          res.redirect(`/subterra/login?feedback=Your login session ended. Log in again below.&state=negative`);
         }
       }
     });
@@ -92,29 +96,21 @@ router.post('/add', (req, res) => {
         }
       });
 
-      if (!exists) {
+      // Check if a session already exists
+      if (!req.session.username) {
+        // Provide feedback that login session has ended
+        res.redirect(`/subterra/login?feedback=Your login session ended. Log in again below.&state=negative`);
+      } else if (!exists) {
         // Add submitted data to database
         connection.query(`
           INSERT INTO types SET ?
         `, [data], (err, results) => {
-          // Navigate to /subterra/types overview
-          res.redirect('/subterra/types');
+          // Navigate to /subterra/types overview and provide feedback that page type was successfully added
+          res.redirect(`/subterra/types?feedback='${ data.name }' was successfully added.&state=positive`);
         });
       } else {
-        // Fetch all system page modules from database
-        database.retrieve(connection, {
-          category: 'types',
-          tables: ['modules'],
-          callback: systemData => {
-            res.render('types/add', {
-              username: req.session.username,
-              pathname: '/subterra/types',
-              feedback: `Page type with name '${ data.name }' already exists.`,
-              feedbackState: 'negative',
-              system: systemData
-            });
-          }
-        });
+        // Provide feedback that page type name already exists
+        res.redirect(`/subterra/types/add?feedback=Page type with name '${ data.name }' already exists.&state=negative`);
       }
     });
   });
@@ -137,13 +133,13 @@ router.get('/edit/:id', (req, res) => {
         category: 'types',
         tables: ['modules'],
         callback: systemData => {
-          // Checks if a session already exists
+          // Check if a session already exists
           if (req.session.username) {
             res.render('types/edit', {
               username: req.session.username,
               pathname: '/subterra/types',
-              feedback: false,
-              feedbackState: false,
+              feedback: req.query.feedback,
+              feedbackState: req.query.state,
               system: systemData,
               type: {
                 id: type.id,
@@ -155,7 +151,8 @@ router.get('/edit/:id', (req, res) => {
               }
             });
           } else {
-            res.redirect('/subterra/login');
+            // Provide feedback that login session has ended
+            res.redirect(`/subterra/login?feedback=Your login session ended. Log in again below.&state=negative`);
           }
         }
       });
@@ -186,47 +183,23 @@ router.post('/edit/:id', (req, res) => {
         }
       });
 
-      if (!exists) {
+      // Check if a session already exists
+      if (!req.session.username) {
+        // Provide feedback that login session has ended
+        res.redirect(`/subterra/login?feedback=Your login session ended. Log in again below.&state=negative`);
+      } else if (!exists) {
         // Update type in database
         connection.query(`
           UPDATE types
           SET name = '${ data.name }', defaultModules = '${ data.modules }'
           WHERE id = ${ req.params.id }
         `, [], (err, results) => {
-          // Navigate to /subterra/types overview
-          res.redirect('/subterra/types');
+          // Navigate to /subterra/types overview and provide feedback that page type was successfully edited
+          res.redirect(`/subterra/types?feedback='${ data.name }' was successfully edited.&state=positive`);
         });
       } else {
-        // Select type with ID from GET parameter
-        connection.query(`
-          SELECT * FROM types
-          WHERE id = '${ req.params.id }'
-        `, [], (err, types) => {
-          const type = types[0];
-
-          // Fetch all system page modules from database
-          database.retrieve(connection, {
-            category: 'types',
-            tables: ['modules'],
-            callback: systemData => {
-              res.render('types/edit', {
-                username: req.session.username,
-                pathname: '/subterra/types',
-                feedback: `Page type with name '${ data.name }' already exists.`,
-                feedbackState: 'negative',
-                system: systemData,
-                type: {
-                  id: type.id,
-                  name: type.name,
-                  modules: type.defaultModules.split(',').filter(e => {
-                    // Removes empty data fields
-                    return e;
-                  })
-                }
-              });
-            }
-          });
-        });
+        // Provide feedback that page type name already exists
+        res.redirect(`/subterra/types/edit/${ req.params.id }/?feedback=Page type with name '${ data.name }' already exists.&state=negative`);
       }
     });
   });
@@ -242,8 +215,8 @@ router.get('/delete/:id', (req, res) => {
       DELETE FROM types
       WHERE id = ${ req.params.id }
     `, [], (err, results) => {
-      // Redirect to type overview page
-      res.redirect('/subterra/types');
+      // Redirect to page type overview page and provide feedback that page type is successfully deleted
+      res.redirect(`/subterra/types?feedback=Successfully deleted page type.&state=positive`);
     });
   });
 });

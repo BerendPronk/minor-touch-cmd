@@ -26,17 +26,20 @@ router.get('/', (req, res) => {
         });
       });
 
-      // Checks if a session already exists
+      // Check if a session already exists
       if (req.session.username) {
         res.render('menus/index', {
           username: req.session.username,
           pathname: '/subterra/menus',
+          feedback: req.query.feedback,
+          feedbackState: req.query.state,
           system: {
             menus: system.menus
           }
         });
       } else {
-        res.redirect('/subterra/login');
+        // Provide feedback that login session has ended
+        res.redirect(`/subterra/login?feedback=Your login session ended. Log in again below.&state=negative`);
       }
     });
   });
@@ -52,17 +55,18 @@ router.get('/add', (req, res) => {
       category: 'menus',
       tables: ['pages'],
       callback: systemData => {
-        // Checks if a session already exists
+        // Check if a session already exists
         if (req.session.username) {
           res.render('menus/add', {
             username: req.session.username,
             pathname: '/subterra/menus',
-            feedback: false,
-            feedbackState: false,
+            feedback: req.query.feedback,
+            feedbackState: req.query.state,
             system: systemData
           });
         } else {
-          res.redirect('/subterra/login');
+          // Provide feedback that login session has ended
+          res.redirect(`/subterra/login?feedback=Your login session ended. Log in again below.&state=negative`);
         }
       }
     });
@@ -92,29 +96,21 @@ router.post('/add', (req, res) => {
         }
       });
 
-      if (!exists) {
+      // Check if a session already exists
+      if (!req.session.username) {
+        // Provide feedback that login session has ended
+        res.redirect(`/subterra/login?feedback=Your login session ended. Log in again below.&state=negative`);
+      } else if (!exists) {
         // Add submitted data to database
         connection.query(`
           INSERT INTO menus SET ?
         `, [data], (err, results) => {
-          // Navigate to /subterra/menus overview
-          res.redirect('/subterra/menus');
+          // Navigate to /subterra/menus overview and provide feedback that menu was successfully added
+          res.redirect(`/subterra/menus?feedback='${ data.name }' was successfully added.&state=positive`);
         });
       } else {
-        // Fetch all system pages from database
-        database.retrieve(connection, {
-          category: 'menus',
-          tables: ['pages'],
-          callback: systemData => {
-            res.render('menus/add', {
-              username: req.session.username,
-              pathname: '/subterra/menus',
-              feedback: `Menu with name '${ data.name }' already exists.`,
-              feedbackState: 'negative',
-              system: systemData
-            });
-          }
-        });
+        // Provide feedback that menu name already exists
+        res.redirect(`/subterra/menus/add?feedback=Menu with name '${ data.name }' already exists.&state=negative`);
       }
     });
   });
@@ -137,13 +133,13 @@ router.get('/edit/:id', (req, res) => {
         category: 'menus',
         tables: ['pages'],
         callback: systemData => {
-          // Checks if a session already exists
+          // Check if a session already exists
           if (req.session.username) {
             res.render('menus/edit', {
               username: req.session.username,
               pathname: '/subterra/menus',
-              feedback: false,
-              feedbackState: false,
+              feedback: req.query.feedback,
+              feedbackState: req.query.state,
               system: systemData,
               menu: {
                 id: menu.id,
@@ -155,7 +151,8 @@ router.get('/edit/:id', (req, res) => {
               }
             });
           } else {
-            res.redirect('/subterra/login');
+            // Provide feedback that login session has ended
+            res.redirect(`/subterra/login?feedback=Your login session ended. Log in again below.&state=negative`);
           }
         }
       });
@@ -186,46 +183,23 @@ router.post('/edit/:id', (req, res) => {
         }
       });
 
-      if (!exists) {
+      // Check if a session already exists
+      if (!req.session.username) {
+        // Provide feedback that login session has ended
+        res.redirect(`/subterra/login?feedback=Your login session ended. Log in again below.&state=negative`);
+      } else if (!exists) {
         // Update menu in database
         connection.query(`
           UPDATE menus
           SET name = '${ data.name }', children = '${ data.children }'
           WHERE id = ${ req.params.id }
         `, [], (err, results) => {
-          // Navigate to /subterra/menus overview
-          res.redirect('/subterra/menus');
+          // Navigate to /subterra/menus overview and provide feedback that menu was successfully edited
+          res.redirect(`/subterra/menus?feedback='${ data.name }' was successfully edited.&state=positive`);
         });
       } else {
-        // Select menu with ID from GET parameter
-        connection.query(`
-          SELECT * FROM menus
-          WHERE id = '${ req.params.id }'
-        `, [], (err, menus) => {
-          const menu = menus[0];
-
-          database.retrieve(connection, {
-            category: 'menus',
-            tables: ['pages'],
-            callback: systemData => {
-              res.render('menus/edit', {
-                username: req.session.username,
-                pathname: '/subterra/menus',
-                feedback: `Menu with name '${ data.name }' already exists.`,
-                feedbackState: 'negative',
-                system: systemData,
-                menu: {
-                  id: menu.id,
-                  name: menu.name,
-                  children: menu.children.split(',').filter(e => {
-                    // Removes empty data fields
-                    return e;
-                  })
-                }
-              });
-            }
-          });
-        });
+        // Provide feedback that menu name already exists
+        res.redirect(`/subterra/menus/edit/${ req.params.id }?feedback=Menu with name '${ data.name }' already exists.&state=negative`);
       }
     });
   });
@@ -254,8 +228,8 @@ router.get('/delete/:id', (req, res) => {
           DELETE FROM menus
           WHERE id = ${ req.params.id }
           `, [], (err, results) => {
-            // Redirect to menu overview page
-            res.redirect('/subterra/menus');
+            // Redirect to menu overview page and provide feedback that menu is successfully deleted
+            res.redirect(`/subterra/menus?feedback=Successfully deleted menu.&state=positive`);
           });
       });
     });

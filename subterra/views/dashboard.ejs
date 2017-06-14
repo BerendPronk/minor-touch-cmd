@@ -9,6 +9,12 @@
 
     <%- include partials/header -%>
 
+    <% if (feedback) { %>
+      <div id="feedback" class="<%= feedbackState %>">
+        <%= feedback %>
+      </div>
+    <% } %>
+
     <h1>Curriculum CMD: Subterra</h1>
 
     <button data-add="page" onclick="toggleShow('#pageTypes')">Add new page</button>

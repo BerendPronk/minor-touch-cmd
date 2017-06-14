@@ -223,8 +223,6 @@ function orderModule(direction) {
       field.outerHTML
     );
   });
-
-  event.preventDefault();
 }
 
 // Set value to input/textarea based on target
@@ -256,8 +254,6 @@ function deleteModule() {
   const field = event.target.parentNode.parentNode.parentNode;
 
   pageContent.removeChild(field);
-
-  event.preventDefault();
 }
 
 // Add image name to hidden input field
@@ -278,9 +274,7 @@ function addListInput() {
     `<li>
       <input type="text" oninput="addListItem()" onblur="setInput()">
     </li>`
-  )
-
-  event.preventDefault();
+  );
 }
 
 // Add list name input to hidden input field

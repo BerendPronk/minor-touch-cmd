@@ -26,17 +26,20 @@ router.get('/', (req, res) => {
         });
       });
 
-      // Checks if a session already exists
+      // Check if a session already exists
       if (req.session.username) {
         res.render('portfolio/index', {
           username: req.session.username,
           pathname: '/subterra/portfolio',
+          feedback: req.query.feedback,
+          feedbackState: req.query.state,
           system: {
             portfolio: system.portfolio
           }
         });
       } else {
-        res.redirect('/subterra/login');
+        // Provide feedback that login session has ended
+        res.redirect(`/subterra/login?feedback=Your login session ended. Log in again below.&state=negative`);
       }
     });
   });
@@ -52,17 +55,18 @@ router.get('/add', (req, res) => {
       category: 'portfolio',
       tables: ['pages'],
       callback: systemData => {
-        // Checks if a session already exists
+        // Check if a session already exists
         if (req.session.username) {
           res.render('portfolio/add', {
             username: req.session.username,
             pathname: '/subterra/portfolio',
-            feedback: false,
-            feedbackState: false,
+            feedback: req.query.feedback,
+            feedbackState: req.query.state,
             system: systemData
           });
         } else {
-          res.redirect('/subterra/login');
+          // Provide feedback that login session has ended
+          res.redirect(`/subterra/login?feedback=Your login session ended. Log in again below.&state=negative`);
         }
       }
     });
@@ -95,29 +99,21 @@ router.post('/add', (req, res) => {
         }
       });
 
-      if (!exists) {
+      // Check if a session already exists
+      if (!req.session.username) {
+        // Provide feedback that login session has ended
+        res.redirect(`/subterra/login?feedback=Your login session ended. Log in again below.&state=negative`);
+      } else if (!exists) {
         // Add submitted data to database
         connection.query(`
           INSERT INTO portfolio SET ?
         `, [data], (err, results) => {
-          // Navigate to /subterra/portfolio overview
-          res.redirect('/subterra/portfolio');
+          // Navigate to /subterra/portfolio overview and provide feedback that portfolio item was succesfully added
+          res.redirect(`/subterra/portfolio?feedback='${ data.title }' was successfully added.&state=positive`);
         });
       } else {
-        // Fetch all 'course' pages from database
-        database.retrieve(connection, {
-          category: 'portfolio',
-          tables: ['pages'],
-          callback: systemData => {
-            res.render('portfolio/add', {
-              username: req.session.username,
-              pathname: '/subterra/portfolio',
-              feedback: `Portfolio item with title '${ data.title }' already exists.`,
-              feedbackState: 'negative',
-              system: systemData
-            });
-          }
-        });
+        // Provide feedback that portfolio item title already exisits
+        res.redirect(`/subterra/portfolio/add?feedback='Portfolio item with title '${ data.title }' already exists.&state=negative`);
       }
     });
   });
@@ -140,13 +136,13 @@ router.get('/edit/:id', (req, res) => {
         category: 'portfolio',
         tables: ['pages'],
         callback: systemData => {
-          // Checks if a session already exists
+          // Check if a session already exists
           if (req.session.username) {
             res.render('portfolio/edit', {
               username: req.session.username,
               pathname: '/subterra/portfolio',
-              feedback: false,
-              feedbackState: false,
+              feedback: req.query.feedback,
+              feedbackState: req.query.state,
               system: systemData,
               item: {
                 id: item.id,
@@ -161,7 +157,8 @@ router.get('/edit/:id', (req, res) => {
               }
             });
           } else {
-            res.redirect('/subterra/login');
+            // Provide feedback that login session has ended
+            res.redirect(`/subterra/login?feedback=Your login session ended. Log in again below.&state=negative`);
           }
         }
       });
@@ -195,50 +192,23 @@ router.post('/edit/:id', (req, res) => {
         }
       });
 
-      if (!exists) {
+      // Check if a session already exists
+      if (!req.session.username) {
+        // Provide feedback that login session has ended
+        res.redirect(`/subterra/login?feedback=Your login session ended. Log in again below.&state=negative`);
+      } else if (!exists) {
         // Update portfolio item in database
         connection.query(`
           UPDATE portfolio
           SET ?
           WHERE id = ${ req.params.id }
         `, [data], (err, results) => {
-          // Navigate to /subterra/portfolio overview
-          res.redirect('/subterra/portfolio');
+          // Navigate to /subterra/portfolio overview and provide feedback that portfolio item was successfully edited
+          res.redirect(`/subterra/portfolio?feedback='${ data.title }' was successfully edited.&state=positive`);
         });
       } else {
-        // Select portfolio item with ID from GET parameter
-        connection.query(`
-          SELECT * FROM portfolio
-          WHERE id = '${ req.params.id }'
-        `, [], (err, portfolio) => {
-          const item = portfolio[0];
-
-          // Fetch all 'course' pages from database
-          database.retrieve(connection, {
-            category: 'portfolio',
-            tables: ['pages'],
-            callback: systemData => {
-              res.render('portfolio/edit', {
-                username: req.session.username,
-                pathname: '/subterra/portfolio',
-                feedback: `Portfolio item with title '${ data.title }' already exists.`,
-                feedbackState: 'negative',
-                system: systemData,
-                item: {
-                  id: item.id,
-                  title: item.title,
-                  courses: item.courses.split(',').filter(e => {
-                    // Removes empty data fields
-                    return e;
-                  }),
-                  paragraph: item.paragraph,
-                  image: item.image,
-                  video: item.video
-                }
-              });
-            }
-          });
-        });
+        // Provice feedback that portfolio item title already exists
+        res.redirect(`/subterra/portfolio/edit/${ req.params.id }?feedback=Portfolio item with title '${ data.title }' already exists.&state=negative`);
       }
     });
   });
@@ -254,8 +224,8 @@ router.get('/delete/:id', (req, res) => {
       DELETE FROM portfolio
       WHERE id = ${ req.params.id }
     `, [], (err, results) => {
-      // Redirect to portfolio overview page
-      res.redirect('/subterra/portfolio');
+      // Redirect to portfolio overview page and provide feedback that portfolio item is successfully deleted
+      res.redirect(`/subterra/portfolio?feedback=Successfully deleted portfolio item.&state=positive`);
     });
   });
 });

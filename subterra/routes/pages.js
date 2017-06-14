@@ -35,18 +35,21 @@ router.get('/', (req, res) => {
           system.types.push(type.name);
         });
 
-        // Checks if a session already exists
+        // Check if a session already exists
         if (req.session.username) {
           res.render('pages/index', {
             username: req.session.username,
             pathname: '/subterra/pages',
+            feedback: req.query.feedback,
+            feedbackState: req.query.state,
             system: {
               pages: system.pages,
               types: system.types
             },
           });
         } else {
-          res.redirect('/subterra/login');
+          // Provide feedback that login session has ended
+          res.redirect(`/subterra/login?feedback=Your login session ended. Log in again below.&state=negative`);
         }
       });
     });
@@ -141,13 +144,13 @@ router.get('/add/:type', (req, res) => {
             }
           });
 
-          // Checks if a session already exists
+          // Check if a session already exists
           if (req.session.username) {
             res.render('pages/add', {
               username: req.session.username,
               pathname: '/subterra/pages',
-              feedback: false,
-              feedbackState: false,
+              feedback: req.query.feedback,
+              feedbackState: req.query.state,
               system: systemData,
               page: {
                 type: req.params.type,
@@ -155,7 +158,8 @@ router.get('/add/:type', (req, res) => {
               }
             });
           } else {
-            res.redirect('/subterra/login');
+            // Provide feedback that login session has ended
+            res.redirect(`/subterra/login?feedback=Your login session ended. Log in again below.&state=negative`);
           }
         });
       }
@@ -232,112 +236,21 @@ router.post('/add', (req, res) => {
         }
       });
 
-      if (!exists) {
+      // Check if a session already exists
+      if (!req.session.username) {
+        // Provide feedback that login session has ended
+        res.redirect(`/subterra/login?feedback=Your login session ended. Log in again below.&state=negative`);
+      } else if (!exists) {
         // Add submitted data to database
         connection.query(`
           INSERT INTO pages SET ?
         `, [data], (err, results) => {
           // Navigate to /subterra/pages overview
-          res.redirect('/subterra/pages');
+          res.redirect(`/subterra/pages?feedback='${ data.title }' was successfully added.&state=positive`);
         });
       } else {
-        // Fetch system data from database
-        database.retrieve(connection, {
-          category: 'pages',
-          tables: ['types', 'menus', 'pages', 'modules'],
-          callback: systemData => {
-            // Fetch defaultModules from page type
-            connection.query(`
-              SELECT * FROM types
-              WHERE name = '${ data.type }'
-            `, [], (err, type) => {
-              const defaultModules = type[0].defaultModules;
-              let contentFields = [];
-
-              // Apply default modules to content string
-              defaultModules.split(',').forEach((module, index) => {
-                switch (module) {
-                  case 'heading':
-                    contentFields.push(`
-                      <span class="content-tip">Heading</span>
-                      <input name="content-h-${ index }" type="text" onblur="setInput()">
-                    `);
-                  break;
-                  case 'paragraph':
-                    contentFields.push(`
-                      <span class="content-tip">Paragraph</span>
-                      <textarea name="content-p-${ index }" onblur="setInput()"></textarea>
-                    `);
-                  break;
-                  case 'image':
-                    contentFields.push(`
-                      <span class="content-tip">Image</span>
-                      <input name="content-i-name-${ index }" type="hidden">
-                      <input name="content-i-${ index }" type="file" accept="image/*" onblur="setImageName()">
-                    `);
-                  break;
-                  case 'list':
-                    contentFields.push(`
-                      <span class="content-tip">List name</span>
-                      <input name="content-l-name-${ index }" type="text" oninput="addListName()" onblur="setInput()">
-                      <span class="content-tip">List items</span>
-                      <input name="content-l-list-${ index }" type="hidden">
-                      <ul>
-                        <li>
-                          <input type="text" oninput="addListItem()" onblur="setInput()">
-                        </li>
-                      </ul>
-                      <button data-type="addToList" onclick="addListInput()">Add item</button>
-                    `);
-                  break;
-                  case 'embed':
-                    contentFields.push(`
-                      <span class="content-tip">Embedded video (YouTube or Vimeo)</span>
-                      <input name="content-e-${ index }" type="text" onblur="setInput()">
-                    `);
-                  break;
-                  case 'button':
-                    let systemPagesString;
-
-                    systemData.pages.forEach(page => {
-                      const pageTitle = page.split('-')[1];
-
-                      systemPagesString = `
-                        ${ systemPagesString }
-                        <option value="${ page }">
-                          ${ pageTitle }
-                        </option>
-                      `;
-                    });
-
-                    contentFields.push(`
-                      <span class="content-tip">Button name</span>
-                      <input name="content-b-name-${ index }" type="text" oninput="setButtonName()" onblur="setInput()">
-                      <span class="content-tip">Button link</span>
-                      <input name="content-b-link-${ index }" type="hidden">
-                      <select name="content-b-anchor-${ index }" oninput="setButtonAnchor()" onblur="setInput()">
-                        <option value="" disabled selected>Select a page</option>
-                        ${ systemPagesString }
-                      </select>
-                    `);
-                  break;
-                }
-              });
-
-              res.render('pages/add', {
-                username: req.session.username,
-                pathname: '/subterra/pages',
-                feedback: `Page with title '${ data.title }' already exists.`,
-                feedbackState: 'negative',
-                system: systemData,
-                page: {
-                  type: data.type,
-                  content: contentFields
-                }
-              });
-            });
-          }
-        });
+        // Provide feedback that page title already exists
+        res.redirect(`/subterra/pages/add/${ data.type }?feedback=Page with title '${ data.title }' already exists.&state=negative`);
       }
     });
   });
@@ -448,14 +361,14 @@ router.get('/edit/:id', (req, res) => {
             }
           });
 
-          // Checks if a session already exists
+          // Check if a session already exists
           if (req.session.username) {
             // Render edit page
             res.render('pages/edit', {
               username: req.session.username,
               pathname: '/subterra/pages',
-              feedback: false,
-              feedbackState: false,
+              feedback: req.query.feedback,
+              feedbackState: req.query.state,
               system: systemData,
               page: {
                 id: page.id,
@@ -469,7 +382,8 @@ router.get('/edit/:id', (req, res) => {
               }
             });
           } else {
-            res.redirect('/subterra/login');
+            // Provide feedback that login session has ended
+            res.redirect(`/subterra/login?feedback=Your login session ended. Log in again below.&state=negative`);
           }
         }
       });
@@ -545,138 +459,23 @@ router.post('/edit/:id', (req, res) => {
         }
       });
 
-      if (!exists) {
+      // Check if a session already exists
+      if (!req.session.username) {
+        // Provide feedback that login session has ended
+        res.redirect(`/subterra/login?feedback=Your login session ended. Log in again below.&state=negative`);
+      } else if (!exists) {
         // Update data from page
         connection.query(`
           UPDATE pages
           SET type = '${ data.type }', title = '${ data.title }', menus = '${ data.menus }', content = '${ data.content }'
           WHERE id = ${ req.params.id }
         `, [], (err, results) => {
-          // Navigate to /subterra/pages overview
-          res.redirect('/subterra/pages');
+          // Navigate to /subterra/pages overview and provide feedback that page was successfully edited
+          res.redirect(`/subterra/pages?feedback='${ data.title } was successfully edited.'&state=positive`);
         });
       } else {
-        // Select page with ID from GET parameter
-        connection.query(`
-          SELECT * FROM pages
-          WHERE id = '${ req.params.id }'
-        `, [], (err, pages) => {
-          const page = pages[0];
-          let contentFields = [];
-
-          // Fetch system data from database
-          database.retrieve(connection, {
-            category: 'pages',
-            tables: ['types', 'menus', 'pages', 'modules'],
-            callback: systemData => {
-              // Process output to content fields
-              page.content.split('|-|').forEach((field, index) => {
-                switch (field.charAt(1)) {
-                  case 'H':
-                    contentFields.push(`
-                      <span class="content-tip">Heading</span>
-                      <input name="content-h-${ index }" type="text" onblur="setInput()" value="${ field.replace('|H|', '') }">
-                    `);
-                  break;
-                  case 'P':
-                    contentFields.push(`
-                      <span class="content-tip">Paragraph</span>
-                      <textarea name="content-p-${ index }" onblur="setInput()">${ field.replace('|P|', '') }</textarea>
-                    `);
-                  break;
-                  case 'I':
-                    contentFields.push(`
-                      <span class="content-tip">Image</span>
-                      <img src="/media/${ field.replace('|I|', '') }" alt="Image about ${ page.title }">
-                      <input name="content-i-name-${ index }" type="hidden" value="${ field.replace('|I|', '') }">
-                      <input name="content-i-${ index }" type="file" accept="image/*" onblur="setImageName()">
-                    `);
-                  break;
-                  case 'L':
-                    // Divide content string into separate fields
-                    const content = field.replace('|L|', '');
-                    const divider = content.indexOf('|');
-                    const fieldListName = content.substr(0, divider);
-                    const fieldList = content.substr((divider + 1), content.length).split(',');
-                    let fieldListString = '';
-
-                    // Give HTML to each item in list
-                    fieldList.forEach(item => {
-                      fieldListString += `
-                      <li>
-                        <input type="text" oninput="addListItem()" onblur="setInput()" value="${ item }">
-                      </li>
-                      `;
-                    });
-
-                    contentFields.push(`
-                      <span class="content-tip">List name</span>
-                      <input name="content-l-name-${ index }" type="text" oninput="addListName()" onblur="setInput()" value="${ fieldListName }">
-                      <span class="content-tip">List items</span>
-                      <input name="content-l-list-${ index }" type="hidden" onblur="setInput()" value="${ content }">
-                      <ul>
-                        ${ fieldListString }
-                      </ul>
-                      <button data-type="addToList" onclick="addListInput()">Add item</button>
-                    `);
-                  break;
-                  case 'E':
-                    contentFields.push(`
-                      <span class="content-tip">Embedded video (YouTube or Vimeo)</span>
-                      <input name="content-e-${ index }" type="text" onblur="setInput()" value="${ field.replace('|E|', '') }">
-                    `);
-                  break;
-                  case 'B':
-                    let systemPagesString;
-                    const fieldButtonName = field.replace('|B|', '').split('|')[0];
-                    const fieldButtonAnchor =  field.replace('|B|', '').split('|')[1].split('-')[1];
-
-                    systemData.pages.forEach(page => {
-                      const pageTitle = page.split('-')[1];
-
-                      systemPagesString = `
-                        ${ systemPagesString }
-                        <option value="${ page }" ${ fieldButtonAnchor === pageTitle ? 'selected' : '' }>
-                          ${ pageTitle }
-                        </option>
-                      `;
-                    });
-
-                    contentFields.push(`
-                      <span class="content-tip">Button name</span>
-                      <input name="content-b-name-${ index }" type="text" oninput="setButtonName()" onblur="setInput()" value="${ fieldButtonName }">
-                      <span class="content-tip">Button link</span>
-                      <input name="content-b-link-${ index }" type="hidden" value="${ field.replace('|B|', '') }">
-                      <select name="content-b-anchor-${ index }" oninput="setButtonAnchor()" onblur="setInput()">
-                        <option value="" disabled selected>Select a page</option>
-                        ${ systemPagesString }
-                      </select>
-                    `);
-                  break;
-                }
-              });
-
-              // Render edit page
-              res.render('pages/edit', {
-                username: req.session.username,
-                pathname: '/subterra/pages',
-                feedback: `Page with title '${ data.title }' already exists.`,
-                feedbackState: 'negative',
-                system: systemData,
-                page: {
-                  id: page.id,
-                  type: page.type,
-                  title: page.title,
-                  menus: page.menus.split(',').filter(e => {
-                    // Removes empty data fields
-                    return e;
-                  }),
-                  content: contentFields
-                }
-              });
-            }
-          });
-        });
+        // Provide feedback that page title already exists
+        res.redirect(`/subterra/pages/edit/${ req.params.id }?feedback=Page with title '${ data.title }' already exists.&state=negative`);
       }
     });
   });
@@ -712,7 +511,7 @@ router.get('/delete/:id', (req, res) => {
             WHERE id = ${ req.params.id }
             `, [], (err, results) => {
               // Redirect to page overview page
-              res.redirect('/subterra/pages');
+              res.redirect('/subterra/pages?feedback=Successfully deleted page.&state=positive');
             });
         });
       });
