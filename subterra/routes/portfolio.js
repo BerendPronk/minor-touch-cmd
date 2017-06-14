@@ -56,6 +56,7 @@ router.get('/add', (req, res) => {
       SELECT * FROM pages
       WHERE type = 'course'
     `, [], (err, courses) => {
+      // Push pages in system object
       courses.forEach(course => {
         system.courses.push(course.title);
       });
@@ -82,21 +83,63 @@ router.get('/add', (req, res) => {
 router.post('/add', (req, res) => {
   debug(`[${ req.method }] /subterra/portfolio/add`);
 
+  // Object containing system data, after MySQL queries
+  let system = {
+    courses: []
+  };
+
   const data = {
     title: req.body.title.replace(/'/g, '"'),
     courses: req.body.courses,
-    paragraph: req.body['content-e'],
+    paragraph: req.body['content-p'],
     image: req.body['content-i-name'],
     video: req.body['content-e']
   };
 
   req.getConnection((err, connection) => {
-    // Add submitted data to database
+    // Fetch all portfolio items from database
     connection.query(`
-      INSERT INTO portfolio SET ?
-    `, [data], (err, results) => {
-      // Navigate to /subterra/portfolio overview
-      res.redirect('/subterra/portfolio');
+      SELECT * FROM portfolio
+    `, [], (err, portfolio) => {
+      let exists;
+
+      // Check if portfolio item title already exists
+      portfolio.forEach(item => {
+        if (item.title === data.title) {
+          exists = true;
+        }
+      });
+
+      if (!exists) {
+        // Add submitted data to database
+        connection.query(`
+          INSERT INTO portfolio SET ?
+        `, [data], (err, results) => {
+          // Navigate to /subterra/portfolio overview
+          res.redirect('/subterra/portfolio');
+        });
+      } else {
+        // Fetch all 'course' pages from database
+        connection.query(`
+          SELECT * FROM pages
+          WHERE type = 'course'
+        `, [], (err, courses) => {
+          // Push pages in system object
+          courses.forEach(course => {
+            system.courses.push(course.title);
+          });
+
+          res.render('portfolio/add', {
+            username: req.session.username,
+            pathname: '/subterra/portfolio',
+            feedback: `Portfolio item with title '${ data.title }' already exists.`,
+            feedbackState: 'negative',
+            system: {
+              courses: system.courses
+            }
+          });
+        });
+      }
     });
   });
 });
@@ -161,23 +204,83 @@ router.get('/edit/:id', (req, res) => {
 router.post('/edit/:id', (req, res) => {
   debug(`[${ req.method }] /subterra/portfolio/edit/${ req.params.id }`);
 
+  // Object containing system data, after MySQL queries
+  let system = {
+    courses: []
+  };
+
   const data = {
     title: req.body.title.replace(/'/g, '"'),
     courses: req.body.courses,
-    paragraph: req.body['content-e'],
+    paragraph: req.body['content-p'],
     image: req.body['content-i-name'],
     video: req.body['content-e']
   };
 
   req.getConnection((err, connection) => {
-    // Update portfolio item in database
+    // Fetch all menus from database
     connection.query(`
-      UPDATE portfolio
-      SET ?
-      WHERE id = ${ req.params.id }
-    `, [data], (err, results) => {
-      // Navigate to /subterra/portfolio overview
-      res.redirect('/subterra/portfolio');
+      SELECT * FROM portfolio
+    `, [], (err, portfolio) => {
+      let exists;
+
+      // Check if portfolio item title already exists
+      portfolio.forEach(item => {
+        if (item.id != req.params.id && item.title === data.title) {
+          exists = true;
+        }
+      });
+
+      if (!exists) {
+        // Update portfolio item in database
+        connection.query(`
+          UPDATE portfolio
+          SET ?
+          WHERE id = ${ req.params.id }
+        `, [data], (err, results) => {
+          // Navigate to /subterra/portfolio overview
+          res.redirect('/subterra/portfolio');
+        });
+      } else {
+        // Select portfolio item with ID from GET parameter
+        connection.query(`
+          SELECT * FROM portfolio
+          WHERE id = '${ req.params.id }'
+        `, [], (err, portfolio) => {
+          const item = portfolio[0];
+
+          // Fetch all 'course' pages from database
+          connection.query(`
+            SELECT * FROM pages
+            WHERE type = 'course'
+          `, [], (err, courses) => {
+            courses.forEach(course => {
+              system.courses.push(course.title);
+            });
+
+            res.render('portfolio/edit', {
+              username: req.session.username,
+              pathname: '/subterra/portfolio',
+              feedback: `Portfolio item with title '${ data.title }' already exists.`,
+              feedbackState: 'negative',
+              system: {
+                courses: system.courses
+              },
+              item: {
+                id: data.id,
+                title: data.title,
+                courses: data.courses.split(',').filter(e => {
+                  // Removes empty data fields
+                  return e;
+                }),
+                paragraph: data.paragraph,
+                image: data.image,
+                video: data.video
+              }
+            });
+          });
+        });
+      }
     });
   });
 });
