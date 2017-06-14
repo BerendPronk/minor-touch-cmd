@@ -66,12 +66,6 @@ const retrieve = (connection, opts) => {
         `, [], (err, pages) => {
           if (tables.includes('pages')) {
             switch (category) {
-              case 'menus':
-                // Push pages in system object
-                pages.forEach(page => {
-                  system.pages.push(page.title);
-                });
-              break;
               case 'pages':
                 // Push pages in system object
                 pages.forEach(page => {
@@ -86,6 +80,11 @@ const retrieve = (connection, opts) => {
                   }
                 });
               break;
+              default:
+                // Push pages in system object
+                pages.forEach(page => {
+                  system.pages.push(page.title);
+                });
             }
           }
 
