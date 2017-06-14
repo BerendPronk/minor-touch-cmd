@@ -2,7 +2,6 @@ const compression = require('compression');
 const debug = require('debug')('TouchCMD');
 
 const bodyParser = require('body-parser');
-const fs = require('fs');
 
 const mySQL = require('mysql');
 const myConnection = require('express-myconnection');
