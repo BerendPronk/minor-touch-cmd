@@ -1,4 +1,5 @@
 const debug = require('debug')('TouchCMD');
+const database = require('../../subterra/assets/script/modules/database');
 const express = require('express');
 const router = express.Router();
 
@@ -45,35 +46,24 @@ router.get('/', (req, res) => {
 router.get('/add', (req, res) => {
   debug(`[${ req.method }] /subterra/portfolio/add`);
 
-  // Object containing system data, after MySQL queries
-  let system = {
-    courses: []
-  };
-
   req.getConnection((err, connection) => {
     // Fetch all 'course' pages from database
-    connection.query(`
-      SELECT * FROM pages
-      WHERE type = 'course'
-    `, [], (err, courses) => {
-      // Push pages in system object
-      courses.forEach(course => {
-        system.courses.push(course.title);
-      });
-
-      // Checks if a session already exists
-      if (req.session.username) {
-        res.render('portfolio/add', {
-          username: req.session.username,
-          pathname: '/subterra/portfolio',
-          feedback: false,
-          feedbackState: false,
-          system: {
-            courses: system.courses
-          }
-        });
-      } else {
-        res.redirect('/subterra/login');
+    database.retrieve(connection, {
+      category: 'portfolio',
+      tables: ['pages'],
+      callback: systemData => {
+        // Checks if a session already exists
+        if (req.session.username) {
+          res.render('portfolio/add', {
+            username: req.session.username,
+            pathname: '/subterra/portfolio',
+            feedback: false,
+            feedbackState: false,
+            system: systemData
+          });
+        } else {
+          res.redirect('/subterra/login');
+        }
       }
     });
   });
@@ -82,11 +72,6 @@ router.get('/add', (req, res) => {
 // [POST] /subterra/portfolio/add
 router.post('/add', (req, res) => {
   debug(`[${ req.method }] /subterra/portfolio/add`);
-
-  // Object containing system data, after MySQL queries
-  let system = {
-    courses: []
-  };
 
   const data = {
     title: req.body.title.replace(/'/g, '"'),
@@ -120,24 +105,18 @@ router.post('/add', (req, res) => {
         });
       } else {
         // Fetch all 'course' pages from database
-        connection.query(`
-          SELECT * FROM pages
-          WHERE type = 'course'
-        `, [], (err, courses) => {
-          // Push pages in system object
-          courses.forEach(course => {
-            system.courses.push(course.title);
-          });
-
-          res.render('portfolio/add', {
-            username: req.session.username,
-            pathname: '/subterra/portfolio',
-            feedback: `Portfolio item with title '${ data.title }' already exists.`,
-            feedbackState: 'negative',
-            system: {
-              courses: system.courses
-            }
-          });
+        database.retrieve(connection, {
+          category: 'portfolio',
+          tables: ['pages'],
+          callback: systemData => {
+            res.render('portfolio/add', {
+              username: req.session.username,
+              pathname: '/subterra/portfolio',
+              feedback: `Portfolio item with title '${ data.title }' already exists.`,
+              feedbackState: 'negative',
+              system: systemData
+            });
+          }
         });
       }
     });
@@ -148,11 +127,6 @@ router.post('/add', (req, res) => {
 router.get('/edit/:id', (req, res) => {
   debug(`[${ req.method }] /subterra/portfolio/edit/${ req.params.id }`);
 
-  // Object containing system data, after MySQL queries
-  let system = {
-    courses: []
-  };
-
   req.getConnection((err, connection) => {
     // Select portfolio item with ID from GET parameter
     connection.query(`
@@ -162,38 +136,33 @@ router.get('/edit/:id', (req, res) => {
       const item = portfolio[0];
 
       // Fetch all 'course' pages from database
-      connection.query(`
-        SELECT * FROM pages
-        WHERE type = 'course'
-      `, [], (err, courses) => {
-        courses.forEach(course => {
-          system.courses.push(course.title);
-        });
-
-        // Checks if a session already exists
-        if (req.session.username) {
-          res.render('portfolio/edit', {
-            username: req.session.username,
-            pathname: '/subterra/portfolio',
-            feedback: false,
-            feedbackState: false,
-            system: {
-              courses: system.courses
-            },
-            item: {
-              id: item.id,
-              title: item.title,
-              courses: item.courses.split(',').filter(e => {
-                // Removes empty data fields
-                return e;
-              }),
-              paragraph: item.paragraph,
-              image: item.image,
-              video: item.video
-            }
-          });
-        } else {
-          res.redirect('/subterra/login');
+      database.retrieve(connection, {
+        category: 'portfolio',
+        tables: ['pages'],
+        callback: systemData => {
+          // Checks if a session already exists
+          if (req.session.username) {
+            res.render('portfolio/edit', {
+              username: req.session.username,
+              pathname: '/subterra/portfolio',
+              feedback: false,
+              feedbackState: false,
+              system: systemData,
+              item: {
+                id: item.id,
+                title: item.title,
+                courses: item.courses.split(',').filter(e => {
+                  // Removes empty data fields
+                  return e;
+                }),
+                paragraph: item.paragraph,
+                image: item.image,
+                video: item.video
+              }
+            });
+          } else {
+            res.redirect('/subterra/login');
+          }
         }
       });
     });
@@ -203,11 +172,6 @@ router.get('/edit/:id', (req, res) => {
 // [POST] /subterra/portfolio/edit/:id
 router.post('/edit/:id', (req, res) => {
   debug(`[${ req.method }] /subterra/portfolio/edit/${ req.params.id }`);
-
-  // Object containing system data, after MySQL queries
-  let system = {
-    courses: []
-  };
 
   const data = {
     title: req.body.title.replace(/'/g, '"'),
@@ -250,34 +214,29 @@ router.post('/edit/:id', (req, res) => {
           const item = portfolio[0];
 
           // Fetch all 'course' pages from database
-          connection.query(`
-            SELECT * FROM pages
-            WHERE type = 'course'
-          `, [], (err, courses) => {
-            courses.forEach(course => {
-              system.courses.push(course.title);
-            });
-
-            res.render('portfolio/edit', {
-              username: req.session.username,
-              pathname: '/subterra/portfolio',
-              feedback: `Portfolio item with title '${ data.title }' already exists.`,
-              feedbackState: 'negative',
-              system: {
-                courses: system.courses
-              },
-              item: {
-                id: data.id,
-                title: data.title,
-                courses: data.courses.split(',').filter(e => {
-                  // Removes empty data fields
-                  return e;
-                }),
-                paragraph: data.paragraph,
-                image: data.image,
-                video: data.video
-              }
-            });
+          database.retrieve(connection, {
+            category: 'portfolio',
+            tables: ['pages'],
+            callback: systemData => {
+              res.render('portfolio/edit', {
+                username: req.session.username,
+                pathname: '/subterra/portfolio',
+                feedback: `Portfolio item with title '${ data.title }' already exists.`,
+                feedbackState: 'negative',
+                system: systemData,
+                item: {
+                  id: item.id,
+                  title: item.title,
+                  courses: item.courses.split(',').filter(e => {
+                    // Removes empty data fields
+                    return e;
+                  }),
+                  paragraph: item.paragraph,
+                  image: item.image,
+                  video: item.video
+                }
+              });
+            }
           });
         });
       }

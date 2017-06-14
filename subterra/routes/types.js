@@ -1,4 +1,5 @@
 const debug = require('debug')('TouchCMD');
+const database = require('../../subterra/assets/script/modules/database');
 const express = require('express');
 const router = express.Router();
 
@@ -45,34 +46,24 @@ router.get('/', (req, res) => {
 router.get('/add', (req, res) => {
   debug(`[${ req.method }] /subterra/types/add`);
 
-  // Object containing system data, after MySQL queries
-  let system = {
-    modules: []
-  };
-
   req.getConnection((err, connection) => {
     // Fetch all system page modules from database
-    connection.query(`
-      SELECT * FROM modules
-    `, [], (err, modules) => {
-      // Push modules in system object
-      modules.forEach(module => {
-        system.modules.push(module.name);
-      });
-
-      // Checks if a session already exists
-      if (req.session.username) {
-        res.render('types/add', {
-          username: req.session.username,
-          pathname: '/subterra/types',
-          feedback: false,
-          feedbackState: false,
-          system: {
-            modules: system.modules
-          }
-        });
-      } else {
-        res.redirect('/subterra/login');
+    database.retrieve(connection, {
+      category: 'types',
+      tables: ['modules'],
+      callback: systemData => {
+        // Checks if a session already exists
+        if (req.session.username) {
+          res.render('types/add', {
+            username: req.session.username,
+            pathname: '/subterra/types',
+            feedback: false,
+            feedbackState: false,
+            system: systemData
+          });
+        } else {
+          res.redirect('/subterra/login');
+        }
       }
     });
   });
@@ -82,18 +73,13 @@ router.get('/add', (req, res) => {
 router.post('/add', (req, res) => {
   debug(`[${ req.method }] /subterra/types/add`);
 
-  // Object containing system data, after MySQL queries
-  let system = {
-    modules: []
-  };
-
   const data = {
     name: req.body.name.replace(/'/, '"'),
     defaultModules: req.body.modules
   };
 
   req.getConnection((err, connection) => {
-    // Fetch all menus from database
+    // Fetch all page types from database
     connection.query(`
       SELECT * FROM types
     `, [], (err, types) => {
@@ -115,24 +101,19 @@ router.post('/add', (req, res) => {
           res.redirect('/subterra/types');
         });
       } else {
-        // Fetch all system modules from database
-        connection.query(`
-          SELECT * FROM modules
-        `, [], (err, modules) => {
-          // Push modules in system object
-          modules.forEach(module => {
-            system.modules.push(module.name);
-          });
-
-          res.render('types/add', {
-            username: req.session.username,
-            pathname: '/subterra/types',
-            feedback: `Page type with name '${ data.name }' already exists.`,
-            feedbackState: 'negative',
-            system: {
-              modules: system.modules
-            }
-          });
+        // Fetch all system page modules from database
+        database.retrieve(connection, {
+          category: 'types',
+          tables: ['modules'],
+          callback: systemData => {
+            res.render('types/add', {
+              username: req.session.username,
+              pathname: '/subterra/types',
+              feedback: `Page type with name '${ data.name }' already exists.`,
+              feedbackState: 'negative',
+              system: systemData
+            });
+          }
         });
       }
     });
@@ -143,11 +124,6 @@ router.post('/add', (req, res) => {
 router.get('/edit/:id', (req, res) => {
   debug(`[${ req.method }] /subterra/types/edit/${ req.params.id }`);
 
-  // Object containing system data, after MySQL queries
-  let system = {
-    modules: []
-  };
-
   req.getConnection((err, connection) => {
     // Select type with ID from GET parameter
     connection.query(`
@@ -157,34 +133,30 @@ router.get('/edit/:id', (req, res) => {
       const type = types[0];
 
       // Fetch all system page modules from database
-      connection.query(`
-        SELECT * FROM modules
-      `, [], (err, modules) => {
-        modules.forEach(module => {
-          system.modules.push(module.name);
-        });
-
-        // Checks if a session already exists
-        if (req.session.username) {
-          res.render('types/edit', {
-            username: req.session.username,
-            pathname: '/subterra/types',
-            feedback: false,
-            feedbackState: false,
-            system: {
-              modules: system.modules
-            },
-            type: {
-              id: type.id,
-              name: type.name,
-              modules: type.defaultModules.split(',').filter(e => {
-                // Removes empty data fields
-                return e;
-              })
-            }
-          });
-        } else {
-          res.redirect('/subterra/login');
+      database.retrieve(connection, {
+        category: 'types',
+        tables: ['modules'],
+        callback: systemData => {
+          // Checks if a session already exists
+          if (req.session.username) {
+            res.render('types/edit', {
+              username: req.session.username,
+              pathname: '/subterra/types',
+              feedback: false,
+              feedbackState: false,
+              system: systemData,
+              type: {
+                id: type.id,
+                name: type.name,
+                modules: type.defaultModules.split(',').filter(e => {
+                  // Removes empty data fields
+                  return e;
+                })
+              }
+            });
+          } else {
+            res.redirect('/subterra/login');
+          }
         }
       });
     });
@@ -194,11 +166,6 @@ router.get('/edit/:id', (req, res) => {
 // [POST] /subterra/types/edit/:id
 router.post('/edit/:id', (req, res) => {
   debug(`[${ req.method }] /subterra/types/edit/${ req.params.id }`);
-
-  // Object containing system data, after MySQL queries
-  let system = {
-    modules: []
-  };
 
   const data = {
     name: req.body.name.replace(/'/, '"'),
@@ -238,31 +205,26 @@ router.post('/edit/:id', (req, res) => {
           const type = types[0];
 
           // Fetch all system page modules from database
-          connection.query(`
-            SELECT * FROM modules
-          `, [], (err, modules) => {
-            // Push modules in system object
-            modules.forEach(module => {
-              system.modules.push(module.title);
-            });
-
-            res.render('types/edit', {
-              username: req.session.username,
-              pathname: '/subterra/types',
-              feedback: `Page type with name '${ data.name }' already exists.`,
-              feedbackState: 'negative',
-              system: {
-                modules: system.modules
-              },
-              type: {
-                id: type.id,
-                name: type.name,
-                modules: type.defaultModules.split(',').filter(e => {
-                  // Removes empty data fields
-                  return e;
-                })
-              }
-            });
+          database.retrieve(connection, {
+            category: 'types',
+            tables: ['modules'],
+            callback: systemData => {
+              res.render('types/edit', {
+                username: req.session.username,
+                pathname: '/subterra/types',
+                feedback: `Page type with name '${ data.name }' already exists.`,
+                feedbackState: 'negative',
+                system: systemData,
+                type: {
+                  id: type.id,
+                  name: type.name,
+                  modules: type.defaultModules.split(',').filter(e => {
+                    // Removes empty data fields
+                    return e;
+                  })
+                }
+              });
+            }
           });
         });
       }
