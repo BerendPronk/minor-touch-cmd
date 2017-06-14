@@ -107,7 +107,7 @@ router.post('/add', (req, res) => {
         // Add submitted data to database
         connection.query(`
           INSERT INTO portfolio SET ?
-        `, [data], (err, results) => {
+        `, [data], (err, log) => {
           // Navigate to /subterra/portfolio overview and provide feedback that portfolio item was succesfully added
           res.redirect(`/subterra/portfolio?feedback='${ data.title }' was successfully added.&state=positive`);
         });
@@ -202,7 +202,7 @@ router.post('/edit/:id', (req, res) => {
           UPDATE portfolio
           SET ?
           WHERE id = ${ req.params.id }
-        `, [data], (err, results) => {
+        `, [data], (err, log) => {
           // Navigate to /subterra/portfolio overview and provide feedback that portfolio item was successfully edited
           res.redirect(`/subterra/portfolio?feedback='${ data.title }' was successfully edited.&state=positive`);
         });
@@ -223,7 +223,7 @@ router.get('/delete/:id', (req, res) => {
     connection.query(`
       DELETE FROM portfolio
       WHERE id = ${ req.params.id }
-    `, [], (err, results) => {
+    `, [], (err, log) => {
       // Redirect to portfolio overview page and provide feedback that portfolio item is successfully deleted
       res.redirect(`/subterra/portfolio?feedback=Successfully deleted the portfolio item.&state=positive`);
     });
