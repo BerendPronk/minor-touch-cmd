@@ -33,9 +33,20 @@ const retrieve = (connection, opts) => {
     `, [], (err, types) => {
       // Push types in system object
       if (tables.includes('types')) {
-        types.forEach(type => {
-          system.types.push(type.name);
-        });
+        switch (category) {
+          case 'types':
+            types.forEach(type => {
+              system.types.push({
+                name: type.name,
+                modules: type.defaultModules
+              });
+            });
+          break;
+          default:
+            types.forEach(type => {
+              system.types.push(type.name);
+            });
+        }
       }
 
       // Fetch all system page menus from database
