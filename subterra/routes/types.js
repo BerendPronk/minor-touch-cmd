@@ -7,17 +7,17 @@ const router = express.Router();
 router.get('/', (req, res) => {
   debug(`[${ req.method }] /subterra/types`);
 
-  // Object containing system data, after MySQL queries
+  // Object containing system data, after MySQL query
   let system = {
     types: []
   };
 
   req.getConnection((err, connection) => {
-    // Fetch all types from database
+    // Fetch all page types from database
     connection.query(`
       SELECT * FROM types
     `, [], (err, types) => {
-      // Push types in system object
+      // Push page types in system object
       types.forEach(type => {
         system.types.push({
           id: type.id,
@@ -89,7 +89,7 @@ router.post('/add', (req, res) => {
     `, [], (err, types) => {
       let exists;
 
-      // Check if type name already exists
+      // Check if page type name already exists
       types.forEach(type => {
         if (type.name === data.name) {
           exists = true;
@@ -121,7 +121,7 @@ router.get('/edit/:id', (req, res) => {
   debug(`[${ req.method }] /subterra/types/edit/${ req.params.id }`);
 
   req.getConnection((err, connection) => {
-    // Select type with ID from GET parameter
+    // Select page type with ID from GET parameter
     connection.query(`
       SELECT * FROM types
       WHERE id = '${ req.params.id }'
@@ -170,13 +170,13 @@ router.post('/edit/:id', (req, res) => {
   };
 
   req.getConnection((err, connection) => {
-    // Fetch all menus from database
+    // Fetch all page types from database
     connection.query(`
       SELECT * FROM types
     `, [], (err, types) => {
       let exists;
 
-      // Check if type name already exists
+      // Check if page type name already exists
       types.forEach(type => {
         if (type.id != req.params.id && type.name === data.name) {
           exists = true;
@@ -188,7 +188,7 @@ router.post('/edit/:id', (req, res) => {
         // Provide feedback that login session has ended
         res.redirect(`/subterra/login?feedback=Your login session ended. Log in again below.&state=negative`);
       } else if (!exists) {
-        // Update type in database
+        // Update page type in database
         connection.query(`
           UPDATE types
           SET name = '${ data.name }', defaultModules = '${ data.modules }'
@@ -210,7 +210,7 @@ router.get('/delete/:id', (req, res) => {
   debug(`[${ req.method }] /subterra/types/delete/${ req.params.id }`);
 
   req.getConnection((err, connection) => {
-    // Remove page from database
+    // Remove page type from database
     connection.query(`
       DELETE FROM types
       WHERE id = ${ req.params.id }

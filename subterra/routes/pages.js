@@ -30,7 +30,7 @@ router.get('/', (req, res) => {
       connection.query(`
         SELECT * FROM types
       `, [], (err, types) => {
-        // Push types in system object
+        // Push page types in system object
         types.forEach(type => {
           system.types.push(type.name);
         });
@@ -66,7 +66,7 @@ router.get('/add/:type', (req, res) => {
       category: 'pages',
       tables: ['types', 'menus', 'pages', 'modules'],
       callback: systemData => {
-        // Fetch defaultModules from page type
+        // Fetch default modules from specific page type
         connection.query(`
           SELECT * FROM types
           WHERE name = '${ req.params.type }'
@@ -363,7 +363,6 @@ router.get('/edit/:id', (req, res) => {
 
           // Check if a session already exists
           if (req.session.username) {
-            // Render edit page
             res.render('pages/edit', {
               username: req.session.username,
               pathname: '/subterra/pages',
@@ -486,7 +485,7 @@ router.get('/delete/:id', (req, res) => {
   debug(`[${ req.method }] /subterra/pages/delete/${ req.params.id }`);
 
   req.getConnection((err, connection) => {
-    // Retrieve page name
+    // Retrieve page title
     connection.query(`
       SELECT * FROM pages
       WHERE id = ${ req.params.id }
