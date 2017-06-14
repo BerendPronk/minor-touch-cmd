@@ -15,9 +15,9 @@ router.get('/', (req, res) => {
     // Fetch all menus from database
     connection.query(`
       SELECT * FROM menus
-    `, [], (err, results) => {
+    `, [], (err, menus) => {
       // Push menus in system object
-      results.forEach(menu => {
+      menus.forEach(menu => {
         system.menus.push({
           id: menu.id,
           name: menu.name,
@@ -115,7 +115,7 @@ router.post('/add', (req, res) => {
           res.redirect('/subterra/menus');
         });
       } else {
-        // Fetch all system page modules from database
+        // Fetch all system pages from database
         connection.query(`
           SELECT * FROM pages
         `, [], (err, pages) => {
@@ -153,8 +153,8 @@ router.get('/edit/:id', (req, res) => {
     connection.query(`
       SELECT * FROM menus
       WHERE id = '${ req.params.id }'
-    `, [], (err, results) => {
-      const menu = results[0];
+    `, [], (err, menus) => {
+      const menu = menus[0];
 
       // Fetch all system page modules from database
       connection.query(`
@@ -235,8 +235,8 @@ router.post('/edit/:id', (req, res) => {
         connection.query(`
           SELECT * FROM menus
           WHERE id = '${ req.params.id }'
-        `, [], (err, results) => {
-          const menu = results[0];
+        `, [], (err, menus) => {
+          const menu = menus[0];
 
           // Fetch all system page modules from database
           connection.query(`

@@ -16,8 +16,8 @@ router.get('/', (req, res) => {
     // Fetch all pages from database
     connection.query(`
       SELECT * FROM pages
-    `, [], (err, results) => {
-      results.forEach(page => {
+    `, [], (err, pages) => {
+      pages.forEach(page => {
         // Push pages in system object
         system.pages.push({
           id: page.id,
@@ -290,8 +290,8 @@ router.get('/edit/:id', (req, res) => {
     // Select page with ID from GET parameter
     connection.query(`
       SELECT * FROM pages WHERE id = '${ req.params.id }'
-    `, [], (err, results) => {
-      const page = results[0];
+    `, [], (err, pages) => {
+      const page = pages[0];
 
       // Fetch all system page types from database
       connection.query(`
