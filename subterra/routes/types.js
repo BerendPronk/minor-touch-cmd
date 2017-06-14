@@ -214,7 +214,7 @@ router.post('/edit/:id', (req, res) => {
 
       // Check if type name already exists
       types.forEach(type => {
-        if (type.name === data.name) {
+        if (type.id != req.params.id && type.name === data.name) {
           exists = true;
         }
       });

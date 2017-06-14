@@ -215,7 +215,8 @@ router.post('/edit/:id', (req, res) => {
 
       // Check if menu name already exists
       menus.forEach(menu => {
-        if (menu.id !== req.params.id && menu.name === data.name) {
+        console.log(menu.id, req.params.id)
+        if (menu.id != req.params.id && menu.name === data.name) {
           exists = true;
         }
       });
