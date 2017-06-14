@@ -244,7 +244,7 @@ router.post('/add', (req, res) => {
         // Add submitted data to database
         connection.query(`
           INSERT INTO pages SET ?
-        `, [data], (err, results) => {
+        `, [data], (err, log) => {
           // Navigate to /subterra/pages overview
           res.redirect(`/subterra/pages?feedback='${ data.title }' was successfully added.&state=positive`);
         });
@@ -469,7 +469,7 @@ router.post('/edit/:id', (req, res) => {
           UPDATE pages
           SET type = '${ data.type }', title = '${ data.title }', menus = '${ data.menus }', content = '${ data.content }'
           WHERE id = ${ req.params.id }
-        `, [], (err, results) => {
+        `, [], (err, log) => {
           // Navigate to /subterra/pages overview and provide feedback that page was successfully edited
           res.redirect(`/subterra/pages?feedback='${ data.title } was successfully edited.'&state=positive`);
         });
@@ -509,9 +509,9 @@ router.get('/delete/:id', (req, res) => {
           connection.query(`
             DELETE FROM pages
             WHERE id = ${ req.params.id }
-            `, [], (err, results) => {
+            `, [], (err, log) => {
               // Redirect to page overview page
-              res.redirect('/subterra/pages?feedback=Successfully deleted page.&state=positive');
+              res.redirect('/subterra/pages?feedback=Successfully deleted the page.&state=positive');
             });
         });
       });

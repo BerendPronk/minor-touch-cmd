@@ -104,7 +104,7 @@ router.post('/add', (req, res) => {
         // Add submitted data to database
         connection.query(`
           INSERT INTO menus SET ?
-        `, [data], (err, results) => {
+        `, [data], (err, log) => {
           // Navigate to /subterra/menus overview and provide feedback that menu was successfully added
           res.redirect(`/subterra/menus?feedback='${ data.name }' was successfully added.&state=positive`);
         });
@@ -193,7 +193,7 @@ router.post('/edit/:id', (req, res) => {
           UPDATE menus
           SET name = '${ data.name }', children = '${ data.children }'
           WHERE id = ${ req.params.id }
-        `, [], (err, results) => {
+        `, [], (err, log) => {
           // Navigate to /subterra/menus overview and provide feedback that menu was successfully edited
           res.redirect(`/subterra/menus?feedback='${ data.name }' was successfully edited.&state=positive`);
         });
@@ -227,9 +227,9 @@ router.get('/delete/:id', (req, res) => {
         connection.query(`
           DELETE FROM menus
           WHERE id = ${ req.params.id }
-          `, [], (err, results) => {
+          `, [], (err, log) => {
             // Redirect to menu overview page and provide feedback that menu is successfully deleted
-            res.redirect(`/subterra/menus?feedback=Successfully deleted menu.&state=positive`);
+            res.redirect(`/subterra/menus?feedback=Successfully deleted the menu.&state=positive`);
           });
       });
     });

@@ -104,7 +104,7 @@ router.post('/add', (req, res) => {
         // Add submitted data to database
         connection.query(`
           INSERT INTO types SET ?
-        `, [data], (err, results) => {
+        `, [data], (err, log) => {
           // Navigate to /subterra/types overview and provide feedback that page type was successfully added
           res.redirect(`/subterra/types?feedback='${ data.name }' was successfully added.&state=positive`);
         });
@@ -193,7 +193,7 @@ router.post('/edit/:id', (req, res) => {
           UPDATE types
           SET name = '${ data.name }', defaultModules = '${ data.modules }'
           WHERE id = ${ req.params.id }
-        `, [], (err, results) => {
+        `, [], (err, log) => {
           // Navigate to /subterra/types overview and provide feedback that page type was successfully edited
           res.redirect(`/subterra/types?feedback='${ data.name }' was successfully edited.&state=positive`);
         });
@@ -214,9 +214,9 @@ router.get('/delete/:id', (req, res) => {
     connection.query(`
       DELETE FROM types
       WHERE id = ${ req.params.id }
-    `, [], (err, results) => {
+    `, [], (err, log) => {
       // Redirect to page type overview page and provide feedback that page type is successfully deleted
-      res.redirect(`/subterra/types?feedback=Successfully deleted page type.&state=positive`);
+      res.redirect(`/subterra/types?feedback=Successfully deleted the page type.&state=positive`);
     });
   });
 });
