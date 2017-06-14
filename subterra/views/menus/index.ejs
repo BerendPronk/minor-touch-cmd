@@ -20,7 +20,7 @@
 						<a href="/subterra/menus/edit/<%= system.menus[i].id %>">
 							<%= system.menus[i].name %>
 						</a>
-						| <%= system.menus[i].children.replace(',', ', ') %>
+						| <%= system.menus[i].children.replace(/,/g, ', ') %>
 						<button data-action="delete menu" onclick="deleteItem('menus', <%= system.menus[i].id %>)">delete</button>
 					</li>
 				<% } %>
