@@ -1,4 +1,5 @@
 const debug = require('debug')('TouchCMD');
+const database = require('../../subterra/assets/script/modules/database');
 const express = require('express');
 const router = express.Router();
 
@@ -45,34 +46,24 @@ router.get('/', (req, res) => {
 router.get('/add', (req, res) => {
   debug(`[${ req.method }] /subterra/portfolio/add`);
 
-  // Object containing system data, after MySQL queries
-  let system = {
-    courses: []
-  };
-
   req.getConnection((err, connection) => {
     // Fetch all 'course' pages from database
-    connection.query(`
-      SELECT * FROM pages
-      WHERE type = 'course'
-    `, [], (err, courses) => {
-      courses.forEach(course => {
-        system.courses.push(course.title);
-      });
-
-      // Checks if a session already exists
-      if (req.session.username) {
-        res.render('portfolio/add', {
-          username: req.session.username,
-          pathname: '/subterra/portfolio',
-          feedback: false,
-          feedbackState: false,
-          system: {
-            courses: system.courses
-          }
-        });
-      } else {
-        res.redirect('/subterra/login');
+    database.retrieve(connection, {
+      category: 'portfolio',
+      tables: ['pages'],
+      callback: systemData => {
+        // Checks if a session already exists
+        if (req.session.username) {
+          res.render('portfolio/add', {
+            username: req.session.username,
+            pathname: '/subterra/portfolio',
+            feedback: false,
+            feedbackState: false,
+            system: systemData
+          });
+        } else {
+          res.redirect('/subterra/login');
+        }
       }
     });
   });
@@ -85,18 +76,49 @@ router.post('/add', (req, res) => {
   const data = {
     title: req.body.title.replace(/'/g, '"'),
     courses: req.body.courses,
-    paragraph: req.body['content-e'],
+    paragraph: req.body['content-p'],
     image: req.body['content-i-name'],
     video: req.body['content-e']
   };
 
   req.getConnection((err, connection) => {
-    // Add submitted data to database
+    // Fetch all portfolio items from database
     connection.query(`
-      INSERT INTO portfolio SET ?
-    `, [data], (err, results) => {
-      // Navigate to /subterra/portfolio overview
-      res.redirect('/subterra/portfolio');
+      SELECT * FROM portfolio
+    `, [], (err, portfolio) => {
+      let exists;
+
+      // Check if portfolio item title already exists
+      portfolio.forEach(item => {
+        if (item.title === data.title) {
+          exists = true;
+        }
+      });
+
+      if (!exists) {
+        // Add submitted data to database
+        connection.query(`
+          INSERT INTO portfolio SET ?
+        `, [data], (err, results) => {
+          // Navigate to /subterra/portfolio overview
+          res.redirect('/subterra/portfolio');
+        });
+      } else {
+        // Fetch all 'course' pages from database
+        database.retrieve(connection, {
+          category: 'portfolio',
+          tables: ['pages'],
+          callback: systemData => {
+            res.render('portfolio/add', {
+              username: req.session.username,
+              pathname: '/subterra/portfolio',
+              feedback: `Portfolio item with title '${ data.title }' already exists.`,
+              feedbackState: 'negative',
+              system: systemData
+            });
+          }
+        });
+      }
     });
   });
 });
@@ -104,11 +126,6 @@ router.post('/add', (req, res) => {
 // [GET] /subterra/portfolio/edit/:id
 router.get('/edit/:id', (req, res) => {
   debug(`[${ req.method }] /subterra/portfolio/edit/${ req.params.id }`);
-
-  // Object containing system data, after MySQL queries
-  let system = {
-    courses: []
-  };
 
   req.getConnection((err, connection) => {
     // Select portfolio item with ID from GET parameter
@@ -119,38 +136,33 @@ router.get('/edit/:id', (req, res) => {
       const item = portfolio[0];
 
       // Fetch all 'course' pages from database
-      connection.query(`
-        SELECT * FROM pages
-        WHERE type = 'course'
-      `, [], (err, courses) => {
-        courses.forEach(course => {
-          system.courses.push(course.title);
-        });
-
-        // Checks if a session already exists
-        if (req.session.username) {
-          res.render('portfolio/edit', {
-            username: req.session.username,
-            pathname: '/subterra/portfolio',
-            feedback: false,
-            feedbackState: false,
-            system: {
-              courses: system.courses
-            },
-            item: {
-              id: item.id,
-              title: item.title,
-              courses: item.courses.split(',').filter(e => {
-                // Removes empty data fields
-                return e;
-              }),
-              paragraph: item.paragraph,
-              image: item.image,
-              video: item.video
-            }
-          });
-        } else {
-          res.redirect('/subterra/login');
+      database.retrieve(connection, {
+        category: 'portfolio',
+        tables: ['pages'],
+        callback: systemData => {
+          // Checks if a session already exists
+          if (req.session.username) {
+            res.render('portfolio/edit', {
+              username: req.session.username,
+              pathname: '/subterra/portfolio',
+              feedback: false,
+              feedbackState: false,
+              system: systemData,
+              item: {
+                id: item.id,
+                title: item.title,
+                courses: item.courses.split(',').filter(e => {
+                  // Removes empty data fields
+                  return e;
+                }),
+                paragraph: item.paragraph,
+                image: item.image,
+                video: item.video
+              }
+            });
+          } else {
+            res.redirect('/subterra/login');
+          }
         }
       });
     });
@@ -164,20 +176,70 @@ router.post('/edit/:id', (req, res) => {
   const data = {
     title: req.body.title.replace(/'/g, '"'),
     courses: req.body.courses,
-    paragraph: req.body['content-e'],
+    paragraph: req.body['content-p'],
     image: req.body['content-i-name'],
     video: req.body['content-e']
   };
 
   req.getConnection((err, connection) => {
-    // Update portfolio item in database
+    // Fetch all menus from database
     connection.query(`
-      UPDATE portfolio
-      SET ?
-      WHERE id = ${ req.params.id }
-    `, [data], (err, results) => {
-      // Redirect to same page with newly added data
-      res.redirect(`/subterra/portfolio/edit/${ req.params.id }`);
+      SELECT * FROM portfolio
+    `, [], (err, portfolio) => {
+      let exists;
+
+      // Check if portfolio item title already exists
+      portfolio.forEach(item => {
+        if (item.id != req.params.id && item.title === data.title) {
+          exists = true;
+        }
+      });
+
+      if (!exists) {
+        // Update portfolio item in database
+        connection.query(`
+          UPDATE portfolio
+          SET ?
+          WHERE id = ${ req.params.id }
+        `, [data], (err, results) => {
+          // Navigate to /subterra/portfolio overview
+          res.redirect('/subterra/portfolio');
+        });
+      } else {
+        // Select portfolio item with ID from GET parameter
+        connection.query(`
+          SELECT * FROM portfolio
+          WHERE id = '${ req.params.id }'
+        `, [], (err, portfolio) => {
+          const item = portfolio[0];
+
+          // Fetch all 'course' pages from database
+          database.retrieve(connection, {
+            category: 'portfolio',
+            tables: ['pages'],
+            callback: systemData => {
+              res.render('portfolio/edit', {
+                username: req.session.username,
+                pathname: '/subterra/portfolio',
+                feedback: `Portfolio item with title '${ data.title }' already exists.`,
+                feedbackState: 'negative',
+                system: systemData,
+                item: {
+                  id: item.id,
+                  title: item.title,
+                  courses: item.courses.split(',').filter(e => {
+                    // Removes empty data fields
+                    return e;
+                  }),
+                  paragraph: item.paragraph,
+                  image: item.image,
+                  video: item.video
+                }
+              });
+            }
+          });
+        });
+      }
     });
   });
 });

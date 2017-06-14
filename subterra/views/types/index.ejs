@@ -20,7 +20,7 @@
             <a href="/subterra/types/edit/<%= system.types[i].id %>">
               <%= system.types[i].name %>
             </a>
-            | <%= system.types[i].modules.replace(',', ', ') %>
+            | <%= system.types[i].modules.replace(/,/g, ', ') %>
 						<button data-action="delete type" onclick="deleteItem('types', <%= system.types[i].id %>)">delete</button>
           </li>
         <% } %>

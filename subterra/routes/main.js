@@ -194,7 +194,7 @@ router.get('/search/*', (req, res) => {
                 name: item.title
               });
             });
-            
+
             // Checks if a session already exists
             if (req.session.username) {
               res.render('search', {

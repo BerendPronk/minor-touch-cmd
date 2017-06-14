@@ -20,7 +20,7 @@
             <a href="/subterra/portfolio/edit/<%= system.portfolio[i].id %>">
               <%= system.portfolio[i].title %>
             </a>
-            | <%= system.portfolio[i].courses.replace(',', ', ') %>
+            | <%= system.portfolio[i].courses.replace(/,/g, ', ') %>
 						<button data-action="delete type" onclick="deleteItem('portfolio', <%= system.portfolio[i].id %>)">delete</button>
           </li>
         <% } %>
