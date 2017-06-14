@@ -39,14 +39,14 @@ app.use(myConnection(mySQL, {
   port: process.env.DB_PORT
 }, 'single'));
 
-// Declare session for subterra
+// Define session for subterra
 app.use(session({
   secret: process.env.SESSION_SECRET,
   saveUninitialized: true,
   resave: false
 }));
 
-// Declare app routing
+// Define app routing
 app.use('/', require('./routes/main'));
 app.use('/subterra', require('./subterra/routes/main'));
 
