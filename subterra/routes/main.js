@@ -5,7 +5,7 @@ const express = require('express');
 const router = express.Router();
 
 // Initialize multer storage
-const storage = multer.diskStorage({
+const fileStorage = multer.diskStorage({
   destination: function (req, file, callBack) {
     callBack(null, path.dirname(require.main.filename) + '/media');
   },
@@ -14,12 +14,12 @@ const storage = multer.diskStorage({
   }
 });
 
-// Apply initialized storage to multer
+// Apply configured storage to multer
 const upload = multer({
-  storage: storage
+  storage: fileStorage
 });
 
-// Declare subterra routing
+// Define subterra routing
 router.use('/menus', require('./menus'));
 router.use('/types', require('./types'));
 router.use('/pages', upload.any(), require('./pages'));
@@ -29,17 +29,17 @@ router.use('/portfolio', upload.any(), require('./portfolio'));
 router.get('/', (req, res) => {
   debug(`[${ req.method }] /subterra`);
 
-  // Object containing system data, after MySQL queries
+  // Object containing system data, after MySQL query
   let system = {
     types: []
   };
 
   req.getConnection((err, connection) => {
-    // Fetch all pages from database
+    // Fetch all page types from database
     connection.query(`
       SELECT * FROM types
     `, [], (err, types) => {
-      // Push types in system object
+      // Push page types in system object
       types.forEach(type => {
         system.types.push(type.name);
       });
@@ -92,16 +92,26 @@ router.post('/login', (req, res) => {
 
   req.getConnection((err, connection) => {
     // Select user from database based on submitted form
-    connection.query('SELECT * FROM users WHERE username = ? AND password = ?',
-      [data.username, data.password], (err, results) => {
-      if (results.length > 0) {
-        req.session.username = results[0].username;
+    connection.query(`
+      SELECT * FROM users
+      WHERE username = '${ data.username }'
+    `, [], (err, users) => {
+      // Check if username is contained in database
+      if (users.length > 0) {
+        // Check if given password the one of the user
+        if (users[0].password === data.password) {
+          // Apply username from database to session
+          req.session.username = users[0].username;
 
-        // Navigate to subterra dashboard and provide feedback with username
-        res.redirect(`/subterra?feedback=Welcome back ${ req.session.username }!&state=positive`);
+          // Navigate to subterra dashboard and provide feedback with username
+          res.redirect(`/subterra?feedback=Welcome back ${ req.session.username }!&state=positive`);
+        } else {
+          // Provide feedback that wrong password has been entered
+          res.redirect(`/subterra/login?feedback=Password was incorrect. Are you sure you entered it properly?&state=negative`);
+        }
       } else {
-        // Provide feedback that wrong data has been entered
-        res.redirect(`/subterra/login?feedback=Wrong username or password given, please try again.&state=negative`);
+        // Provide feedback that wrong username has been entered
+        res.redirect(`/subterra/login?feedback=Username not found. Are you sure you entered it correctly?&state=negative`);
       }
     });
   });
@@ -111,6 +121,7 @@ router.post('/login', (req, res) => {
 router.get('/logout', (req, res) => {
   debug(`[${ req.method }] /subterra/logout`);
 
+  // Remove everything that is stored in the session
   req.session.destroy();
 
   res.redirect('/');

@@ -7,7 +7,7 @@ const router = express.Router();
 router.get('/', (req, res) => {
   debug(`[${ req.method }] /subterra/menus`);
 
-  // Object containing system data, after MySQL queries
+  // Object containing system data, after MySQL query
   let system = {
     menus: []
   };
@@ -50,7 +50,7 @@ router.get('/add', (req, res) => {
   debug(`[${ req.method }] /subterra/menus/add`);
 
   req.getConnection((err, connection) => {
-    // Fetch all system pages from database
+    // Fetch all menus from database
     database.retrieve(connection, {
       category: 'menus',
       tables: ['pages'],

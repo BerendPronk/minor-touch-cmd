@@ -7,7 +7,7 @@ const router = express.Router();
 router.get('/', (req, res) => {
   debug(`[${ req.method }] /subterra/portfolio`);
 
-  // Object containing system data, after MySQL queries
+  // Object containing system data, after MySQL query
   let system = {
     portfolio: []
   };
@@ -17,7 +17,7 @@ router.get('/', (req, res) => {
     connection.query(`
       SELECT * FROM portfolio
     `, [], (err, portfolio) => {
-      // Push types in system object
+      // Push portfolio items in system object
       portfolio.forEach(item => {
         system.portfolio.push({
           id: item.id,
