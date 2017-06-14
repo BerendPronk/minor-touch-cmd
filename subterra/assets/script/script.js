@@ -353,6 +353,8 @@ function toggleShow(element) {
   } else {
     toToggle.classList.add('hidden');
   }
+
+  event.preventDefault();
 }
 
 let formSubmit = false;
