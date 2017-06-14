@@ -129,10 +129,10 @@ router.get('/add/:type', (req, res) => {
 
                 contentFields.push(`
                   <span class="content-tip">Button name</span>
-                  <input name="content-b-name-${ index }" type="text" oninput="setButtonName()">
+                  <input name="content-b-name-${ index }" type="text" oninput="setButtonName()" onblur="setInput()">
                   <span class="content-tip">Button link</span>
                   <input name="content-b-link-${ index }" type="hidden">
-                  <select name="content-b-anchor-${ index }" oninput="setButtonAnchor()">
+                  <select name="content-b-anchor-${ index }" oninput="setButtonAnchor()" onblur="setInput()">
                     <option value="" disabled selected>Select a page</option>
                     ${ systemPagesString }
                   </select>
@@ -312,10 +312,10 @@ router.post('/add', (req, res) => {
 
                     contentFields.push(`
                       <span class="content-tip">Button name</span>
-                      <input name="content-b-name-${ index }" type="text" oninput="setButtonName()">
+                      <input name="content-b-name-${ index }" type="text" oninput="setButtonName()" onblur="setInput()">
                       <span class="content-tip">Button link</span>
                       <input name="content-b-link-${ index }" type="hidden">
-                      <select name="content-b-anchor-${ index }" oninput="setButtonAnchor()">
+                      <select name="content-b-anchor-${ index }" oninput="setButtonAnchor()" onblur="setInput()">
                         <option value="" disabled selected>Select a page</option>
                         ${ systemPagesString }
                       </select>
