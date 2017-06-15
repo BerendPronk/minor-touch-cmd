@@ -403,6 +403,7 @@ router.post('/edit/:id', (req, res) => {
     if (req.body[field].replace(/ /g, '') === '') {
       return;
     }
+
     // Switch on content fields only
     if (field.indexOf('content-') !== -1) {
       switch (field.charAt(8).toUpperCase()) {
