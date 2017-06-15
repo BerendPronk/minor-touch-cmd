@@ -348,11 +348,7 @@ function setButtonAnchor() {
 function toggleShow(element) {
   const toToggle = document.querySelector(element);
 
-  if (toToggle.classList.contains('hidden')) {
-    toToggle.classList.remove('hidden');
-  } else {
-    toToggle.classList.add('hidden');
-  }
+  toToggle.classList.toggle('hidden');
 
   event.preventDefault();
 }
