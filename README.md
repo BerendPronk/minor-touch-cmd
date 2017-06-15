@@ -31,11 +31,14 @@ All that is left is to start the application
 $ npm start
 ```
 
-## Personal goals
-What do I personally want to achieve with this project, exactly? It's listed here:
-
-- Build a unique experience for a large touchscreen interface
-- Build a clean content management system in NodeJS, that'll be named Subterra
+## Core functionalities
+This application will function as a 'self-help' center during open days at every university that provides students with the Communication and Multimedia Design study. It needs to meet the following demands:
+- The application must have a front-end view, for people to navigate through
+- The application must be viewed on a large multi-touch monitor, desktop computers and mobile devices
+- The application must inform the user with the core data about the CMD program
+- The application should be easily editable by an administrator
+- Users of any age must be able to use the application for it's purpose
+- The interface of the application must not contain interactions other than tap/click
 
 ## Objectives
 Before being able to create such a platform, I need to figure out what my priorities should be. The next lists consist of objective I still need to work on. Everything that's already been made, exists as files on this repository.
@@ -58,11 +61,8 @@ My development process is best checked in the [issues page](https://github.com/B
 - **[Subterra]** Encrypt/decrypt user data ;)
 - **[IOT]** Implement NodeMCU into the mix, doesn't have to be a major feature
 
-## Core functionalities
-This application will function as a 'self-help' center during open days at every university that provides students with the Communication and Multimedia Design study. It needs to meet the following demands:
-- The application must have a front-end view, for people to navigate through
-- The application must be viewed on a large multi-touch monitor, desktop computers and mobile devices
-- The application must inform the user with the core data about the CMD program
-- The application should be easily editable by an administrator
-- Users of any age must be able to use the application for it's purpose
-- The interface of the application must not contain interactions other than tap/click
+## Personal goals
+What do I personally want to achieve with this project, exactly? It's listed here:
+
+- Build a unique experience for a large touchscreen interface
+- Build a clean content management system in NodeJS, that'll be named Subterra
