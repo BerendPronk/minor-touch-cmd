@@ -31,8 +31,8 @@ All that is left is to start the application
 $ npm start
 ```
 
-## Goals
-What do I want to achieve with this project, exactly? It's listed here:
+## Personal goals
+What do I personally want to achieve with this project, exactly? It's listed here:
 
 - Build a unique experience for a large touchscreen interface
 - Build a clean content management system in NodeJS, that'll be named Subterra
