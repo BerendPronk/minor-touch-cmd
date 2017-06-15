@@ -113,7 +113,7 @@ router.get('/add/:type', (req, res) => {
               case 'embed':
                 contentFields.push(`
                   <span class="content-tip">Embedded video (YouTube or Vimeo)</span>
-                  <input name="content-e-${ index }" type="text" onblur="setInput()">
+                  <input name="content-e-${ index }" type="url" onblur="setInput()">
                 `);
               break;
               case 'button':
@@ -328,7 +328,7 @@ router.get('/edit/:id', (req, res) => {
               case 'E':
                 contentFields.push(`
                   <span class="content-tip">Embedded video (YouTube or Vimeo)</span>
-                  <input name="content-e-${ index }" type="text" onblur="setInput()" value="${ field.replace('|E|', '') }">
+                  <input name="content-e-${ index }" type="url" onblur="setInput()" value="${ field.replace('|E|', '') }">
                 `);
               break;
               case 'B':
