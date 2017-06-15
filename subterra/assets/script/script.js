@@ -99,7 +99,7 @@ function addModule() {
     case 'embed':
       newModule = `
         <span class="content-tip">Embedded video (YouTube or Vimeo)</span>
-        <input name="content-e-${ index }" type="text" onblur="setInput()">
+        <input name="content-e-${ index }" type="url" onblur="setInput()">
       `;
     break;
     case 'button':
