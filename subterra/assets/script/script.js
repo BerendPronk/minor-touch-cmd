@@ -1,28 +1,28 @@
-// Add new list item to given type
-function addSelectList(type) {
-  const formInput = document.querySelector(`input[name="${ type }"]`);
+// Add selected option as a new selection list item
+function addSelectList(option) {
+  const formInput = document.querySelector(`input[name="${ option }"]`);
   const formSelect = event.target;
-  const typeList = event.target.parentNode.querySelector('ul');
-  const typeListItems = typeList.querySelectorAll('li');
+  const optionList = event.target.parentNode.querySelector('ul');
+  const optionListItems = optionList.querySelectorAll('li');
   const currentItems = formInput.value.split(',').filter(e => {
     // Removes empty data fields
     return e;
   });
 
-  // Check if type has already been added
+  // Check if option has already been added
   if (currentItems.indexOf(formSelect.value) === -1) {
     const newItem = document.createElement('li');
 
     newItem.insertAdjacentHTML(
       'afterbegin',
-      `<span data-type="${ type }-name">${ formSelect.value }</span>
-      <button data-type="${ type }-delete" onclick="removeSelectList('${ type }')">X</button>`
+      `<span data-type="${ option }-name">${ formSelect.value }</span>
+      <button data-type="${ option }-delete" onclick="removeSelectList('${ option }')">X</button>`
     );
 
-    // Append new type to list
-    typeList.appendChild(newItem);
+    // Append new option to DOM list
+    optionList.appendChild(newItem);
 
-    // Add newly added type to input
+    // Add newly added option to input
     currentItems.push(formSelect.value);
 
     if (currentItems.length === 1) {
@@ -32,27 +32,27 @@ function addSelectList(type) {
     }
   }
 
-  // Reset index of type selection
+  // Reset index of selection element
   formSelect.selectedIndex = 0;
 }
 
-// Remove a type from the list
-function removeSelectList(type) {
+// Remove an option from the selection list items
+function removeSelectList(option) {
   const field = event.target.parentNode.parentNode.parentNode;
-  const formInput = field.querySelector(`input[name="${ type }"]`);
-  const typeList = field.querySelector(`ul`);
+  const formInput = field.querySelector(`input[name="${ option }"]`);
+  const optionList = field.querySelector(`ul`);
   const currentItems = formInput.value.split(',');
 
-  const content = event.target.parentNode.querySelector(`[data-type="${ type }-name"]`).textContent;
+  const content = event.target.parentNode.querySelector(`[data-type="${ option }-name"]`).textContent;
   const contentIndex = currentItems.indexOf(content);
 
-  // Remove type from input values
+  // Remove option from input values
   currentItems.splice(contentIndex, 1);
 
-  // Remove type from DOM list
-  typeList.removeChild(typeList.children[contentIndex]);
+  // Remove option from DOM list
+  optionList.removeChild(optionList.children[contentIndex]);
 
-  // Remove type from hidden input
+  // Remove option from hidden input
   formInput.value = currentItems.join(',').replace(', ', ',');
 }
 
