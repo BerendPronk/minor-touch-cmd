@@ -5,18 +5,29 @@
 
 		<title><%= page.title %></title>
 
-    <%- include partials/head -%>
+		<%- include partials/head -%>
 
-    <%- include partials/header -%>
+		<%- include partials/header -%>
 
 		<% if (tv) { %>
 			Multi-touch screen mode active
 		<% } %>
 
-    <h2><%= page.title %></h2>
+		<h2><%= page.title %></h2>
 
-    <span><%= page.type %></span>
+		<span><%= page.type %></span>
 
-    <p><%= page.content %></p>
+		<% if (page.menus.length > 0) { %>
+			<% for (let i = 0; i < page.menus.length; i++) { %>
+				<h3><%= page.menus[i] %></h3>
+				<ul>
+					<% for (let j = 0; j < page.menuChildren[i].length; j++) { %>
+						<li><a href="/page/<%= page.menuChildren[i][j].replace(/ /g, '-') %>"><%= page.menuChildren[i][j] %></a></li>
+					<% } %>
+				</ul>
+			<% } %>
+		<% } %>
 
-    <%- include partials/footer -%>
+		<p><%= page.content %></p>
+
+		<%- include partials/footer -%>
