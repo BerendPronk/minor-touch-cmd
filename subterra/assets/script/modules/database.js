@@ -9,8 +9,8 @@
 // }
 const retrieve = (connection, opts) => {
   // Check if callback function has been added
-  if (opts.callback) {
-    // Define storage based on given options, or set default
+  if (opts && opts.callback) {
+    // Define system storage
     let system = {
       types: [],
       menus: [],
@@ -110,6 +110,7 @@ const retrieve = (connection, opts) => {
                 });
               }
 
+              // Execute callback
               opts.callback(system);
             });
           });
@@ -121,4 +122,91 @@ const retrieve = (connection, opts) => {
   }
 };
 
-exports.retrieve = retrieve;
+// Search in database tables on specific keyword
+// connection: express-connection
+// opts:
+// {
+//   query: String,
+//   callback: Function
+// }
+const search = (connection, opts) => {
+  if (opts && opts.callback) {
+    // Define results storage
+    let results = {
+      types: [],
+      menus: [],
+      pages: [],
+      portfolio: []
+    };
+
+    // Define search query, or set default to search entire database
+    const query = opts.query || '';
+
+    // Apply queries to set database content in system variable
+    // -
+    // Fetch all system types from database that contain query
+    connection.query(`
+      SELECT * FROM types
+      WHERE name LIKE '%${ query }%'
+    `, [], (err, types) => {
+      // Push types in results object
+      types.forEach(type => {
+        results.types.push({
+          id: type.id,
+          name: type.name
+        });
+      });
+
+      // Fetch all system menus from database that contain query
+      connection.query(`
+        SELECT * FROM menus
+        WHERE name LIKE '%${ query }%'
+      `, [], (err, menus) => {
+        // Push menus in results object
+        menus.forEach(menu => {
+          results.menus.push({
+            id: menu.id,
+            name: menu.name
+          });
+        });
+
+        // Fetch all system pages from database that contain query
+        connection.query(`
+          SELECT * FROM pages
+          WHERE title LIKE '%${ query }%'
+        `, [], (err, pages) => {
+          // Push pages in results object
+          pages.forEach(page => {
+            results.pages.push({
+              id: page.id,
+              name: page.title
+            });
+          });
+
+          // Fetch all system portolio items from database that contain query
+          connection.query(`
+            SELECT * FROM portfolio
+            WHERE title LIKE '%${ query }%'
+          `, [], (err, portfolio) => {
+            // Push portfolio items in results object
+            portfolio.forEach(item => {
+              results.portfolio.push({
+                id: item.id,
+                name: item.title
+              });
+            });
+
+            // Execute callback
+            opts.callback(results);
+          });
+        });
+      });
+    });
+  } else {
+    console.error('[database.search] No callback function given.');
+  }
+};
+
+// Export functions
+module.exports.retrieve = retrieve;
+module.exports.search = search;

@@ -18,17 +18,17 @@
     <h1>Results for '<%= query %>':</h1>
 
     <%# Check if category contains result%>
-    <% Object.keys(system).forEach(category => { %>
-      <% if (system[category].length > 0) { %>
+    <% Object.keys(results).forEach(category => { %>
+      <% if (results[category].length > 0) { %>
         <section>
           <h3><%= category %></h3>
-          <p><%= system[category].length %> <%= system[category].length === 1 ? 'item' : 'items' %> found</p>
+          <p><%= results[category].length %> <%= results[category].length === 1 ? 'item' : 'items' %> found</p>
 
           <ul>
-            <% for (let i = 0; i < system[category].length; i++) { %>
+            <% for (let i = 0; i < results[category].length; i++) { %>
               <li>
-                <%= system[category][i].name %>
-                <a href="/subterra/<%= category %>/edit/<%= system[category][i].id %>">
+                <%= results[category][i].name %>
+                <a href="/subterra/<%= category %>/edit/<%= results[category][i].id %>">
                   edit
                 </a>
               </li>
