@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="nl">
+	<head>
+		<meta charset="UTF-8">
+
+		<title><%= page.title %></title>
+
+    <%- include partials/head -%>
+
+    <%- include partials/header -%>
+
+		<% if (tv) { %>
+			Multi-touch screen mode active
+		<% } %>
+
+    <h2><%= page.title %></h2>
+
+    <span><%= page.type %></span>
+
+    <p><%= page.content %></p>
+
+    <%- include partials/footer -%>
