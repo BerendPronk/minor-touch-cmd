@@ -5,7 +5,7 @@ const router = express.Router();
 // [GET] index
 router.get('/', (req, res) => {
   debug(`[${ req.method }] /index`);
-  
+
   if (req.session.tv) {
     console.log('You are on a tv')
   }
@@ -37,30 +37,60 @@ router.get('/tv', (req, res) => {
   res.redirect('/');
 });
 
-// [GET] /:page
-router.get('/:page', (req, res) => {
+// [GET] /page/:page
+router.get('/page/:page', (req, res) => {
   debug(`[${ req.method }] /${ req.params.page }`);
 
   const title = req.params.page.replace(/-/g, ' ');
 
   req.getConnection((err, connection) => {
+    // Select page with title from GET parameter
     connection.query(`
       SELECT * FROM pages
       WHERE title = '${ title }'
     `, [], (err, pages) => {
       const page = pages[0];
 
-      res.render('page', {
-        tv: req.session.tv,
-        page: {
-          type: page.type.replace(/ /g, '-'),
-          title: page.title,
-          menus: page.menus.split(','),
-          content: page.content
-        }
+      // Page menu specific variables
+      const pageMenus = page.menus.split(',');
+      let menuChildren = [];
+
+      // Fetch all menus from database
+      connection.query(`
+        SELECT * FROM menus
+      `, [], (err, menus) => {
+
+        // Pushes array of each page menu's children
+        pageMenus.forEach(pageMenu => {
+          menus.forEach(menu => {
+            if (menu.name === pageMenu) {
+              menuChildren.push(menu.children.split(','));
+            }
+          });
+        });
+
+        // Render page view
+        res.render('page', {
+          tv: req.session.tv,
+          page: {
+            type: page.type.replace(/ /g, '-'),
+            title: page.title,
+            menus: pageMenus.filter(e => {
+              // Removes empty data fields
+              return e;
+            }),
+            menuChildren: menuChildren,
+            content: page.content
+          }
+        });
       });
     });
   });
+});
+
+// [GET] /404
+router.get('/*', (req, res) => {
+  res.send('A 404 error occurred.');
 });
 
 module.exports = router;
