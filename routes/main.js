@@ -5,6 +5,10 @@ const router = express.Router();
 // [GET] index
 router.get('/', (req, res) => {
   debug(`[${ req.method }] /index`);
+  
+  if (req.session.tv) {
+    console.log('You are on a tv')
+  }
 
   req.getConnection((err, connection) => {
     // Select menu with name 'Index' from database
@@ -20,6 +24,17 @@ router.get('/', (req, res) => {
       });
     });
   });
+});
+
+// [GET] /tv
+router.get('/tv', (req, res) => {
+  debug(`[${ req.method }] /tv - Multi-touch screen mode active`);
+
+  // Activate session when user entered URL
+  req.session.tv = true;
+
+  // Redirect back to the index pages
+  res.redirect('/');
 });
 
 module.exports = router;
