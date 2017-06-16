@@ -37,4 +37,30 @@ router.get('/tv', (req, res) => {
   res.redirect('/');
 });
 
+// [GET] /:page
+router.get('/:page', (req, res) => {
+  debug(`[${ req.method }] /${ req.params.page }`);
+
+  const title = req.params.page.replace(/-/g, ' ');
+
+  req.getConnection((err, connection) => {
+    connection.query(`
+      SELECT * FROM pages
+      WHERE title = '${ title }'
+    `, [], (err, pages) => {
+      const page = pages[0];
+
+      res.render('page', {
+        tv: req.session.tv,
+        page: {
+          type: page.type.replace(/ /g, '-'),
+          title: page.title,
+          menus: page.menus.split(','),
+          content: page.content
+        }
+      });
+    });
+  });
+});
+
 module.exports = router;
