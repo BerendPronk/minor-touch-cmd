@@ -9,16 +9,27 @@
 
     <%- include partials/header -%>
 
-      <h1>Hello</h1>
+		<% if (tv) { %>
+			Multi-touch screen mode active
+		<% } %>
 
+		<nav id="main">
       <ul>
         <% for (let i = 0; i < menu.length; i++) { %>
           <li>
-            <a href="/<%= menu[i] %>">
+            <a href="/<%= menu[i].replace(/ /g, '-').toLowerCase() %>">
               <%= menu[i] %>
             </a>
           </li>
         <% } %>
       </ul>
+		</nav>
+
+		<nav id="sub">
+			<ul>
+				<li><a href="/all">Alle vakken</a></li>
+				<li><a href="/faq">FAQ</a></li>
+			</ul>
+		</nav>
 
     <%- include partials/footer -%>
