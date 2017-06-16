@@ -199,7 +199,7 @@ router.post('/add', (req, res) => {
         case 'L':
           // Only pick grouped input
           if (field.indexOf('content-l-list') !== -1) {
-            content.push(`|L|${ req.body[field] }`);
+            content.push(`|L|${ req.body[field].replace(/,,/g, ',') }`);
           }
         break;
         case 'E':
@@ -422,7 +422,7 @@ router.post('/edit/:id', (req, res) => {
         case 'L':
           // Only pick grouped input
           if (field.indexOf('content-l-list') !== -1) {
-            content.push(`|L|${ req.body[field] }`);
+            content.push(`|L|${ req.body[field].replace(/,,/g, ',') }`);
           }
         break;
         case 'E':
