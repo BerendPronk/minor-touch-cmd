@@ -23,7 +23,7 @@
       <fieldset>
         <legend>Title</legend>
 
-        <input name="title" type="text" value="<%= item.title %>" required>
+        <input name="title" type="text" pattern="[a-zA-Z0-9\s]+" title="Only alphanumeric characters are allowed" value="<%= item.title %>" required>
       </fieldset>
       <fieldset>
         <legend>Modules</legend>

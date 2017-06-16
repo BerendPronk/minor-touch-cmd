@@ -23,7 +23,7 @@
       <fieldset>
         <legend>Name</legend>
 
-        <input name="name" type="text" value="<%= menu.name %>" required>
+        <input name="name" type="text" pattern="[a-zA-Z0-9\s]+" title="Only alphanumeric characters are allowed" value="<%= menu.name %>" required>
       </fieldset>
       <fieldset>
         <legend>Modules</legend>
