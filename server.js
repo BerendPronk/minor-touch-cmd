@@ -29,8 +29,8 @@ app
   .set('views', viewArray);
 
 // Define app routing
-app.use('/', require('./routes/main'));
 app.use('/subterra', require('./subterra/routes/main'));
+app.use('/', require('./routes/main'));
 
 // Run the application
 app.listen(process.env.PORT || 3000, () => {
