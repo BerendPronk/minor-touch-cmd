@@ -471,7 +471,7 @@ router.post('/edit/:id', (req, res) => {
           WHERE id = ${ req.params.id }
         `, [], (err, log) => {
           // Navigate to /subterra/pages overview and provide feedback that page was successfully edited
-          res.redirect(`/subterra/pages?feedback='${ data.title } was successfully edited.'&state=positive`);
+          res.redirect(`/subterra/pages?feedback='${ data.title }' was successfully edited.&state=positive`);
         });
       } else {
         // Provide feedback that page title already exists
