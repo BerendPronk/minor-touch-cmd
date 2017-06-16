@@ -275,6 +275,8 @@ function addListInput() {
       <input type="text" oninput="addListItem()" onblur="setInput()">
     </li>`
   );
+
+  event.preventDefault();
 }
 
 // Add list name input to hidden input field
