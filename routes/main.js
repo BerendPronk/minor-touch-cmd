@@ -21,9 +21,32 @@ router.get('/', (req, res) => {
     `, [], (err, menus) => {
       const menu = menus[0].children.split(',');
 
-      res.render('index', {
-        tv: req.session.tv,
-        menu: menu
+      // Fetch intro paragraphs for main menu
+      connection.query(`
+        SELECT * FROM pages
+        WHERE (title LIKE '%${ menu[0] }%' OR title LIKE '%${ menu[1] }%' OR title LIKE '%${ menu[2] }%')
+      `, [], (err, pages) => {
+        let introText = [];
+
+        // Extract intro from each category page
+        pages.forEach(page => {
+          const content = page.content.split('|-|');
+
+          // Select the first occuring paragraph in page content
+          for (let block of content) {
+            if (block.charAt(1) === 'P') {
+              introText.push(block.replace('|P|', ''));
+              break;
+            }
+          }
+        });
+
+        // Render index page
+        res.render('index', {
+          tv: req.session.tv,
+          menu: menu,
+          introText: introText
+        });
       });
     });
   });
@@ -61,7 +84,8 @@ router.get('/faq', (req, res) => {
 
 // [GET] /404
 router.get('/*', (req, res) => {
-  res.send('A 404 error occurred.');
+  // Render error page
+  res.render('error');
 });
 
 module.exports = router;
