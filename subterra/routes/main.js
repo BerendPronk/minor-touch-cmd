@@ -25,6 +25,7 @@ router.use('/menus', require('./menus'));
 router.use('/types', require('./types'));
 router.use('/pages', upload.any(), require('./pages'));
 router.use('/portfolio', upload.any(), require('./portfolio'));
+router.use('/faq', require('./faq'));
 
 // [GET] /subterra
 router.get('/', (req, res) => {
