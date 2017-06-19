@@ -17,6 +17,10 @@
 
     <h1>Edit portfolio item '<%= item.title %>'</h1>
 
+		<p>
+			Edit the list of courses your want this portfolio item to appear on and edit it's paragraph, image and embedded video, if desired.
+		</p>
+
 		<button data-action="delete type" onclick="deleteItem('portfolio', <%= item.id %>)">Delete <%= item.title %></button>
 
     <form enctype="multipart/form-data" action="/subterra/portfolio/edit/<%= item.id %>" method="post" onsubmit="submitForm()">

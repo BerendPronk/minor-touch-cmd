@@ -17,6 +17,11 @@
 
 		<h1>Edit '<%= page.title %>'</h1>
 
+		<p>
+			Edit the list of menu's you want this page to have and edit content to your desire.<br>
+			You can add more modules by pressing the 'Add Module' button.
+		</p>
+
 		<button data-action="delete page" onclick="deleteItem('pages', <%= page.id %>)">Delete <%= page.title %></button>
 
 		<form enctype="multipart/form-data" action="/subterra/pages/edit/<%= page.id %>" method="post" onsubmit="submitForm()">
