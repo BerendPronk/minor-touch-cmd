@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="nl">
+	<head>
+		<meta charset="UTF-8">
+
+		<title>Edit FAQ question</title>
+
+    <%- include ../partials/head -%>
+
+    <%- include ../partials/header -%>
+
+    <% if (feedback) { %>
+      <div id="feedback" class="<%= feedbackState %>">
+        <%= feedback %>
+      </div>
+    <% } %>
+
+    <h1>Edit FAQ question</h1>
+
+		<p>
+			Edit the question in the title field and edit the answer in the field below that.
+		</p>
+
+		<button data-action="delete type" onclick="deleteItem('faq', <%= question.id %>)">Delete question</button>
+
+    <form action="/subterra/faq/edit/<%= question.id %>" method="post" onsubmit="submitForm()">
+      <fieldset>
+        <legend>Question</legend>
+
+        <input name="question" type="text" pattern="[a-zA-Z0-9\s]+" title="Only alphanumeric characters are allowed" value="<%= question.question %>" required> ?
+      </fieldset>
+			<fieldset>
+				<legend>Answer</legend>
+
+				<ul id="pageContent">
+					<li>
+						<textarea name="answer"><%= question.answer %></textarea>
+					</li>
+				</ul>
+			</fieldset>
+
+      <input type="submit" value="Submit">
+    </form>
+
+		<%- include ../partials/footer -%>

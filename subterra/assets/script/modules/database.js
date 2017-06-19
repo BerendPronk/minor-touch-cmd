@@ -16,7 +16,8 @@ const retrieve = (connection, opts) => {
       menus: [],
       pages: [],
       courses: [],
-      modules: []
+      modules: [],
+      faq: []
     };
 
     // Define category based on given options, or set default to undefined
@@ -110,8 +111,20 @@ const retrieve = (connection, opts) => {
                 });
               }
 
-              // Execute callback
-              opts.callback(system);
+              // Fetch all system FAQ questions from database
+              connection.query(`
+                SELECT * FROM faq
+              `, [], (err, faq) => {
+                // Push FAQ questions in system object
+                if (tables.includes('faq')) {
+                  faq.forEach(question => {
+                    system.faq.push(question.question);
+                  });
+                }
+
+                // Execute callback
+                opts.callback(system);
+              });
             });
           });
         });
@@ -136,7 +149,8 @@ const search = (connection, opts) => {
       types: [],
       menus: [],
       pages: [],
-      portfolio: []
+      portfolio: [],
+      faq: []
     };
 
     // Define search query, or set default to search entire database
@@ -196,8 +210,22 @@ const search = (connection, opts) => {
               });
             });
 
-            // Execute callback
-            opts.callback(results);
+            // Fetch all system FAQ questions from database that contain query
+            connection.query(`
+              SELECT * FROM faq
+              WHERE question LIKE '%${ query }%'
+            `, [], (err, faq) => {
+              // Push FAQ questions in results object
+              faq.forEach(question => {
+                results.faq.push({
+                  id: question.id,
+                  name: question.question + '?'
+                })
+              });
+
+              // Execute callback
+              opts.callback(results);
+            });
           });
         });
       });
@@ -208,5 +236,7 @@ const search = (connection, opts) => {
 };
 
 // Export functions
-module.exports.retrieve = retrieve;
-module.exports.search = search;
+module.exports = {
+  retrieve: retrieve,
+  search: search
+};
