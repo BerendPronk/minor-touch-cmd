@@ -175,6 +175,14 @@ router.post('/edit/:id', (req, res) => {
       SELECT * FROM menus
     `, [], (err, menus) => {
       let exists;
+      let currentName;
+
+      // Find current menu name
+      menus.forEach(menu => {
+        if (menu.id == req.params.id) {
+          currentName = menu.name;
+        }
+      });
 
       // Check if menu name already exists
       menus.forEach(menu => {
@@ -188,14 +196,21 @@ router.post('/edit/:id', (req, res) => {
         // Provide feedback that login session has ended
         res.redirect(`/subterra/login?feedback=Your login session ended. Log in again below.&state=negative`);
       } else if (!exists) {
-        // Update menu in database
+        // Rename menu included in pages table
         connection.query(`
-          UPDATE menus
-          SET name = '${ data.name }', children = '${ data.children }'
-          WHERE id = ${ req.params.id }
-        `, [], (err, log) => {
-          // Navigate to /subterra/menus overview and provide feedback that menu was successfully edited
-          res.redirect(`/subterra/menus?feedback='${ data.name }' was successfully edited.&state=positive`);
+          UPDATE pages
+          SET menus = REPLACE(menus, '${ currentName }', '${ data.name }')
+        `, [], (err, pagesLog) => {
+
+          // Update menu in database
+          connection.query(`
+            UPDATE menus
+            SET name = '${ data.name }', children = '${ data.children }'
+            WHERE id = ${ req.params.id }
+          `, [], (err, menusLog) => {
+            // Navigate to /subterra/menus overview and provide feedback that menu was successfully edited
+            res.redirect(`/subterra/menus?feedback='${ data.name }' was successfully edited.&state=positive`);
+          });
         });
       } else {
         // Provide feedback that menu name already exists
@@ -221,13 +236,13 @@ router.get('/delete/:id', (req, res) => {
       connection.query(`
         UPDATE pages
         SET menus = REPLACE(REPLACE(REPLACE(menus, ',${ menu }', ''), '${ menu },', ''), '${ menu }', '')
-      `, [], (err, pages) => {
+      `, [], (err, pagesLog) => {
 
         // Remove menu from it's own table in database
         connection.query(`
           DELETE FROM menus
           WHERE id = ${ req.params.id }
-          `, [], (err, log) => {
+          `, [], (err, menusLog) => {
             // Redirect to menu overview page and provide feedback that menu is successfully deleted
             res.redirect(`/subterra/menus?feedback=Successfully deleted the menu.&state=positive`);
           });

@@ -451,6 +451,14 @@ router.post('/edit/:id', (req, res) => {
       SELECT * FROM pages
     `, [], (err, pages) => {
       let exists;
+      let currentTitle;
+
+      // Find current menu name
+      pages.forEach(page => {
+        if (page.id == req.params.id) {
+          currentTitle = page.title;
+        }
+      });
 
       // Check if page title already exists
       pages.forEach(page => {
@@ -464,14 +472,28 @@ router.post('/edit/:id', (req, res) => {
         // Provide feedback that login session has ended
         res.redirect(`/subterra/login?feedback=Your login session ended. Log in again below.&state=negative`);
       } else if (!exists) {
-        // Update data from page
+        // Remove page included in menus table (',page' - 'page,' - 'page')
         connection.query(`
-          UPDATE pages
-          SET type = '${ data.type }', title = '${ data.title }', menus = '${ data.menus }', content = '${ data.content }'
-          WHERE id = ${ req.params.id }
-        `, [], (err, log) => {
-          // Navigate to /subterra/pages overview and provide feedback that page was successfully edited
-          res.redirect(`/subterra/pages?feedback='${ data.title }' was successfully edited.&state=positive`);
+          UPDATE menus
+          SET children = REPLACE(children, '${ currentTitle }', '${ data.title }')
+        `, [], (err, menusLog) => {
+
+          // Remove page included in portfolio table (',page' - 'page,' - 'page')
+          connection.query(`
+            UPDATE portfolio
+            SET courses = REPLACE(courses, '${ currentTitle }', '${ data.title }')
+          `, [], (err, portfolioLog) => {
+
+            // Update data from page
+            connection.query(`
+              UPDATE pages
+              SET type = '${ data.type }', title = '${ data.title }', menus = '${ data.menus }', content = '${ data.content }'
+              WHERE id = ${ req.params.id }
+            `, [], (err, log) => {
+              // Navigate to /subterra/pages overview and provide feedback that page was successfully edited
+              res.redirect(`/subterra/pages?feedback='${ data.title }' was successfully edited.&state=positive`);
+            });
+          });
         });
       } else {
         // Provide feedback that page title already exists
@@ -497,19 +519,19 @@ router.get('/delete/:id', (req, res) => {
       connection.query(`
         UPDATE menus
         SET children = REPLACE(REPLACE(REPLACE(children, ',${ page }', ''), '${ page },', ''), '${ page }', '')
-      `, [], (err, menus) => {
+      `, [], (err, menusLog) => {
 
         // Remove page included in portfolio table (',page' - 'page,' - 'page')
         connection.query(`
           UPDATE portfolio
           SET courses = REPLACE(REPLACE(REPLACE(courses, ',${ page }', ''), '${ page },', ''), '${ page }', '')
-        `, [], (err, portfolio) => {
+        `, [], (err, portfolioLog) => {
 
           // Remove page from database
           connection.query(`
             DELETE FROM pages
             WHERE id = ${ req.params.id }
-            `, [], (err, log) => {
+            `, [], (err, pagesLog) => {
               // Redirect to page overview page
               res.redirect('/subterra/pages?feedback=Successfully deleted the page.&state=positive');
             });

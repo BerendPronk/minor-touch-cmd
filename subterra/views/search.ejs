@@ -21,7 +21,7 @@
     <% Object.keys(results).forEach(category => { %>
       <% if (results[category].length > 0) { %>
         <section>
-          <h3><%= category %></h3>
+          <h3><%= category === 'faq' ? category.toUpperCase() : category %></h3>
           <p><%= results[category].length %> <%= results[category].length === 1 ? 'item' : 'items' %> found</p>
 
           <ul>
