@@ -28,6 +28,14 @@
 			<% } %>
 		<% } %>
 
-		<p><%= page.content %></p>
+		<main>
+			<% if (page.content.length > 0) { %>
+				<% for (let i = 0; i < page.content.length; i++) { %>
+					<section data-order="<%= i %>">
+						<%- page.content[i] %>
+					</section>
+				<% } %>
+			<% } %>
+		</main>
 
 		<%- include partials/footer -%>
