@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="nl">
+	<head>
+		<meta charset="UTF-8">
+
+		<title>FAQ - Veelgestelde vragen</title>
+
+		<%- include partials/head -%>
+
+		<%- include partials/header -%>
+
+		<% if (tv) { %>
+			Multi-touch screen mode active
+		<% } %>
+
+		<h2>FAQ - Veelgestelde vragen</h2>
+
+		<% if (faq.length > 0) { %>
+			<% for (let i = 0; i < faq.length; i++) { %>
+				<h3>
+					<a href="#faq-<%= faq[i].id %>">
+						<%= faq[i].question %>?
+					</a>
+				</h3>
+				<p id="faq-<%= faq[i].id %>">
+					<%= faq[i].answer %>
+				</p>
+			<% } %>
+		<% } else { %>
+			<p>Geen FAQ vragen gevonden. Vraag aan een docent of hulpstudent om hulp, of druk de SOS knop.</p>
+		<% } %>
+
+		<%- include partials/footer -%>

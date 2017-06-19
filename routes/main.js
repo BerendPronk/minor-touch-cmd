@@ -88,6 +88,25 @@ router.get('/page/:page', (req, res) => {
   });
 });
 
+// [GET] /faq
+router.get('/faq', (req, res) => {
+  debug(`[${ req.method }] /faq`);
+
+  req.getConnection((err, connection) => {
+    // Fetch all FAQ questions from database
+    connection.query(`
+      SELECT * FROM faq
+    `, [], (err, faq) => {
+
+      // Render FAQ view
+      res.render('faq', {
+        tv: req.session.tv,
+        faq: faq
+      })
+    });
+  });
+});
+
 // [GET] /404
 router.get('/*', (req, res) => {
   res.send('A 404 error occurred.');
