@@ -208,5 +208,7 @@ const search = (connection, opts) => {
 };
 
 // Export functions
-module.exports.retrieve = retrieve;
-module.exports.search = search;
+module.exports = {
+  retrieve: retrieve,
+  search: search
+};
