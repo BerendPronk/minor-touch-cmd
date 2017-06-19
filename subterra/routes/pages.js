@@ -299,18 +299,17 @@ router.get('/edit/:id', (req, res) => {
               break;
               case 'L':
                 // Divide content string into separate fields
-                const content = field.replace('|L|', '');
-                const divider = content.indexOf('|');
-                const fieldListName = content.substr(0, divider);
-                const fieldList = content.substr((divider + 1), content.length).split(',');
+                const listContent = field.replace('|L|', '').split('|');
+                const fieldListName = listContent[0];
+                const fieldList = listContent[1].split(',');
                 let fieldListString = '';
 
                 // Give HTML to each item in list
                 fieldList.forEach(item => {
                   fieldListString += `
-                  <li>
-                    <input type="text" oninput="addListItem()" onblur="setInput()" value="${ item }">
-                  </li>
+                    <li>
+                      <input type="text" oninput="addListItem()" onblur="setInput()" value="${ item }">
+                    </li>
                   `;
                 });
 
@@ -318,7 +317,7 @@ router.get('/edit/:id', (req, res) => {
                   <span class="content-tip">List name</span>
                   <input name="content-l-name-${ index }" type="text" oninput="addListName()" onblur="setInput()" value="${ fieldListName }">
                   <span class="content-tip">List items</span>
-                  <input name="content-l-list-${ index }" type="hidden" onblur="setInput()" value="${ content }">
+                  <input name="content-l-list-${ index }" type="hidden" onblur="setInput()" value="${ listContent.join('|') }">
                   <ul>
                     ${ fieldListString }
                   </ul>
@@ -332,9 +331,10 @@ router.get('/edit/:id', (req, res) => {
                 `);
               break;
               case 'B':
+                const buttonContent = field.replace('|B|', '').split('|');
+                const fieldButtonName = buttonContent[0];
+                const fieldButtonAnchor = buttonContent[1].split('-')[1];
                 let systemPagesString;
-                const fieldButtonName = field.replace('|B|', '').split('|')[0];
-                const fieldButtonAnchor =  field.replace('|B|', '').split('|')[1].split('-')[1];
 
                 systemData.pages.forEach(page => {
                   const pageTitle = page.split('-')[1];
