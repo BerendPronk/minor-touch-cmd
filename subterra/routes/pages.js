@@ -472,13 +472,13 @@ router.post('/edit/:id', (req, res) => {
         // Provide feedback that login session has ended
         res.redirect(`/subterra/login?feedback=Your login session ended. Log in again below.&state=negative`);
       } else if (!exists) {
-        // Remove page included in menus table (',page' - 'page,' - 'page')
+        // Rename page included in menus table
         connection.query(`
           UPDATE menus
           SET children = REPLACE(children, '${ currentTitle }', '${ data.title }')
         `, [], (err, menusLog) => {
 
-          // Remove page included in portfolio table (',page' - 'page,' - 'page')
+          // Rename page included in portfolio table
           connection.query(`
             UPDATE portfolio
             SET courses = REPLACE(courses, '${ currentTitle }', '${ data.title }')
