@@ -363,7 +363,8 @@ const disabledPaths = [
   '/subterra/types',
   '/subterra/menus',
   '/subterra/pages',
-  '/subterra/portfolio'
+  '/subterra/portfolio',
+  '/subterra/faq'
 ];
 
 // Set formSubmit to active

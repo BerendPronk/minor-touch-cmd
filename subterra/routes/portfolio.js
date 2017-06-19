@@ -179,7 +179,7 @@ router.post('/edit/:id', (req, res) => {
   };
 
   req.getConnection((err, connection) => {
-    // Fetch all menus from database
+    // Fetch all portfolio items from database
     connection.query(`
       SELECT * FROM portfolio
     `, [], (err, portfolio) => {
