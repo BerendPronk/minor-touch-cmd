@@ -17,6 +17,10 @@
 
     <h1>Edit menu '<%= menu.name %>'</h1>
 
+		<p>
+			Edit the list of attached pages of this menu.
+		</p>
+
 		<button data-action="delete menu" onclick="deleteItem('menus', <%= menu.id %>)">Delete <%= menu.name %></button>
 
 		<form action="/subterra/menus/edit/<%= menu.id %>" method="post" onsubmit="submitForm()">

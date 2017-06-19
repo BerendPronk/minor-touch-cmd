@@ -17,6 +17,10 @@
 
     <h1>Edit page type '<%= type.name %>'</h1>
 
+		<p>
+			Edit the list of modules set as default modules if a '<%= type.name %>' is created.
+		</p>
+
 		<button data-action="delete type" onclick="deleteItem('types', <%= type.id %>)">Delete <%= type.name %></button>
 
     <form action="/subterra/types/edit/<%= type.id %>" method="post" onsubmit="submitForm()">
