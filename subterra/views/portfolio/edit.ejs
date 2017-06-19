@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8">
 
-		<title>Edit portfolio item '<%= item.title %>'</title>
+    <title>Edit portfolio item '<%= item.title %>'</title>
 
     <%- include ../partials/head -%>
 
@@ -17,11 +17,11 @@
 
     <h1>Edit portfolio item '<%= item.title %>'</h1>
 
-		<p>
-			Edit the list of courses your want this portfolio item to appear on and edit it's paragraph, image and embedded video, if desired.
-		</p>
+    <p>
+      Edit the list of courses your want this portfolio item to appear on and edit it's paragraph, image and embedded video, if desired.
+    </p>
 
-		<button data-action="delete type" onclick="deleteItem('portfolio', <%= item.id %>)">Delete <%= item.title %></button>
+    <button data-action="delete type" onclick="deleteItem('portfolio', <%= item.id %>)">Delete <%= item.title %></button>
 
     <form enctype="multipart/form-data" action="/subterra/portfolio/edit/<%= item.id %>" method="post" onsubmit="submitForm()">
       <fieldset>
@@ -52,30 +52,30 @@
           <% } %>
         </select>
       </fieldset>
-			<fieldset>
-				<legend>Content</legend>
+      <fieldset>
+        <legend>Content</legend>
 
-				<ul id="pageContent">
-					<li>
-						<span class="content-tip">Paragraph</span>
-						<textarea name="content-p"><%= item.paragraph %></textarea>
-					</li>
-					<li>
-						<span class="content-tip">Image</span>
-						<% if (item.image) { %>
-							<img src="/media/<%= item.image %>" alt="Image about <% item.image %>">
-						<% } %>
-						<input name="content-i-name" type="hidden" value="<%= item.image %>">
-						<input name="content-" type="file" accept="image/*" onblur="setImageName()">
-					</li>
-					<li>
-						<span class="content-tip">Embedded video (YouTube or Vimeo)</span>
-						<input name="content-e" type="url" value="<%= item.video %>">
-					</li>
-				</ul>
-			</fieldset>
+        <ul id="pageContent">
+          <li>
+            <span class="content-tip">Paragraph</span>
+            <textarea name="content-p"><%= item.paragraph %></textarea>
+          </li>
+          <li>
+            <span class="content-tip">Image</span>
+            <% if (item.image) { %>
+              <img src="/media/<%= item.image %>" alt="Image about <% item.image %>">
+            <% } %>
+            <input name="content-i-name" type="hidden" value="<%= item.image %>">
+            <input name="content-" type="file" accept="image/*" onblur="setImageName()">
+          </li>
+          <li>
+            <span class="content-tip">Embedded video (YouTube or Vimeo)</span>
+            <input name="content-e" type="url" value="<%= item.video %>">
+          </li>
+        </ul>
+      </fieldset>
 
       <input type="submit" value="Submit">
     </form>
 
-		<%- include ../partials/footer -%>
+    <%- include ../partials/footer -%>

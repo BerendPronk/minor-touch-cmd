@@ -1,29 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8">
 
-		<title>Edit menu '<%= menu.name %>'</title>
+    <title>Edit menu '<%= menu.name %>'</title>
 
     <%- include ../partials/head -%>
 
     <%- include ../partials/header -%>
 
-		<% if (feedback) { %>
-			<div id="feedback" class="<%= feedbackState %>">
-				<%= feedback %>
-			</div>
-		<% } %>
+    <% if (feedback) { %>
+      <div id="feedback" class="<%= feedbackState %>">
+        <%= feedback %>
+      </div>
+    <% } %>
 
     <h1>Edit menu '<%= menu.name %>'</h1>
 
-		<p>
-			Edit the list of attached pages of this menu.
-		</p>
+    <p>
+      Edit the list of attached pages of this menu.
+    </p>
 
-		<button data-action="delete menu" onclick="deleteItem('menus', <%= menu.id %>)">Delete <%= menu.name %></button>
+    <button data-action="delete menu" onclick="deleteItem('menus', <%= menu.id %>)">Delete <%= menu.name %></button>
 
-		<form action="/subterra/menus/edit/<%= menu.id %>" method="post" onsubmit="submitForm()">
+    <form action="/subterra/menus/edit/<%= menu.id %>" method="post" onsubmit="submitForm()">
       <fieldset>
         <legend>Name</legend>
 
@@ -56,4 +56,4 @@
       <input type="submit" value="Submit">
     </form>
 
-		<%- include ../partials/footer -%>
+    <%- include ../partials/footer -%>

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8">
 
-		<title>FAQ</title>
+    <title>FAQ</title>
 
     <%- include ../partials/head -%>
 
@@ -17,10 +17,10 @@
 
     <h1>FAQ</h1>
 
-		<p>
-			This page is deticated to all the FAQ questions your website contains. Every questions has it's own answer attached to it.<br>
-			Add a question by pressing the 'Add new question' button, or edit one by selecting it's title.
-		</p>
+    <p>
+      This page is deticated to all the FAQ questions your website contains. Every questions has it's own answer attached to it.<br>
+      Add a question by pressing the 'Add new question' button, or edit one by selecting it's title.
+    </p>
 
     <a href="/subterra/faq/add">Add new question</a>
 
@@ -31,7 +31,7 @@
             <a href="/subterra/faq/edit/<%= system.faq[i].id %>">
               <%= system.faq[i].question %>?
             </a>
-						<button data-action="delete type" onclick="deleteItem('faq', <%= system.faq[i].id %>)">delete</button>
+            <button data-action="delete type" onclick="deleteItem('faq', <%= system.faq[i].id %>)">delete</button>
           </li>
         <% } %>
       </ul>
@@ -39,4 +39,4 @@
       <p>No FAQ questions found.</p>
     <% } %>
 
-		<%- include ../partials/footer -%>
+    <%- include ../partials/footer -%>

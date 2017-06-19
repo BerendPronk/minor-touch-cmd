@@ -1,27 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8">
 
-		<title>Add a menu</title>
+    <title>Add a menu</title>
 
     <%- include ../partials/head -%>
 
     <%- include ../partials/header -%>
 
-		<% if (feedback) { %>
-			<div id="feedback" class="<%= feedbackState %>">
-				<%= feedback %>
-			</div>
-		<% } %>
+    <% if (feedback) { %>
+      <div id="feedback" class="<%= feedbackState %>">
+        <%= feedback %>
+      </div>
+    <% } %>
 
     <h1>Add a new menu</h1>
 
-		<p>
-			Select the pages you want to attach to this menu.
-		</p>
+    <p>
+      Select the pages you want to attach to this menu.
+    </p>
 
-		<form action="/subterra/menus/add" method="post" onsubmit="submitForm()">
+    <form action="/subterra/menus/add" method="post" onsubmit="submitForm()">
       <fieldset>
         <legend>Name</legend>
 
@@ -47,4 +47,4 @@
       <input type="submit" value="Submit">
     </form>
 
-		<%- include ../partials/footer -%>
+    <%- include ../partials/footer -%>

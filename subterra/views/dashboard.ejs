@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8">
 
-		<title>Subterra</title>
+    <title>Subterra</title>
 
     <%- include partials/head -%>
 
@@ -19,12 +19,12 @@
 
     <button data-add="page" onclick="toggleShow('#pageTypes')">Add new page</button>
 
-		<ul id="pageTypes" class="hidden">
-			<% for (let i = 0; i < system.types.length; i++) { %>
-				<li>
-					<a href="/subterra/pages/add/<%= system.types[i] %>">Add <%= system.types[i] %></a>
-				</li>
-			<% } %>
-		</ul>
+    <ul id="pageTypes" class="hidden">
+      <% for (let i = 0; i < system.types.length; i++) { %>
+        <li>
+          <a href="/subterra/pages/add/<%= system.types[i] %>">Add <%= system.types[i] %></a>
+        </li>
+      <% } %>
+    </ul>
 
-		<%- include partials/footer -%>
+    <%- include partials/footer -%>

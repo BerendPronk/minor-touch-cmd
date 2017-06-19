@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8">
 
-		<title>Edit page type '<%= type.name %>'</title>
+    <title>Edit page type '<%= type.name %>'</title>
 
     <%- include ../partials/head -%>
 
@@ -17,11 +17,11 @@
 
     <h1>Edit page type '<%= type.name %>'</h1>
 
-		<p>
-			Edit the list of modules set as default modules if a '<%= type.name %>' is created.
-		</p>
+    <p>
+      Edit the list of modules set as default modules if a '<%= type.name %>' is created.
+    </p>
 
-		<button data-action="delete type" onclick="deleteItem('types', <%= type.id %>)">Delete <%= type.name %></button>
+    <button data-action="delete type" onclick="deleteItem('types', <%= type.id %>)">Delete <%= type.name %></button>
 
     <form action="/subterra/types/edit/<%= type.id %>" method="post" onsubmit="submitForm()">
       <fieldset>
@@ -56,4 +56,4 @@
       <input type="submit" value="Submit">
     </form>
 
-		<%- include ../partials/footer -%>
+    <%- include ../partials/footer -%>

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8">
 
-		<title>Page types</title>
+    <title>Page types</title>
 
     <%- include ../partials/head -%>
 
@@ -17,10 +17,10 @@
 
     <h1>Page types</h1>
 
-		<p>
-			This page is deticated to all the page types your website contains. Every page type has it's own list of default modules to load, when creating a new page..<br>
-			Add a page type by pressing the 'Add new page type' button, or edit one by selecting it's name.
-		</p>
+    <p>
+      This page is deticated to all the page types your website contains. Every page type has it's own list of default modules to load, when creating a new page..<br>
+      Add a page type by pressing the 'Add new page type' button, or edit one by selecting it's name.
+    </p>
 
     <a href="/subterra/types/add">Add new page type</a>
 
@@ -32,7 +32,7 @@
               <%= system.types[i].name %>
             </a>
             | <%= system.types[i].defaultModules.replace(/,/g, ', ') %>
-						<button data-action="delete type" onclick="deleteItem('types', <%= system.types[i].id %>)">delete</button>
+            <button data-action="delete type" onclick="deleteItem('types', <%= system.types[i].id %>)">delete</button>
           </li>
         <% } %>
       </ul>
@@ -40,4 +40,4 @@
       <p>No page types found.</p>
     <% } %>
 
-		<%- include ../partials/footer -%>
+    <%- include ../partials/footer -%>
