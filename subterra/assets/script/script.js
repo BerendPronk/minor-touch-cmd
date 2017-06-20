@@ -65,41 +65,51 @@ function addModule() {
   switch (event.target.value) {
     case 'heading':
       newModule = `
-        <span class="content-tip">Heading</span>
-        <input name="content-h-${ index }" type="text" onblur="setInput()">
+        <label>
+          Heading
+          <input name="content-h-${ index }" type="text" onblur="setInput()">
+        </label>
       `;
     break;
     case 'paragraph':
       newModule = `
-        <span class="content-tip">Paragraph</span>
-        <textarea name="content-p-${ index }" onblur="setInput()"></textarea>
+        <label>
+          Paragraph
+          <textarea name="content-p-${ index }" onblur="setInput()"></textarea>
+        </label>
       `;
     break;
     case 'image':
       newModule = `
-        <span class="content-tip">Image</span>
+        <label>
+          Image
+          <input name="content-i-${ index }" type="file" accept="image/*" onblur="setImageName()">
+        </label>
         <input name="content-i-name-${ index }" type="hidden">
-        <input name="content-i-${ index }" type="file" accept="image/*" onblur="setImageName()">
       `;
     break;
     case 'list':
       newModule = `
-        <span class="content-tip">List name</span>
-        <input name="content-l-name-${ index }" type="text" oninput="addListName()" onblur="setInput()">
-        <span class="content-tip">List items</span>
-        <input name="content-l-list-${ index }" type="hidden">
+        <label>
+          List Name
+          <input name="content-l-name-${ index }" type="text" oninput="setListName()" onblur="setInput()">
+        </label>
+        <label>List items</label>
         <ul>
           <li>
             <input type="text" oninput="addListItem()" onblur="setInput()">
           </li>
         </ul>
         <button data-type="addToList" onclick="addListInput()">Add item</button>
+        <input name="content-l-list-${ index }" type="hidden">
       `;
     break;
     case 'embed':
       newModule = `
-        <span class="content-tip">Embedded video (YouTube or Vimeo)</span>
-        <input name="content-e-${ index }" type="url" onblur="setInput()">
+        <label>
+          Embedded video (YouTube or Vimeo)
+          <input name="content-e-${ index }" type="url" onblur="setInput()">
+        </label>
       `;
     break;
     case 'button':
@@ -119,14 +129,18 @@ function addModule() {
       });
 
       newModule = `
-        <span class="content-tip">Button name</span>
-        <input name="content-b-name-${ index }" type="text" oninput="setButtonName()" onblur="setInput()">
-        <span class="content-tip">Button link</span>
+        <label>
+          Button name
+          <input name="content-b-name-${ index }" type="text" oninput="setButtonName()" onblur="setInput()">
+        </label>
+        <label>
+          Button link
+          <select name="content-b-anchor-${ index }" oninput="setButtonAnchor()" onblur="setInput()">
+            <option value="" disabled selected>Select a page</option>
+            ${ systemPagesString }
+          </select>
+        </label>
         <input name="content-b-link-${ index }" type="hidden">
-        <select name="content-b-anchor-${ index }" oninput="setButtonAnchor()" onblur="setInput()">
-          <option value="" disabled selected>Select a page</option>
-          ${ systemPagesString }
-        </select>
       `;
     break;
   }
@@ -258,7 +272,7 @@ function deleteModule() {
 
 // Add image name to hidden input field
 function setImageName() {
-  const field = event.target.parentNode;
+  const field = event.target.parentNode.parentNode;
   const nameInput = field.querySelector('input[name^="content-i-name"]');
 
   nameInput.value = event.target.value.replace('C:\\fakepath\\', '');
@@ -280,8 +294,8 @@ function addListInput() {
 }
 
 // Add list name input to hidden input field
-function addListName() {
-  const field = event.target.parentNode;
+function setListName() {
+  const field = event.target.parentNode.parentNode;
   const listInput = field.querySelector('input[name^="content-l-list"]');
   const nameValue = event.target.value;
   const list = field.querySelector('ul');
@@ -324,7 +338,7 @@ function deleteItem(category, id) {
 
 // Add button name to hidden input field
 function setButtonName() {
-  const field = event.target.parentNode;
+  const field = event.target.parentNode.parentNode;
   const buttonName = event.target.value;
   const buttonAnchor = field.querySelector('select[name^="content-b-anchor"]').value;
   const buttonInput = field.querySelector('input[name^="content-b-link"]');
@@ -338,7 +352,7 @@ function setButtonName() {
 
 // Add button anchor to hidden input field
 function setButtonAnchor() {
-  const field = event.target.parentNode;
+  const field = event.target.parentNode.parentNode;
   const buttonName = field.querySelector('input[name^="content-b-name"]').value;
   const buttonAnchor = event.target.value;
   const buttonInput = field.querySelector('input[name^="content-b-link"]');

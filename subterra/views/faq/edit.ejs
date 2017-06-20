@@ -25,11 +25,14 @@
     <input name="question" type="text" pattern="[a-zA-Z0-9\s]+" title="Only alphanumeric characters are allowed" value="<%= question.question %>" required> ?
   </fieldset>
   <fieldset>
-    <legend>Answer</legend>
+    <legend>Content</legend>
 
     <ul id="pageContent">
       <li>
-        <textarea name="answer"><%= question.answer %></textarea>
+        <label>
+          Anwser
+          <textarea name="answer"><%= question.answer %></textarea>
+        </label>
       </li>
     </ul>
   </fieldset>

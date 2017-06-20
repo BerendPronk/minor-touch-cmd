@@ -79,41 +79,51 @@ router.get('/add/:type', (req, res) => {
             switch (module) {
               case 'heading':
                 contentFields.push(`
-                  <span class="content-tip">Heading</span>
-                  <input name="content-h-${ index }" type="text" onblur="setInput()">
+                  <label>
+                    Heading
+                    <input name="content-h-${ index }" type="text" onblur="setInput()">
+                  </label>
                 `);
               break;
               case 'paragraph':
                 contentFields.push(`
-                  <span class="content-tip">Paragraph</span>
-                  <textarea name="content-p-${ index }" onblur="setInput()"></textarea>
+                  <label>
+                    Paragraph
+                    <textarea name="content-p-${ index }" onblur="setInput()"></textarea>
+                  </label>
                 `);
               break;
               case 'image':
                 contentFields.push(`
-                  <span class="content-tip">Image</span>
+                  <label>
+                    Image
+                    <input name="content-i-${ index }" type="file" accept="image/*" onblur="setImageName()">
+                  </label>
                   <input name="content-i-name-${ index }" type="hidden">
-                  <input name="content-i-${ index }" type="file" accept="image/*" onblur="setImageName()">
                 `);
               break;
               case 'list':
                 contentFields.push(`
-                  <span class="content-tip">List name</span>
-                  <input name="content-l-name-${ index }" type="text" oninput="addListName()" onblur="setInput()">
-                  <span class="content-tip">List items</span>
-                  <input name="content-l-list-${ index }" type="hidden">
+                  <label>
+                    List name
+                    <input name="content-l-name-${ index }" type="text" oninput="setListName()" onblur="setInput()">
+                  </label>
+                  <label>List items</label>
                   <ul>
                     <li>
                       <input type="text" oninput="addListItem()" onblur="setInput()">
                     </li>
                   </ul>
                   <button data-type="addToList" onclick="addListInput()">Add item</button>
+                  <input name="content-l-list-${ index }" type="hidden">
                 `);
               break;
               case 'embed':
                 contentFields.push(`
-                  <span class="content-tip">Embedded video (YouTube or Vimeo)</span>
-                  <input name="content-e-${ index }" type="url" onblur="setInput()">
+                  <label>
+                    Embedded video (YouTube or Vimeo)
+                    <input name="content-e-${ index }" type="url" onblur="setInput()">
+                  </label>
                 `);
               break;
               case 'button':
@@ -131,14 +141,18 @@ router.get('/add/:type', (req, res) => {
                 });
 
                 contentFields.push(`
-                  <span class="content-tip">Button name</span>
-                  <input name="content-b-name-${ index }" type="text" oninput="setButtonName()" onblur="setInput()">
-                  <span class="content-tip">Button link</span>
+                  <label>
+                    Button name
+                    <input name="content-b-name-${ index }" type="text" oninput="setButtonName()" onblur="setInput()">
+                  </label>
+                  <label>
+                    Button link
+                    <select name="content-b-anchor-${ index }" oninput="setButtonAnchor()" onblur="setInput()">
+                      <option value="" disabled selected>Select a page</option>
+                      ${ systemPagesString }
+                    </select>
+                  </label>
                   <input name="content-b-link-${ index }" type="hidden">
-                  <select name="content-b-anchor-${ index }" oninput="setButtonAnchor()" onblur="setInput()">
-                    <option value="" disabled selected>Select a page</option>
-                    ${ systemPagesString }
-                  </select>
                 `);
               break;
             }
@@ -279,22 +293,28 @@ router.get('/edit/:id', (req, res) => {
             switch (field.charAt(1)) {
               case 'H':
                 contentFields.push(`
-                  <span class="content-tip">Heading</span>
-                  <input name="content-h-${ index }" type="text" onblur="setInput()" value="${ field.replace('|H|', '') }">
+                  <label>
+                    Heading
+                    <input name="content-h-${ index }" type="text" onblur="setInput()" value="${ field.replace('|H|', '') }">
+                  </label>
                 `);
               break;
               case 'P':
                 contentFields.push(`
-                  <span class="content-tip">Paragraph</span>
-                  <textarea name="content-p-${ index }" onblur="setInput()">${ field.replace('|P|', '') }</textarea>
+                  <label>
+                    Paragraph
+                    <textarea name="content-p-${ index }" onblur="setInput()">${ field.replace('|P|', '') }</textarea>
+                  </label>
                 `);
               break;
               case 'I':
                 contentFields.push(`
-                  <span class="content-tip">Image</span>
+                  <label>
+                    Image
+                    <input name="content-i-${ index }" type="file" accept="image/*" onblur="setImageName()">
+                  </label>
                   <img src="/media/${ field.replace('|I|', '') }" alt="Image about ${ page.title }">
                   <input name="content-i-name-${ index }" type="hidden" value="${ field.replace('|I|', '') }">
-                  <input name="content-i-${ index }" type="file" accept="image/*" onblur="setImageName()">
                 `);
               break;
               case 'L':
@@ -314,20 +334,24 @@ router.get('/edit/:id', (req, res) => {
                 });
 
                 contentFields.push(`
-                  <span class="content-tip">List name</span>
-                  <input name="content-l-name-${ index }" type="text" oninput="addListName()" onblur="setInput()" value="${ fieldListName }">
-                  <span class="content-tip">List items</span>
-                  <input name="content-l-list-${ index }" type="hidden" onblur="setInput()" value="${ listContent.join('|') }">
+                  <label>
+                    List name
+                    <input name="content-l-name-${ index }" type="text" oninput="setListName()" onblur="setInput()" value="${ fieldListName }">
+                  </label>
+                  <label>List items</label>
                   <ul>
                     ${ fieldListString }
                   </ul>
                   <button data-type="addToList" onclick="addListInput()">Add item</button>
+                  <input name="content-l-list-${ index }" type="hidden" onblur="setInput()" value="${ listContent.join('|') }">
                 `);
               break;
               case 'E':
                 contentFields.push(`
-                  <span class="content-tip">Embedded video (YouTube or Vimeo)</span>
-                  <input name="content-e-${ index }" type="url" onblur="setInput()" value="${ field.replace('|E|', '') }">
+                  <label>
+                    Embedded video (YouTube or Vimeo)
+                    <input name="content-e-${ index }" type="url" onblur="setInput()" value="${ field.replace('|E|', '') }">
+                  </label>
                 `);
               break;
               case 'B':
@@ -348,14 +372,18 @@ router.get('/edit/:id', (req, res) => {
                 });
 
                 contentFields.push(`
-                  <span class="content-tip">Button name</span>
-                  <input name="content-b-name-${ index }" type="text" oninput="setButtonName()" onblur="setInput()" value="${ fieldButtonName }">
-                  <span class="content-tip">Button link</span>
+                  <label>
+                    Button name
+                    <input name="content-b-name-${ index }" type="text" oninput="setButtonName()" onblur="setInput()" value="${ fieldButtonName }">
+                  </label>
+                  <label>
+                    Button link
+                    <select name="content-b-anchor-${ index }" oninput="setButtonAnchor()" onblur="setInput()">
+                      <option value="" disabled selected>Select a page</option>
+                      ${ systemPagesString }
+                    </select>
+                  </label>
                   <input name="content-b-link-${ index }" type="hidden" value="${ field.replace('|B|', '') }">
-                  <select name="content-b-anchor-${ index }" oninput="setButtonAnchor()" onblur="setInput()">
-                    <option value="" disabled selected>Select a page</option>
-                    ${ systemPagesString }
-                  </select>
                 `);
               break;
             }

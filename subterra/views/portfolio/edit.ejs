@@ -52,20 +52,26 @@
 
     <ul id="pageContent">
       <li>
-        <span class="content-tip">Paragraph</span>
-        <textarea name="content-p"><%= item.paragraph %></textarea>
+        <label>
+          Paragraph
+          <textarea name="content-p"><%= item.paragraph %></textarea>
+        </label>
       </li>
       <li>
-        <span class="content-tip">Image</span>
+        <label>
+          Image
+          <input name="content-" type="file" accept="image/*" onblur="setImageName()">
+        </label>
         <% if (item.image) { %>
           <img src="/media/<%= item.image %>" alt="Image about <% item.image %>">
-        <% } %>
+          <% } %>
         <input name="content-i-name" type="hidden" value="<%= item.image %>">
-        <input name="content-" type="file" accept="image/*" onblur="setImageName()">
       </li>
       <li>
-        <span class="content-tip">Embedded video (YouTube or Vimeo)</span>
-        <input name="content-e" type="url" value="<%= item.video %>">
+        <label>
+          Embedded video (YouTube or Vimeo)
+          <input name="content-e" type="url" value="<%= item.video %>">
+        </label>
       </li>
     </ul>
   </fieldset>
