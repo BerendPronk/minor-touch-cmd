@@ -1,50 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
+<%- include ../partials/head -%>
 
-    <title>Add a page type</title>
+<title>Add a page type</title>
 
-    <%- include ../partials/head -%>
+<%- include ../partials/header -%>
 
-    <%- include ../partials/header -%>
+<% if (feedback) { %>
+  <div id="feedback" class="<%= feedbackState %>">
+    <%= feedback %>
+  </div>
+<% } %>
 
-    <% if (feedback) { %>
-      <div id="feedback" class="<%= feedbackState %>">
-        <%= feedback %>
-      </div>
-    <% } %>
+<h1>Add a page type</h1>
 
-    <h1>Add a page type</h1>
+<p>
+  Select all module you want to set as default modules if a new page with this type is created.
+</p>
 
-    <p>
-      Select all module you want to set as default modules if a new page with this type is created.
-    </p>
+<form action="/subterra/types/add" method="post" onsubmit="submitForm()">
+  <fieldset>
+    <legend>Name</legend>
 
-    <form action="/subterra/types/add" method="post" onsubmit="submitForm()">
-      <fieldset>
-        <legend>Name</legend>
+    <input name="name" type="text" pattern="[a-zA-Z0-9\s]+" title="Only alphanumeric characters are allowed" required>
+  </fieldset>
+  <fieldset>
+    <legend>Modules</legend>
 
-        <input name="name" type="text" pattern="[a-zA-Z0-9\s]+" title="Only alphanumeric characters are allowed" required>
-      </fieldset>
-      <fieldset>
-        <legend>Modules</legend>
+    <ul id="typeModules"></ul>
 
-        <ul id="typeModules"></ul>
+    <input name="modules" type="hidden">
 
-        <input name="modules" type="hidden">
+    <select id="typeModuleSelect" onchange="addSelectList('modules')">
+      <option value="" disabled selected>Add a module</option>
+      <% for (let i = 0; i < system.modules.length; i++) { %>
+        <option value="<%= system.modules[i] %>">
+          <%= system.modules[i] %>
+        </option>
+      <% } %>
+    </select>
+  </fieldset>
 
-        <select id="typeModuleSelect" onchange="addSelectList('modules')">
-          <option value="" disabled selected>Add a module</option>
-          <% for (let i = 0; i < system.modules.length; i++) { %>
-            <option value="<%= system.modules[i] %>">
-              <%= system.modules[i] %>
-            </option>
-          <% } %>
-        </select>
-      </fieldset>
+  <input type="submit" value="Submit">
+</form>
 
-      <input type="submit" value="Submit">
-    </form>
-
-    <%- include ../partials/footer -%>
+<%- include ../partials/footer -%>

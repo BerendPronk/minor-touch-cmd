@@ -1,59 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
+<%- include ../partials/head -%>
 
-    <title>Edit menu '<%= menu.name %>'</title>
+<title>Edit menu '<%= menu.name %>'</title>
 
-    <%- include ../partials/head -%>
+<%- include ../partials/header -%>
 
-    <%- include ../partials/header -%>
+<% if (feedback) { %>
+  <div id="feedback" class="<%= feedbackState %>">
+    <%= feedback %>
+  </div>
+<% } %>
 
-    <% if (feedback) { %>
-      <div id="feedback" class="<%= feedbackState %>">
-        <%= feedback %>
-      </div>
-    <% } %>
+<h1>Edit menu '<%= menu.name %>'</h1>
 
-    <h1>Edit menu '<%= menu.name %>'</h1>
+<p>
+  Edit the list of attached pages of this menu.
+</p>
 
-    <p>
-      Edit the list of attached pages of this menu.
-    </p>
+<button data-action="delete menu" onclick="deleteItem('menus', <%= menu.id %>)">Delete <%= menu.name %></button>
 
-    <button data-action="delete menu" onclick="deleteItem('menus', <%= menu.id %>)">Delete <%= menu.name %></button>
+<form action="/subterra/menus/edit/<%= menu.id %>" method="post" onsubmit="submitForm()">
+  <fieldset>
+    <legend>Name</legend>
 
-    <form action="/subterra/menus/edit/<%= menu.id %>" method="post" onsubmit="submitForm()">
-      <fieldset>
-        <legend>Name</legend>
+    <input name="name" type="text" pattern="[a-zA-Z0-9\s]+" title="Only alphanumeric characters are allowed" value="<%= menu.name %>" required>
+  </fieldset>
+  <fieldset>
+    <legend>Modules</legend>
 
-        <input name="name" type="text" pattern="[a-zA-Z0-9\s]+" title="Only alphanumeric characters are allowed" value="<%= menu.name %>" required>
-      </fieldset>
-      <fieldset>
-        <legend>Modules</legend>
+    <ul id="menuChildren">
+      <% for (let i = 0; i < menu.children.length; i++) { %>
+        <li>
+          <span data-type="children-name"><%= menu.children[i] %></span>
+          <button data-type="children-delete" onclick="removeSelectList('children')">X</button>
+        </li>
+      <% } %>
+    </ul>
 
-        <ul id="menuChildren">
-          <% for (let i = 0; i < menu.children.length; i++) { %>
-            <li>
-              <span data-type="children-name"><%= menu.children[i] %></span>
-              <button data-type="children-delete" onclick="removeSelectList('children')">X</button>
-            </li>
-          <% } %>
-        </ul>
+    <input name="children" type="hidden" value="<%= menu.children %>">
 
-        <input name="children" type="hidden" value="<%= menu.children %>">
+    <select id="childSelect" onchange="addSelectList('children')">
+      <option value="" disabled selected>Add another page</option>
+      <% for (let i = 0; i < system.pages.length; i++) { %>
+        <option value="<%= system.pages[i] %>">
+          <%= system.pages[i] %>
+        </option>
+      <% } %>
+    </select>
+  </fieldset>
 
-        <select id="childSelect" onchange="addSelectList('children')">
-          <option value="" disabled selected>Add another page</option>
-          <% for (let i = 0; i < system.pages.length; i++) { %>
-            <option value="<%= system.pages[i] %>">
-              <%= system.pages[i] %>
-            </option>
-          <% } %>
-        </select>
-      </fieldset>
+  <input type="submit" value="Submit">
+</form>
 
-      <input type="submit" value="Submit">
-    </form>
-
-    <%- include ../partials/footer -%>
+<%- include ../partials/footer -%>

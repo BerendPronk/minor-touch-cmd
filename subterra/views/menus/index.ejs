@@ -1,43 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
+<%- include ../partials/head -%>
 
-    <title>Menus</title>
+<title>Menus</title>
 
-    <%- include ../partials/head -%>
+<%- include ../partials/header -%>
 
-    <%- include ../partials/header -%>
+<% if (feedback) { %>
+  <div id="feedback" class="<%= feedbackState %>">
+    <%= feedback %>
+  </div>
+<% } %>
 
-    <% if (feedback) { %>
-      <div id="feedback" class="<%= feedbackState %>">
-        <%= feedback %>
-      </div>
+<h1>Menus</h1>
+
+<p>
+  This page is deticated to all the menus your website contains. Every menu has it's own list of pages attached to it.<br>
+  Add a menu by pressing the 'Add new menu' button, or edit one by selecting it's name.
+</p>
+
+<a href="/subterra/menus/add">Add a menu</a>
+
+<% if (system.menus.length > 0) { %>
+  <ul>
+    <% for (let i = 0; i < system.menus.length; i++) { %>
+      <li>
+        <a href="/subterra/menus/edit/<%= system.menus[i].id %>">
+          <%= system.menus[i].name %>
+        </a>
+        | <%= system.menus[i].children.replace(/,/g, ', ') %>
+        <button data-action="delete menu" onclick="deleteItem('menus', <%= system.menus[i].id %>)">delete</button>
+      </li>
     <% } %>
+  </ul>
+<% } else { %>
+  <p>No menus found.</p>
+<% } %>
 
-    <h1>Menus</h1>
-
-    <p>
-      This page is deticated to all the menus your website contains. Every menu has it's own list of pages attached to it.<br>
-      Add a menu by pressing the 'Add new menu' button, or edit one by selecting it's name.
-    </p>
-
-    <a href="/subterra/menus/add">Add a menu</a>
-
-    <% if (system.menus.length > 0) { %>
-      <ul>
-        <% for (let i = 0; i < system.menus.length; i++) { %>
-          <li>
-            <a href="/subterra/menus/edit/<%= system.menus[i].id %>">
-              <%= system.menus[i].name %>
-            </a>
-            | <%= system.menus[i].children.replace(/,/g, ', ') %>
-            <button data-action="delete menu" onclick="deleteItem('menus', <%= system.menus[i].id %>)">delete</button>
-          </li>
-        <% } %>
-      </ul>
-    <% } else { %>
-      <p>No menus found.</p>
-    <% } %>
-
-    <%- include ../partials/footer -%>
+<%- include ../partials/footer -%>

@@ -1,103 +1,98 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
+<%- include ../partials/head -%>
 
-    <title>Edit page '<%= page.title %>'</title>
+<title>Edit page '<%= page.title %>'</title>
 
-    <%- include ../partials/head -%>
+<%- include ../partials/header -%>
 
-    <%- include ../partials/header -%>
+<% if (feedback) { %>
+  <div id="feedback" class="<%= feedbackState %>">
+    <%= feedback %>
+  </div>
+<% } %>
 
-    <% if (feedback) { %>
-      <div id="feedback" class="<%= feedbackState %>">
-        <%= feedback %>
-      </div>
-    <% } %>
+<h1>Edit '<%= page.title %>'</h1>
 
-    <h1>Edit '<%= page.title %>'</h1>
+<p>
+  Edit the list of menu's you want this page to have and edit content to your desire.<br>
+  You can add more modules by pressing the 'Add Module' button.
+</p>
 
-    <p>
-      Edit the list of menu's you want this page to have and edit content to your desire.<br>
-      You can add more modules by pressing the 'Add Module' button.
-    </p>
+<button data-action="delete page" onclick="deleteItem('pages', <%= page.id %>)">Delete <%= page.title %></button>
 
-    <button data-action="delete page" onclick="deleteItem('pages', <%= page.id %>)">Delete <%= page.title %></button>
+<form enctype="multipart/form-data" action="/subterra/pages/edit/<%= page.id %>" method="post" onsubmit="submitForm()">
+  <fieldset>
+    <legend>Type</legend>
 
-    <form enctype="multipart/form-data" action="/subterra/pages/edit/<%= page.id %>" method="post" onsubmit="submitForm()">
-      <fieldset>
-        <legend>Type</legend>
+    <select name="type">
+      <option value="" disabled selected>Select a page type</option>
+      <% for (let i = 0; i < system.types.length; i++) { %>
+        // Set current page type to selected
+        <option value="<%= system.types[i] %>" <%= system.types[i] === page.type ? 'selected' : '' %>>
+          <%= system.types[i] %>
+        </option>
+      <% } %>
+    </select>
+  </fieldset>
+  <fieldset>
+    <legend>Title</legend>
 
-        <select name="type">
-          <option value="" disabled selected>Select a page type</option>
-          <% for (let i = 0; i < system.types.length; i++) { %>
-            // Set current page type to selected
-            <option value="<%= system.types[i] %>" <%= system.types[i] === page.type ? 'selected' : '' %>>
-              <%= system.types[i] %>
-            </option>
-          <% } %>
-        </select>
-      </fieldset>
-      <fieldset>
-        <legend>Title</legend>
+    <input type="text" name="title" pattern="[a-zA-Z0-9\s]+" title="Only alphanumeric characters are allowed" value="<%= page.title %>" required>
+  </fieldset>
+  <fieldset>
+    <legend>Menus</legend>
 
-        <input type="text" name="title" pattern="[a-zA-Z0-9\s]+" title="Only alphanumeric characters are allowed" value="<%= page.title %>" required>
-      </fieldset>
-      <fieldset>
-        <legend>Menus</legend>
+    <ul id="pageMenus">
+      <% for (let i = 0; i < page.menus.length; i++) { %>
+        <li>
+          <span data-type="menus-name"><%= page.menus[i] %></span>
+          <button data-type="menus-delete" onclick="removeSelectList('menus')">X</button
+        </li>
+      <% } %>
+    </ul>
 
-        <ul id="pageMenus">
-          <% for (let i = 0; i < page.menus.length; i++) { %>
-            <li>
-              <span data-type="menus-name"><%= page.menus[i] %></span>
-              <button data-type="menus-delete" onclick="removeSelectList('menus')">X</button
-            </li>
-          <% } %>
-        </ul>
+    <input name="menus" type="hidden" value="<%= page.menus %>">
 
-        <input name="menus" type="hidden" value="<%= page.menus %>">
+    <select id="menuSelect" onchange="addSelectList('menus')">
+      <option value="" disabled selected>Add another menu</option>
+      <% for (let i = 0; i < system.menus.length; i++) { %>
+        <option value="<%= system.menus[i] %>">
+          <%= system.menus[i] %>
+        </option>
+      <% } %>
+    </select>
+  </fieldset>
+  <fieldset>
+    <legend>Content</legend>
 
-        <select id="menuSelect" onchange="addSelectList('menus')">
-          <option value="" disabled selected>Add another menu</option>
-          <% for (let i = 0; i < system.menus.length; i++) { %>
-            <option value="<%= system.menus[i] %>">
-              <%= system.menus[i] %>
-            </option>
-          <% } %>
-        </select>
-      </fieldset>
-      <fieldset>
-        <legend>Content</legend>
+    <ul id="pageContent">
+      <% for (let i = 0; i < page.content.length; i++) { %>
+        <li data-order="<%= i %>">
+          <%- page.content[i] %>
+          <ul>
+            <li><button data-action="move-up" onclick="orderModule('up')">up</button></li>
+            <li><button data-action="move-down" onclick="orderModule('down')">down</button></li>
+            <li><button data-action="delete" onclick="deleteModule()">delete</button></li>
+          </ul>
+        </li>
+      <% } %>
+    </ul>
+  </fieldset>
+  <fieldset>
+    <button id="moduleButton" onclick="toggleShow('#moduleSelect')">Add Module</button>
 
-        <ul id="pageContent">
-          <% for (let i = 0; i < page.content.length; i++) { %>
-            <li data-order="<%= i %>">
-              <%- page.content[i] %>
-              <ul>
-                <li><button data-action="move-up" onclick="orderModule('up')">up</button></li>
-                <li><button data-action="move-down" onclick="orderModule('down')">down</button></li>
-                <li><button data-action="delete" onclick="deleteModule()">delete</button></li>
-              </ul>
-            </li>
-          <% } %>
-        </ul>
-      </fieldset>
-      <fieldset>
-        <button id="moduleButton" onclick="toggleShow('#moduleSelect')">Add Module</button>
+    <select id="moduleSelect" class="hidden" onchange="addModule()">
+      <option value="" disabled selected>Choose a module</option>
+      <% for (let i = 0; i < system.modules.length; i++) { %>
+        <option value="<%= system.modules[i] %>">
+          <%= system.modules[i] %>
+        </option>
+      <% } %>
+    </ul>
+  </fieldset>
 
-        <select id="moduleSelect" class="hidden" onchange="addModule()">
-          <option value="" disabled selected>Choose a module</option>
-          <% for (let i = 0; i < system.modules.length; i++) { %>
-            <option value="<%= system.modules[i] %>">
-              <%= system.modules[i] %>
-            </option>
-          <% } %>
-        </ul>
-      </fieldset>
+  <input type="submit" value="Submit">
+</form>
 
-      <input type="submit" value="Submit">
-    </form>
+<p id="systemPages" class="hidden"><%= system.pages %></p>
 
-    <p id="systemPages" class="hidden"><%= system.pages %></p>
-
-    <%- include ../partials/footer -%>
+<%- include ../partials/footer -%>

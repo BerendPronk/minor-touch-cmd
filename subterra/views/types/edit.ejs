@@ -1,59 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
+<%- include ../partials/head -%>
 
-    <title>Edit page type '<%= type.name %>'</title>
+<title>Edit page type '<%= type.name %>'</title>
 
-    <%- include ../partials/head -%>
+<%- include ../partials/header -%>
 
-    <%- include ../partials/header -%>
+<% if (feedback) { %>
+  <div id="feedback" class="<%= feedbackState %>">
+    <%= feedback %>
+  </div>
+<% } %>
 
-    <% if (feedback) { %>
-      <div id="feedback" class="<%= feedbackState %>">
-        <%= feedback %>
-      </div>
-    <% } %>
+<h1>Edit page type '<%= type.name %>'</h1>
 
-    <h1>Edit page type '<%= type.name %>'</h1>
+<p>
+  Edit the list of modules set as default modules if a '<%= type.name %>' is created.
+</p>
 
-    <p>
-      Edit the list of modules set as default modules if a '<%= type.name %>' is created.
-    </p>
+<button data-action="delete type" onclick="deleteItem('types', <%= type.id %>)">Delete <%= type.name %></button>
 
-    <button data-action="delete type" onclick="deleteItem('types', <%= type.id %>)">Delete <%= type.name %></button>
+<form action="/subterra/types/edit/<%= type.id %>" method="post" onsubmit="submitForm()">
+  <fieldset>
+    <legend>Name</legend>
 
-    <form action="/subterra/types/edit/<%= type.id %>" method="post" onsubmit="submitForm()">
-      <fieldset>
-        <legend>Name</legend>
+    <input name="name" type="text" pattern="[a-zA-Z0-9\s]+" title="Only alphanumeric characters are allowed" value="<%= type.name %>" required>
+  </fieldset>
+  <fieldset>
+    <legend>Modules</legend>
 
-        <input name="name" type="text" pattern="[a-zA-Z0-9\s]+" title="Only alphanumeric characters are allowed" value="<%= type.name %>" required>
-      </fieldset>
-      <fieldset>
-        <legend>Modules</legend>
+    <ul id="typeModules">
+      <% for (let i = 0; i < type.modules.length; i++) { %>
+        <li>
+          <span data-type="modules-name"><%= type.modules[i] %></span>
+          <button data-type="modules-delete" onclick="removeSelectList('modules')">X</button>
+        </li>
+      <% } %>
+    </ul>
 
-        <ul id="typeModules">
-          <% for (let i = 0; i < type.modules.length; i++) { %>
-            <li>
-              <span data-type="modules-name"><%= type.modules[i] %></span>
-              <button data-type="modules-delete" onclick="removeSelectList('modules')">X</button>
-            </li>
-          <% } %>
-        </ul>
+    <input name="modules" type="hidden" value="<%= type.modules %>">
 
-        <input name="modules" type="hidden" value="<%= type.modules %>">
+    <select id="typeModuleSelect" onchange="addSelectList('modules')">
+      <option value="" disabled selected>Add another module</option>
+      <% for (let i = 0; i < system.modules.length; i++) { %>
+        <option value="<%= system.modules[i] %>">
+          <%= system.modules[i] %>
+        </option>
+      <% } %>
+    </select>
+  </fieldset>
 
-        <select id="typeModuleSelect" onchange="addSelectList('modules')">
-          <option value="" disabled selected>Add another module</option>
-          <% for (let i = 0; i < system.modules.length; i++) { %>
-            <option value="<%= system.modules[i] %>">
-              <%= system.modules[i] %>
-            </option>
-          <% } %>
-        </select>
-      </fieldset>
+  <input type="submit" value="Submit">
+</form>
 
-      <input type="submit" value="Submit">
-    </form>
-
-    <%- include ../partials/footer -%>
+<%- include ../partials/footer -%>
