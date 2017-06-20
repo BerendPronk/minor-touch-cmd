@@ -22,7 +22,10 @@
   <fieldset>
     <legend>Title</legend>
 
-    <input name="title" type="text" pattern="[a-zA-Z0-9\s]+" title="Only alphanumeric characters are allowed" value="<%= item.title %>" required>
+    <label>
+      Edit this title of this portfolio item
+      <input name="title" type="text" pattern="[a-zA-Z0-9\s]+" title="Only alphanumeric characters are allowed" value="<%= item.title %>" required>
+    </label>
   </fieldset>
   <fieldset>
     <legend>Courses</legend>
@@ -38,34 +41,43 @@
 
     <input name="courses" type="hidden" value="<%= item.courses %>">
 
-    <select id="itemCourseSelect" onchange="addSelectList('courses')">
-      <option value="" disabled selected>Add to course</option>
-      <% for (let i = 0; i < system.courses.length; i++) { %>
-        <option value="<%= system.courses[i] %>">
-          <%= system.courses[i] %>
-        </option>
-      <% } %>
-    </select>
+    <label>
+      Edit the courses this page appears on (multiple possible)
+      <select id="itemCourseSelect" onchange="addSelectList('courses')">
+        <option value="" disabled selected>Add to course</option>
+        <% for (let i = 0; i < system.courses.length; i++) { %>
+          <option value="<%= system.courses[i] %>">
+            <%= system.courses[i] %>
+          </option>
+        <% } %>
+      </select>
+    </label>
   </fieldset>
   <fieldset>
     <legend>Content</legend>
 
     <ul id="pageContent">
       <li>
-        <span class="content-tip">Paragraph</span>
-        <textarea name="content-p"><%= item.paragraph %></textarea>
+        <label>
+          Paragraph
+          <textarea name="content-p"><%= item.paragraph %></textarea>
+        </label>
       </li>
       <li>
-        <span class="content-tip">Image</span>
+        <label>
+          Image
+          <input name="content-" type="file" accept="image/*" onblur="setImageName()">
+        </label>
         <% if (item.image) { %>
           <img src="/media/<%= item.image %>" alt="Image about <% item.image %>">
-        <% } %>
+          <% } %>
         <input name="content-i-name" type="hidden" value="<%= item.image %>">
-        <input name="content-" type="file" accept="image/*" onblur="setImageName()">
       </li>
       <li>
-        <span class="content-tip">Embedded video (YouTube or Vimeo)</span>
-        <input name="content-e" type="url" value="<%= item.video %>">
+        <label>
+          Embedded video (YouTube or Vimeo)
+          <input name="content-e" type="url" value="<%= item.video %>">
+        </label>
       </li>
     </ul>
   </fieldset>

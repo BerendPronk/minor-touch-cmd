@@ -23,20 +23,26 @@
   <fieldset>
     <legend>Type</legend>
 
-    <select name="type">
-      <option value="" disabled selected>Select a page type</option>
-      <% for (let i = 0; i < system.types.length; i++) { %>
-        // Set current page type to selected
-        <option value="<%= system.types[i] %>" <%= system.types[i] === page.type ? 'selected' : '' %>>
-          <%= system.types[i] %>
-        </option>
-      <% } %>
-    </select>
+    <label>
+      Edit the page type
+      <select name="type">
+        <option value="" disabled selected>Select a page type</option>
+        <% for (let i = 0; i < system.types.length; i++) { %>
+          // Set current page type to selected
+          <option value="<%= system.types[i] %>" <%= system.types[i] === page.type ? 'selected' : '' %>>
+            <%= system.types[i] %>
+          </option>
+        <% } %>
+      </select>
+    </label>
   </fieldset>
   <fieldset>
     <legend>Title</legend>
 
-    <input type="text" name="title" pattern="[a-zA-Z0-9\s]+" title="Only alphanumeric characters are allowed" value="<%= page.title %>" required>
+    <label>
+      Edit the page title
+      <input type="text" name="title" pattern="[a-zA-Z0-9\s]+" title="Only alphanumeric characters are allowed" value="<%= page.title %>" required>
+    </label>
   </fieldset>
   <fieldset>
     <legend>Menus</legend>
@@ -52,14 +58,17 @@
 
     <input name="menus" type="hidden" value="<%= page.menus %>">
 
-    <select id="menuSelect" onchange="addSelectList('menus')">
-      <option value="" disabled selected>Add another menu</option>
-      <% for (let i = 0; i < system.menus.length; i++) { %>
-        <option value="<%= system.menus[i] %>">
-          <%= system.menus[i] %>
-        </option>
-      <% } %>
-    </select>
+    <label>
+      Edit the menus attached to this page (multiple possible)
+      <select id="menuSelect" onchange="addSelectList('menus')">
+        <option value="" disabled selected>Add another menu</option>
+        <% for (let i = 0; i < system.menus.length; i++) { %>
+          <option value="<%= system.menus[i] %>">
+            <%= system.menus[i] %>
+          </option>
+        <% } %>
+      </select>
+    </label>
   </fieldset>
   <fieldset>
     <legend>Content</legend>
@@ -87,7 +96,7 @@
           <%= system.modules[i] %>
         </option>
       <% } %>
-    </ul>
+    </select>
   </fieldset>
 
   <input type="submit" value="Submit">

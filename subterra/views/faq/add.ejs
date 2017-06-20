@@ -20,14 +20,20 @@
   <fieldset>
     <legend>Question</legend>
 
-    <input name="question" type="text" pattern="[a-zA-Z0-9\s]+" title="Only alphanumeric characters are allowed" required> ?
+    <label>
+      Enter a question
+      <input name="question" type="text" pattern="[a-zA-Z0-9\s]+" title="Only alphanumeric characters are allowed" required> ?
+    </label>
   </fieldset>
   <fieldset>
-    <legend>Answer</legend>
+    <legend>Content</legend>
 
     <ul id="pageContent">
       <li>
-        <textarea name="answer"></textarea>
+        <label>
+          Enter the answer
+          <textarea name="answer"></textarea>
+        </label>
       </li>
     </ul>
   </fieldset>
