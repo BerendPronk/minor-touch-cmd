@@ -188,7 +188,7 @@ router.post('/add', (req, res) => {
           content.push(`|H|${ req.body[field] }`);
         break;
         case 'P':
-          content.push(`|P|${ req.body[field] }`);
+          content.push(`|P|${ req.body[field].replace(/\|/g, '—') }`);
         break;
         case 'I':
           // Only pick image name input
@@ -411,7 +411,7 @@ router.post('/edit/:id', (req, res) => {
           content.push(`|H|${ req.body[field] }`);
         break;
         case 'P':
-          content.push(`|P|${ req.body[field] }`);
+          content.push(`|P|${ req.body[field].replace(/\|/g, '—') }`);
         break;
         case 'I':
           // Only pick image name input
