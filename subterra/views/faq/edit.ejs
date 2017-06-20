@@ -22,7 +22,10 @@
   <fieldset>
     <legend>Question</legend>
 
-    <input name="question" type="text" pattern="[a-zA-Z0-9\s]+" title="Only alphanumeric characters are allowed" value="<%= question.question %>" required> ?
+    <label>
+      Edit the question
+      <input name="question" type="text" pattern="[a-zA-Z0-9\s]+" title="Only alphanumeric characters are allowed" value="<%= question.question %>" required> ?
+    </label>
   </fieldset>
   <fieldset>
     <legend>Content</legend>
@@ -30,7 +33,7 @@
     <ul id="pageContent">
       <li>
         <label>
-          Anwser
+          Edit the answer
           <textarea name="answer"><%= question.answer %></textarea>
         </label>
       </li>

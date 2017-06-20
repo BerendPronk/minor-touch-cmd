@@ -24,7 +24,7 @@
     <% for (let i = 0; i < system.faq.length; i++) { %>
       <li>
         <a href="/subterra/faq/edit/<%= system.faq[i].id %>">
-          <%= system.faq[i].question %>?
+          <%= system.faq[i].question + '?' %>
         </a>
         <button data-action="delete type" onclick="deleteItem('faq', <%= system.faq[i].id %>)">delete</button>
       </li>

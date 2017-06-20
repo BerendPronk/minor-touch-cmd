@@ -20,7 +20,10 @@
   <fieldset>
     <legend>Name</legend>
 
-    <input name="name" type="text" pattern="[a-zA-Z0-9\s]+" title="Only alphanumeric characters are allowed" required>
+    <label>
+      Enter a name for this page type
+      <input name="name" type="text" pattern="[a-zA-Z0-9\s]+" title="Only alphanumeric characters are allowed" required>
+    </label>
   </fieldset>
   <fieldset>
     <legend>Modules</legend>
@@ -29,14 +32,17 @@
 
     <input name="modules" type="hidden">
 
-    <select id="typeModuleSelect" onchange="addSelectList('modules')">
-      <option value="" disabled selected>Add a module</option>
-      <% for (let i = 0; i < system.modules.length; i++) { %>
-        <option value="<%= system.modules[i] %>">
-          <%= system.modules[i] %>
-        </option>
-      <% } %>
-    </select>
+    <label>
+      Select a default module to include in this page type (multiple possible)
+      <select id="typeModuleSelect" onchange="addSelectList('modules')">
+        <option value="" disabled selected>Add a module</option>
+        <% for (let i = 0; i < system.modules.length; i++) { %>
+          <option value="<%= system.modules[i] %>">
+            <%= system.modules[i] %>
+          </option>
+        <% } %>
+      </select>
+    </label>
   </fieldset>
 
   <input type="submit" value="Submit">
