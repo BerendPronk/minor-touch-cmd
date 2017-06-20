@@ -1,41 +1,36 @@
-<!DOCTYPE html>
-<html lang="nl">
-	<head>
-		<meta charset="UTF-8">
+<%- include partials/head -%>
 
-		<title><%= page.title %></title>
+<title><%= page.title %></title>
 
-		<%- include partials/head -%>
+<%- include partials/header -%>
 
-		<%- include partials/header -%>
+<body class="<%= tv === true ? 'tv' : '' %> <%= page.type %>">
 
-		<% if (tv) { %>
-			Multi-touch screen mode active
-		<% } %>
+<% if (tv) { %>
+  Multi-touch screen mode active
+<% } %>
 
-		<h2><%= page.title %></h2>
+<h2><%= page.title %></h2>
 
-		<span><%= page.type %></span>
+<% if (page.menus.length > 0) { %>
+  <% for (let i = 0; i < page.menus.length; i++) { %>
+    <h3><%= page.menus[i] %></h3>
+    <ul>
+      <% for (let j = 0; j < page.menuChildren[i].length; j++) { %>
+        <li><a href="/page/<%= page.menuChildren[i][j].replace(/ /g, '-') %>"><%= page.menuChildren[i][j] %></a></li>
+      <% } %>
+    </ul>
+  <% } %>
+<% } %>
 
-		<% if (page.menus.length > 0) { %>
-			<% for (let i = 0; i < page.menus.length; i++) { %>
-				<h3><%= page.menus[i] %></h3>
-				<ul>
-					<% for (let j = 0; j < page.menuChildren[i].length; j++) { %>
-						<li><a href="/page/<%= page.menuChildren[i][j].replace(/ /g, '-') %>"><%= page.menuChildren[i][j] %></a></li>
-					<% } %>
-				</ul>
-			<% } %>
-		<% } %>
+<main>
+  <% if (page.content.length > 0) { %>
+    <% for (let i = 0; i < page.content.length; i++) { %>
+      <section data-order="<%= i %>">
+        <%- page.content[i] %>
+      </section>
+    <% } %>
+  <% } %>
+</main>
 
-		<main>
-			<% if (page.content.length > 0) { %>
-				<% for (let i = 0; i < page.content.length; i++) { %>
-					<section data-order="<%= i %>">
-						<%- page.content[i] %>
-					</section>
-				<% } %>
-			<% } %>
-		</main>
-
-		<%- include partials/footer -%>
+<%- include partials/footer -%>
