@@ -2,7 +2,7 @@
 function addSelectList(option) {
   const formInput = document.querySelector(`input[name="${ option }"]`);
   const formSelect = event.target;
-  const optionList = event.target.parentNode.querySelector('ul');
+  const optionList = event.target.parentNode.parentNode.querySelector('ul');
   const optionListItems = optionList.querySelectorAll('li');
   const currentItems = formInput.value.split(',').filter(e => {
     // Removes empty data fields
