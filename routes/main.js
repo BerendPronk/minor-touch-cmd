@@ -44,6 +44,7 @@ router.get('/', (req, res) => {
         // Render index page
         res.render('index', {
           tv: req.session.tv,
+          parent: false,
           menu: menu,
           introText: introText
         });
@@ -76,6 +77,7 @@ router.get('/faq', (req, res) => {
       // Render FAQ view
       res.render('faq', {
         tv: req.session.tv,
+        parent: false,
         faq: faq
       })
     });
@@ -85,7 +87,9 @@ router.get('/faq', (req, res) => {
 // [GET] /404
 router.get('/*', (req, res) => {
   // Render error page
-  res.render('error');
+  res.render('error', {
+    parent: false
+  });
 });
 
 module.exports = router;
