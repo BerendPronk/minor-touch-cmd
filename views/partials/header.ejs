@@ -1,3 +1,9 @@
 <body>
 
   <h1><a href="/">Curriculum CMD</a></h1>
+
+  <% if (parent) { %>
+    <header>
+      [img] <a href="/">Home</a> / <a href="<%= parent.replace(/ /g, '-') %>"><%= parent %></a>
+    </header>
+  <% } %>
