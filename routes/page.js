@@ -1,12 +1,13 @@
 const debug = require('debug')('TouchCMD');
+const breadcrumb = require('../assets/script/modules/breadcrumb');
 const express = require('express');
 const router = express.Router();
 
 // [GET] /page/:page
 router.get('/:page', (req, res) => {
-  debug(`[${ req.method }] /${ req.params.page }`);
+  debug(`[${ req.method }] /page/${ req.params.page }`);
 
-  // Convert
+  // Convert page title dashes back to spaces
   const title = req.params.page.replace(/-/g, ' ');
 
   req.getConnection((err, connection) => {
@@ -26,8 +27,6 @@ router.get('/:page', (req, res) => {
 
       // Process page content to HTML
       page.content.split('|-|').forEach(block => {
-        console.log(block);
-
         switch (block.charAt(1)) {
           case 'H':
             contentBlocks.push(`
@@ -92,8 +91,6 @@ router.get('/:page', (req, res) => {
         }
       });
 
-      console.log(contentBlocks)
-
       // Fetch all menus from database
       connection.query(`
         SELECT * FROM menus
@@ -108,24 +105,21 @@ router.get('/:page', (req, res) => {
           });
         });
 
-        // Render different view based on page type
-        switch (page.type) {
-          default:
-            // Render page view
-            res.render('page', {
-              tv: req.session.tv,
-              page: {
-                type: page.type.replace(/ /g, '-'),
-                title: page.title,
-                menus: pageMenus.filter(e => {
-                  // Removes empty data fields
-                  return e;
-                }),
-                menuChildren: menuChildren,
-                content: contentBlocks
-              }
-            });
-        }
+        // Render page view
+        res.render('page', {
+          tv: req.session.tv,
+          parent: breadcrumb.retrieve(page.title),
+          page: {
+            type: page.type.replace(/ /g, '-'),
+            title: page.title,
+            menus: pageMenus.filter(e => {
+              // Removes empty data fields
+              return e;
+            }),
+            menuChildren: menuChildren,
+            content: contentBlocks
+          }
+        });
       });
     });
   });
