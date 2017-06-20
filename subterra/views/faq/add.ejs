@@ -1,43 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
+<%- include ../partials/head -%>
 
-    <title>Add a FAQ question</title>
+<title>Add a FAQ question</title>
 
-    <%- include ../partials/head -%>
+<%- include ../partials/header -%>
 
-    <%- include ../partials/header -%>
+<% if (feedback) { %>
+  <div id="feedback" class="<%= feedbackState %>">
+    <%= feedback %>
+  </div>
+<% } %>
 
-    <% if (feedback) { %>
-      <div id="feedback" class="<%= feedbackState %>">
-        <%= feedback %>
-      </div>
-    <% } %>
+<h1>Add a FAQ question</h1>
 
-    <h1>Add a FAQ question</h1>
+<p>
+  Enter a question in the title field and set the answer in the field below that.
+</p>
 
-    <p>
-      Enter a question in the title field and set the answer in the field below that.
-    </p>
+<form action="/subterra/faq/add" method="post" onsubmit="submitForm()">
+  <fieldset>
+    <legend>Question</legend>
 
-    <form action="/subterra/faq/add" method="post" onsubmit="submitForm()">
-      <fieldset>
-        <legend>Question</legend>
+    <input name="question" type="text" pattern="[a-zA-Z0-9\s]+" title="Only alphanumeric characters are allowed" required> ?
+  </fieldset>
+  <fieldset>
+    <legend>Answer</legend>
 
-        <input name="question" type="text" pattern="[a-zA-Z0-9\s]+" title="Only alphanumeric characters are allowed" required> ?
-      </fieldset>
-      <fieldset>
-        <legend>Answer</legend>
+    <ul id="pageContent">
+      <li>
+        <textarea name="answer"></textarea>
+      </li>
+    </ul>
+  </fieldset>
 
-        <ul id="pageContent">
-          <li>
-            <textarea name="answer"></textarea>
-          </li>
-        </ul>
-      </fieldset>
+  <input type="submit" value="Submit">
+</form>
 
-      <input type="submit" value="Submit">
-    </form>
-
-    <%- include ../partials/footer -%>
+<%- include ../partials/footer -%>

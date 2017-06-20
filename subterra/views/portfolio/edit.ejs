@@ -1,81 +1,76 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
+<%- include ../partials/head -%>
 
-    <title>Edit portfolio item '<%= item.title %>'</title>
+<title>Edit portfolio item '<%= item.title %>'</title>
 
-    <%- include ../partials/head -%>
+<%- include ../partials/header -%>
 
-    <%- include ../partials/header -%>
+<% if (feedback) { %>
+  <div id="feedback" class="<%= feedbackState %>">
+    <%= feedback %>
+  </div>
+<% } %>
 
-    <% if (feedback) { %>
-      <div id="feedback" class="<%= feedbackState %>">
-        <%= feedback %>
-      </div>
-    <% } %>
+<h1>Edit portfolio item '<%= item.title %>'</h1>
 
-    <h1>Edit portfolio item '<%= item.title %>'</h1>
+<p>
+  Edit the list of courses your want this portfolio item to appear on and edit it's paragraph, image and embedded video, if desired.
+</p>
 
-    <p>
-      Edit the list of courses your want this portfolio item to appear on and edit it's paragraph, image and embedded video, if desired.
-    </p>
+<button data-action="delete type" onclick="deleteItem('portfolio', <%= item.id %>)">Delete <%= item.title %></button>
 
-    <button data-action="delete type" onclick="deleteItem('portfolio', <%= item.id %>)">Delete <%= item.title %></button>
+<form enctype="multipart/form-data" action="/subterra/portfolio/edit/<%= item.id %>" method="post" onsubmit="submitForm()">
+  <fieldset>
+    <legend>Title</legend>
 
-    <form enctype="multipart/form-data" action="/subterra/portfolio/edit/<%= item.id %>" method="post" onsubmit="submitForm()">
-      <fieldset>
-        <legend>Title</legend>
+    <input name="title" type="text" pattern="[a-zA-Z0-9\s]+" title="Only alphanumeric characters are allowed" value="<%= item.title %>" required>
+  </fieldset>
+  <fieldset>
+    <legend>Courses</legend>
 
-        <input name="title" type="text" pattern="[a-zA-Z0-9\s]+" title="Only alphanumeric characters are allowed" value="<%= item.title %>" required>
-      </fieldset>
-      <fieldset>
-        <legend>Courses</legend>
+    <ul id="itemCourses">
+      <% for (let i = 0; i < item.courses.length; i++) { %>
+        <li>
+          <span data-type="courses-name"><%= item.courses[i] %></span>
+          <button data-type="courses-delete" onclick="removeSelectList('courses')">X</button>
+        </li>
+      <% } %>
+    </ul>
 
-        <ul id="itemCourses">
-          <% for (let i = 0; i < item.courses.length; i++) { %>
-            <li>
-              <span data-type="courses-name"><%= item.courses[i] %></span>
-              <button data-type="courses-delete" onclick="removeSelectList('courses')">X</button>
-            </li>
-          <% } %>
-        </ul>
+    <input name="courses" type="hidden" value="<%= item.courses %>">
 
-        <input name="courses" type="hidden" value="<%= item.courses %>">
+    <select id="itemCourseSelect" onchange="addSelectList('courses')">
+      <option value="" disabled selected>Add to course</option>
+      <% for (let i = 0; i < system.courses.length; i++) { %>
+        <option value="<%= system.courses[i] %>">
+          <%= system.courses[i] %>
+        </option>
+      <% } %>
+    </select>
+  </fieldset>
+  <fieldset>
+    <legend>Content</legend>
 
-        <select id="itemCourseSelect" onchange="addSelectList('courses')">
-          <option value="" disabled selected>Add to course</option>
-          <% for (let i = 0; i < system.courses.length; i++) { %>
-            <option value="<%= system.courses[i] %>">
-              <%= system.courses[i] %>
-            </option>
-          <% } %>
-        </select>
-      </fieldset>
-      <fieldset>
-        <legend>Content</legend>
+    <ul id="pageContent">
+      <li>
+        <span class="content-tip">Paragraph</span>
+        <textarea name="content-p"><%= item.paragraph %></textarea>
+      </li>
+      <li>
+        <span class="content-tip">Image</span>
+        <% if (item.image) { %>
+          <img src="/media/<%= item.image %>" alt="Image about <% item.image %>">
+        <% } %>
+        <input name="content-i-name" type="hidden" value="<%= item.image %>">
+        <input name="content-" type="file" accept="image/*" onblur="setImageName()">
+      </li>
+      <li>
+        <span class="content-tip">Embedded video (YouTube or Vimeo)</span>
+        <input name="content-e" type="url" value="<%= item.video %>">
+      </li>
+    </ul>
+  </fieldset>
 
-        <ul id="pageContent">
-          <li>
-            <span class="content-tip">Paragraph</span>
-            <textarea name="content-p"><%= item.paragraph %></textarea>
-          </li>
-          <li>
-            <span class="content-tip">Image</span>
-            <% if (item.image) { %>
-              <img src="/media/<%= item.image %>" alt="Image about <% item.image %>">
-            <% } %>
-            <input name="content-i-name" type="hidden" value="<%= item.image %>">
-            <input name="content-" type="file" accept="image/*" onblur="setImageName()">
-          </li>
-          <li>
-            <span class="content-tip">Embedded video (YouTube or Vimeo)</span>
-            <input name="content-e" type="url" value="<%= item.video %>">
-          </li>
-        </ul>
-      </fieldset>
+  <input type="submit" value="Submit">
+</form>
 
-      <input type="submit" value="Submit">
-    </form>
-
-    <%- include ../partials/footer -%>
+<%- include ../partials/footer -%>

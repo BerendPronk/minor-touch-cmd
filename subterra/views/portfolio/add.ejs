@@ -1,69 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
+<%- include ../partials/head -%>
 
-    <title>Add a page type</title>
+<title>Add a page type</title>
 
-    <%- include ../partials/head -%>
+<%- include ../partials/header -%>
 
-    <%- include ../partials/header -%>
+<% if (feedback) { %>
+  <div id="feedback" class="<%= feedbackState %>">
+    <%= feedback %>
+  </div>
+<% } %>
 
-    <% if (feedback) { %>
-      <div id="feedback" class="<%= feedbackState %>">
-        <%= feedback %>
-      </div>
-    <% } %>
+<h1>Add a portfolio item</h1>
 
-    <h1>Add a portfolio item</h1>
+<p>
+  Select the course(s) your want this portfolio item to appear on and set it's paragraph, image and embedded video, if desired.
+</p>
 
-    <p>
-      Select the course(s) your want this portfolio item to appear on and set it's paragraph, image and embedded video, if desired.
-    </p>
+<form enctype="multipart/form-data" action="/subterra/portfolio/add" method="post" onsubmit="submitForm()">
+  <fieldset>
+    <legend>Title</legend>
 
-    <form enctype="multipart/form-data" action="/subterra/portfolio/add" method="post" onsubmit="submitForm()">
-      <fieldset>
-        <legend>Title</legend>
+    <input name="title" type="text" pattern="[a-zA-Z0-9\s]+" title="Only alphanumeric characters are allowed" required>
+  </fieldset>
+  <fieldset>
+    <legend>Courses</legend>
 
-        <input name="title" type="text" pattern="[a-zA-Z0-9\s]+" title="Only alphanumeric characters are allowed" required>
-      </fieldset>
-      <fieldset>
-        <legend>Courses</legend>
+    <ul id="itemCourses"></ul>
 
-        <ul id="itemCourses"></ul>
+    <input name="courses" type="hidden">
 
-        <input name="courses" type="hidden">
+    <select id="itemCourseSelect" onchange="addSelectList('courses')">
+      <option value="" disabled selected>Add to course</option>
+      <% for (let i = 0; i < system.courses.length; i++) { %>
+        <option value="<%= system.courses[i] %>">
+          <%= system.courses[i] %>
+        </option>
+      <% } %>
+    </select>
+  </fieldset>
+  <fieldset>
+    <legend>Content</legend>
 
-        <select id="itemCourseSelect" onchange="addSelectList('courses')">
-          <option value="" disabled selected>Add to course</option>
-          <% for (let i = 0; i < system.courses.length; i++) { %>
-            <option value="<%= system.courses[i] %>">
-              <%= system.courses[i] %>
-            </option>
-          <% } %>
-        </select>
-      </fieldset>
-      <fieldset>
-        <legend>Content</legend>
+    <ul id="pageContent">
+      <li>
+        <span class="content-tip">Paragraph</span>
+        <textarea name="content-p"></textarea>
+      </li>
+      <li>
+        <span class="content-tip">Image</span>
+        <input name="content-i-name" type="hidden">
+        <input name="content-" type="file" accept="image/*" onblur="setImageName()">
+      </li>
+      <li>
+        <span class="content-tip">Embedded video (YouTube or Vimeo)</span>
+        <input name="content-e" type="url">
+      </li>
+    </ul>
+  </fieldset>
 
-        <ul id="pageContent">
-          <li>
-            <span class="content-tip">Paragraph</span>
-            <textarea name="content-p"></textarea>
-          </li>
-          <li>
-            <span class="content-tip">Image</span>
-            <input name="content-i-name" type="hidden">
-            <input name="content-" type="file" accept="image/*" onblur="setImageName()">
-          </li>
-          <li>
-            <span class="content-tip">Embedded video (YouTube or Vimeo)</span>
-            <input name="content-e" type="url">
-          </li>
-        </ul>
-      </fieldset>
+  <input type="submit" value="Submit">
+</form>
 
-      <input type="submit" value="Submit">
-    </form>
-
-    <%- include ../partials/footer -%>
+<%- include ../partials/footer -%>

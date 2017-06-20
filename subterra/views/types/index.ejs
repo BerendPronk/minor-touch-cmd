@@ -1,43 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
+<%- include ../partials/head -%>
 
-    <title>Page types</title>
+<title>Page types</title>
 
-    <%- include ../partials/head -%>
+<%- include ../partials/header -%>
 
-    <%- include ../partials/header -%>
+<% if (feedback) { %>
+  <div id="feedback" class="<%= feedbackState %>">
+    <%= feedback %>
+  </div>
+<% } %>
 
-    <% if (feedback) { %>
-      <div id="feedback" class="<%= feedbackState %>">
-        <%= feedback %>
-      </div>
+<h1>Page types</h1>
+
+<p>
+  This page is deticated to all the page types your website contains. Every page type has it's own list of default modules to load, when creating a new page..<br>
+  Add a page type by pressing the 'Add new page type' button, or edit one by selecting it's name.
+</p>
+
+<a href="/subterra/types/add">Add new page type</a>
+
+<% if (system.types.length > 0) { %>
+  <ul>
+    <% for (let i = 0; i < system.types.length; i++) { %>
+      <li>
+        <a href="/subterra/types/edit/<%= system.types[i].id %>">
+          <%= system.types[i].name %>
+        </a>
+        | <%= system.types[i].defaultModules.replace(/,/g, ', ') %>
+        <button data-action="delete type" onclick="deleteItem('types', <%= system.types[i].id %>)">delete</button>
+      </li>
     <% } %>
+  </ul>
+<% } else { %>
+  <p>No page types found.</p>
+<% } %>
 
-    <h1>Page types</h1>
-
-    <p>
-      This page is deticated to all the page types your website contains. Every page type has it's own list of default modules to load, when creating a new page..<br>
-      Add a page type by pressing the 'Add new page type' button, or edit one by selecting it's name.
-    </p>
-
-    <a href="/subterra/types/add">Add new page type</a>
-
-    <% if (system.types.length > 0) { %>
-      <ul>
-        <% for (let i = 0; i < system.types.length; i++) { %>
-          <li>
-            <a href="/subterra/types/edit/<%= system.types[i].id %>">
-              <%= system.types[i].name %>
-            </a>
-            | <%= system.types[i].defaultModules.replace(/,/g, ', ') %>
-            <button data-action="delete type" onclick="deleteItem('types', <%= system.types[i].id %>)">delete</button>
-          </li>
-        <% } %>
-      </ul>
-    <% } else { %>
-      <p>No page types found.</p>
-    <% } %>
-
-    <%- include ../partials/footer -%>
+<%- include ../partials/footer -%>

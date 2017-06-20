@@ -1,30 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
+<%- include partials/head -%>
 
-    <title>Subterra</title>
+<title>Subterra</title>
 
-    <%- include partials/head -%>
+<%- include partials/header -%>
 
-    <%- include partials/header -%>
+<% if (feedback) { %>
+  <div id="feedback" class="<%= feedbackState %>">
+    <%= feedback %>
+  </div>
+<% } %>
 
-    <% if (feedback) { %>
-      <div id="feedback" class="<%= feedbackState %>">
-        <%= feedback %>
-      </div>
-    <% } %>
+<h1>Curriculum CMD: Subterra</h1>
 
-    <h1>Curriculum CMD: Subterra</h1>
+<button data-add="page" onclick="toggleShow('#pageTypes')">Add new page</button>
 
-    <button data-add="page" onclick="toggleShow('#pageTypes')">Add new page</button>
+<ul id="pageTypes" class="hidden">
+  <% for (let i = 0; i < system.types.length; i++) { %>
+    <li>
+      <a href="/subterra/pages/add/<%= system.types[i] %>">Add <%= system.types[i] %></a>
+    </li>
+  <% } %>
+</ul>
 
-    <ul id="pageTypes" class="hidden">
-      <% for (let i = 0; i < system.types.length; i++) { %>
-        <li>
-          <a href="/subterra/pages/add/<%= system.types[i] %>">Add <%= system.types[i] %></a>
-        </li>
-      <% } %>
-    </ul>
-
-    <%- include partials/footer -%>
+<%- include partials/footer -%>

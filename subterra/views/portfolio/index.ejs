@@ -1,43 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
+<%- include ../partials/head -%>
 
-    <title>Portfolio</title>
+<title>Portfolio</title>
 
-    <%- include ../partials/head -%>
+<%- include ../partials/header -%>
 
-    <%- include ../partials/header -%>
+<% if (feedback) { %>
+  <div id="feedback" class="<%= feedbackState %>">
+    <%= feedback %>
+  </div>
+<% } %>
 
-    <% if (feedback) { %>
-      <div id="feedback" class="<%= feedbackState %>">
-        <%= feedback %>
-      </div>
+<h1>Portfolio</h1>
+
+<p>
+  This page is deticated to all the portfolio items your website contains. Every portfolio item has it's own paragraph, image and embedded video field, and are attached to either one or multiple courses.<br>
+  Add a portfolio item by pressing the 'Add new portfolio item' button, or edit one by selecting it's title.
+</p>
+
+<a href="/subterra/portfolio/add">Add new portfolio item</a>
+
+<% if (system.portfolio.length > 0) { %>
+  <ul>
+    <% for (let i = 0; i < system.portfolio.length; i++) { %>
+      <li>
+        <a href="/subterra/portfolio/edit/<%= system.portfolio[i].id %>">
+          <%= system.portfolio[i].title %>
+        </a>
+        | <%= system.portfolio[i].courses.replace(/,/g, ', ') %>
+        <button data-action="delete type" onclick="deleteItem('portfolio', <%= system.portfolio[i].id %>)">delete</button>
+      </li>
     <% } %>
+  </ul>
+<% } else { %>
+  <p>No portfolio items found.</p>
+<% } %>
 
-    <h1>Portfolio</h1>
-
-    <p>
-      This page is deticated to all the portfolio items your website contains. Every portfolio item has it's own paragraph, image and embedded video field, and are attached to either one or multiple courses.<br>
-      Add a portfolio item by pressing the 'Add new portfolio item' button, or edit one by selecting it's title.
-    </p>
-
-    <a href="/subterra/portfolio/add">Add new portfolio item</a>
-
-    <% if (system.portfolio.length > 0) { %>
-      <ul>
-        <% for (let i = 0; i < system.portfolio.length; i++) { %>
-          <li>
-            <a href="/subterra/portfolio/edit/<%= system.portfolio[i].id %>">
-              <%= system.portfolio[i].title %>
-            </a>
-            | <%= system.portfolio[i].courses.replace(/,/g, ', ') %>
-            <button data-action="delete type" onclick="deleteItem('portfolio', <%= system.portfolio[i].id %>)">delete</button>
-          </li>
-        <% } %>
-      </ul>
-    <% } else { %>
-      <p>No portfolio items found.</p>
-    <% } %>
-
-    <%- include ../partials/footer -%>
+<%- include ../partials/footer -%>
