@@ -6,31 +6,35 @@
 
 <body class="<%= tv === true ? 'tv' : '' %> <%= page.type %>">
 
-<% if (tv) { %>
-  Multi-touch screen mode active
-<% } %>
+  <h2><%= page.title %></h2>
 
-<h2><%= page.title %></h2>
-
-<% if (page.menus.length > 0) { %>
-  <% for (let i = 0; i < page.menus.length; i++) { %>
-    <h3><%= page.menus[i] %></h3>
-    <ul>
-      <% for (let j = 0; j < page.menuChildren[i].length; j++) { %>
-        <li><a href="/page/<%= page.menuChildren[i][j].replace(/ /g, '-') %>"><%= page.menuChildren[i][j] %></a></li>
+  <main>
+    <% if (page.content.length > 0) { %>
+      <% for (let i = 0; i < page.content.length; i++) { %>
+        <section data-type="content" data-order="<%= i %>">
+          <%- page.content[i] %>
+        </section>
       <% } %>
-    </ul>
-  <% } %>
-<% } %>
-
-<main>
-  <% if (page.content.length > 0) { %>
-    <% for (let i = 0; i < page.content.length; i++) { %>
-      <section data-order="<%= i %>">
-        <%- page.content[i] %>
-      </section>
     <% } %>
-  <% } %>
-</main>
 
-<%- include partials/footer -%>
+    <% if (page.menus.length > 0) { %>
+      <% for (let i = 0; i < page.menus.length; i++) { %>
+        <section data-type="menu" data-order="<%= i %>">
+          <h3><%= page.menus[i] %></h3>
+          <nav data-nav="children">
+            <ul>
+              <% for (let j = 0; j < page.menuChildren[i].length; j++) { %>
+                <li class="<%= page.menuChildren[i][j].type %>">
+                  <a href="/page/<%= page.menuChildren[i][j].title.replace(/ /g, '-') %>">
+                    <%= page.menuChildren[i][j].title %>
+                  </a>
+                </li>
+              <% } %>
+            </ul>
+          </nav>
+        </section>
+      <% } %>
+    <% } %>
+  </main>
+
+  <%- include partials/footer -%>
