@@ -4,25 +4,23 @@
 
 <%- include partials/header -%>
 
-<% if (tv) { %>
-  Multi-touch screen mode active
-<% } %>
+<body class="<%= tv === true ? 'tv' : '' %>">
 
-<h2>FAQ - Veelgestelde vragen</h2>
+  <h2>FAQ - Veelgestelde vragen</h2>
 
-<% if (faq.length > 0) { %>
-  <% for (let i = 0; i < faq.length; i++) { %>
-    <h3>
-      <a href="#faq-<%= faq[i].id %>">
-        <%= faq[i].question %>?
-      </a>
-    </h3>
-    <p id="faq-<%= faq[i].id %>">
-      <%= faq[i].answer %>
-    </p>
-  <% } %>
-<% } else { %>
-  <p>Geen FAQ vragen gevonden. Vraag aan een docent of hulpstudent om hulp, of druk de SOS knop.</p>
-<% } %>
+  <main>
+    <% if (faq.length > 0) { %>
+      <% for (let i = 0; i < faq.length; i++) { %>
+        <a href="#faq-<%= faq[i].id %>" data-faq="question">
+          <%= faq[i].question + '?' %>
+        </a>
+        <p id="faq-<%= faq[i].id %>" data-faq="answer">
+          <%= faq[i].answer %>
+        </p>
+      <% } %>
+    <% } else { %>
+      <p>Geen FAQ vragen gevonden. Vraag aan een docent of hulpstudent om hulp, of druk de SOS knop.</p>
+    <% } %>
+  </main>
 
-<%- include partials/footer -%>
+  <%- include partials/footer -%>
