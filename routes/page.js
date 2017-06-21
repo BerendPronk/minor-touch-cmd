@@ -77,6 +77,10 @@ router.get('/:page', (req, res) => {
               contentBlocks.push(`
                 <iframe width="640" height="360" src="https://player.vimeo.com/video/${ host.split('.com/')[1].replace('/', '') }" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
               `);
+            } else {
+              contentBlocks.push(`
+                <a href="${ host }">${ host }</a>
+              `)
             }
           break;
           case 'B':
@@ -96,29 +100,52 @@ router.get('/:page', (req, res) => {
         SELECT * FROM menus
       `, [], (err, menus) => {
 
-        // Pushes array of each page menu's children
-        pageMenus.forEach(pageMenu => {
-          menus.forEach(menu => {
-            if (menu.name === pageMenu) {
-              menuChildren.push(menu.children.split(','));
+        // Fetch all pages from database
+        connection.query(`
+          SELECT * FROM pages
+        `, [], (err, pages) => {
+
+          // Pushes array of each page menu's children
+          pageMenus.forEach(pageMenu => {
+            menus.forEach(menu => {
+              if (menu.name === pageMenu) {
+                const children = menu.children.split(',');
+                let pageData = [];
+
+                // Retrieve type from children
+                children.forEach(child => {
+                  pages.forEach(page => {
+                    if (page.title === child) {
+                      // Push both type and title in array
+                      pageData.push({
+                        type: page.type,
+                        title: child
+                      });
+                    }
+                  });
+                });
+
+                // Add page data array to menu chidlren array
+                menuChildren.push(pageData);
+              }
+            });
+          });
+
+          // Render page view
+          res.render('page', {
+            tv: req.session.tv,
+            parent: breadcrumb.retrieve(page.title),
+            page: {
+              type: page.type.replace(/ /g, '-'),
+              title: page.title,
+              menus: pageMenus.filter(e => {
+                // Removes empty data fields
+                return e;
+              }),
+              menuChildren: menuChildren,
+              content: contentBlocks
             }
           });
-        });
-
-        // Render page view
-        res.render('page', {
-          tv: req.session.tv,
-          parent: breadcrumb.retrieve(page.title),
-          page: {
-            type: page.type.replace(/ /g, '-'),
-            title: page.title,
-            menus: pageMenus.filter(e => {
-              // Removes empty data fields
-              return e;
-            }),
-            menuChildren: menuChildren,
-            content: contentBlocks
-          }
         });
       });
     });

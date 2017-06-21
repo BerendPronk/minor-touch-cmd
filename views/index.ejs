@@ -4,31 +4,31 @@
 
 <%- include partials/header -%>
 
-<% if (tv) { %>
-  Multi-touch screen mode active
-<% } %>
+<body class="<%= tv === true ? 'tv' : '' %>">
 
-<nav id="main">
-  <ul>
-    <% for (let i = 0; i < menu.length; i++) { %>
-      <li>
-        <a href="/page/<%= menu[i].replace(/ /g, '-').toLowerCase() %>">
-          <%= menu[i] %>
+  <header>
+    <nav data-nav="sub">
+      <ul>
+        <li><a href="/all">Alle vakken</a></li>
+        <li><a href="/faq">FAQ</a></li>
+      </ul>
+    </nav>
+  </header>
 
-          <p>
-            <%= introText[i] %>
-          </p>
-        </a>
-      </li>
-    <% } %>
-  </ul>
-</nav>
+  <nav data-nav="main">
+    <ul>
+      <% for (let i = 0; i < menu.length; i++) { %>
+        <li>
+          <a href="/page/<%= menu[i].replace(/ /g, '-').toLowerCase() %>">
+            <h2><%= menu[i] %></h2>
 
-<nav id="sub">
-  <ul>
-    <li><a href="/all">Alle vakken</a></li>
-    <li><a href="/faq">FAQ</a></li>
-  </ul>
-</nav>
+            <p>
+              <%= introText[i] %>
+            </p>
+          </a>
+        </li>
+      <% } %>
+    </ul>
+  </nav>
 
-<%- include partials/footer -%>
+  <%- include partials/footer -%>

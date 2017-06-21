@@ -4,10 +4,14 @@
 
 <%- include partials/header -%>
 
-<h2>Page not found.</h2>
+<body class="<%= tv === true ? 'tv' : '' %>">
 
-<p>
-  <a href="/">Go back to the homepage</a>
-</p>
+  <h2>Geen pagina gevonden.</h2>
 
-<%- include partials/footer -%>
+  <main>
+    <p>
+      <a href="/">Terug naar de homepagina</a>
+    </p>
+  </main>
+
+  <%- include partials/footer -%>
