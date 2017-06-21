@@ -77,6 +77,10 @@ router.get('/:page', (req, res) => {
               contentBlocks.push(`
                 <iframe width="640" height="360" src="https://player.vimeo.com/video/${ host.split('.com/')[1].replace('/', '') }" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
               `);
+            } else {
+              contentBlocks.push(`
+                <a href="${ host }">${ host }</a>
+              `)
             }
           break;
           case 'B':
