@@ -85,9 +85,12 @@ router.get('/faq', (req, res) => {
 });
 
 // [GET] /404
-router.get('/*', (req, res) => {
+router.get('/:notfound', (req, res) => {
+  debug(`[${ req.method }] /${ req.params.notfound } - which does not exist on server`);
+
   // Render error page
   res.render('error', {
+    tv: req.session.tv,
     parent: false
   });
 });
