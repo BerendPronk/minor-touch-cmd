@@ -4,16 +4,7 @@
 
 <%- include partials/header -%>
 
-<body class="<%= tv === true ? 'tv' : '' %>">
-
-  <header>
-    <nav data-nav="sub">
-      <ul>
-        <li><a href="/all">Alle vakken</a></li>
-        <li><a href="/faq">FAQ</a></li>
-      </ul>
-    </nav>
-  </header>
+<body class="<%= tv === true ? 'tv ' : '' %> index">
 
   <nav data-nav="main">
     <ul>
@@ -30,5 +21,14 @@
       <% } %>
     </ul>
   </nav>
+
+  <header data-header="sub">
+    <nav data-nav="sub">
+      <ul>
+        <li><a href="/page/Alle-vakken">Alle vakken</a></li>
+        <li><a href="/faq">FAQ</a></li>
+      </ul>
+    </nav>
+  </header>
 
   <%- include partials/footer -%>
