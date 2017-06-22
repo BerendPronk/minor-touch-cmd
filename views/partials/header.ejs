@@ -1,9 +1,18 @@
-<body>
+<header>
+  <img data-img="logo" src="/assets/images/hva-logo_black.png" alt="Hogeschool van Amsterdam Logo">
 
   <h1><a href="/">Curriculum CMD</a></h1>
+</header>
 
-  <% if (parent) { %>
-    <header>
-      [img] <a href="/">Home</a> / <a href="<%= parent.replace(/ /g, '-') %>"><%= parent %></a>
-    </header>
-  <% } %>
+<header data-header="breadcrumb">
+  <nav data-nav="breadcrumb">
+    <ul>
+      <li><img src="http://www.cmd-amsterdam.nl/wp-content/uploads/2016/10/cmd_icon_enter_key-e1476734051778.png" alt="Navigatie presentatie, erg mooi"></li>
+      <li><a href="/">Home</a></li>
+      <% if (parent) { %>
+        <li>/</li>
+        <li><a href="<%= parent.replace(/ /g, '-') %>"><%= parent %></a></li>
+      <% } %>
+    </ul>
+  </nav>
+</header>
