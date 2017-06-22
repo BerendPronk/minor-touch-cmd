@@ -16,9 +16,9 @@
   Edit the list of attached pages of this menu.
 </p>
 
-<button data-action="delete menu" onclick="deleteItem('menus', <%= menu.id %>)">Delete <%= menu.name %></button>
+<button data-action="delete menu" onclick="utils.removeItem('menus', <%= menu.id %>)">Delete <%= menu.name %></button>
 
-<form action="/subterra/menus/edit/<%= menu.id %>" method="post" onsubmit="submitForm()">
+<form action="/subterra/menus/edit/<%= menu.id %>" method="post" onsubmit="form.submit()">
   <fieldset>
     <legend>Name</legend>
 
@@ -34,7 +34,7 @@
       <% for (let i = 0; i < menu.children.length; i++) { %>
         <li>
           <span data-type="children-name"><%= menu.children[i] %></span>
-          <button data-type="children-delete" onclick="removeSelectList('children')">X</button>
+          <button data-type="children-delete" onclick="list.delete('children')">X</button>
         </li>
       <% } %>
     </ul>
@@ -43,7 +43,7 @@
 
     <label>
       Select a page you want to attach as child (multiple possible)
-      <select id="childSelect" onchange="addSelectList('children')">
+      <select id="childSelect" onchange="list.add('children')">
         <option value="" disabled selected>Add another page</option>
         <% for (let i = 0; i < system.pages.length; i++) { %>
           <option value="<%= system.pages[i] %>">

@@ -16,9 +16,9 @@
   Edit the list of courses your want this portfolio item to appear on and edit it's paragraph, image and embedded video, if desired.
 </p>
 
-<button data-action="delete type" onclick="deleteItem('portfolio', <%= item.id %>)">Delete <%= item.title %></button>
+<button data-action="delete type" onclick="utils.removeItem('portfolio', <%= item.id %>)">Delete <%= item.title %></button>
 
-<form enctype="multipart/form-data" action="/subterra/portfolio/edit/<%= item.id %>" method="post" onsubmit="submitForm()">
+<form enctype="multipart/form-data" action="/subterra/portfolio/edit/<%= item.id %>" method="post" onsubmit="form.submit()">
   <fieldset>
     <legend>Title</legend>
 
@@ -34,7 +34,7 @@
       <% for (let i = 0; i < item.courses.length; i++) { %>
         <li>
           <span data-type="courses-name"><%= item.courses[i] %></span>
-          <button data-type="courses-delete" onclick="removeSelectList('courses')">X</button>
+          <button data-type="courses-delete" onclick="list.delete('courses')">X</button>
         </li>
       <% } %>
     </ul>
@@ -43,7 +43,7 @@
 
     <label>
       Edit the courses this page appears on (multiple possible)
-      <select id="itemCourseSelect" onchange="addSelectList('courses')">
+      <select id="itemCourseSelect" onchange="list.add('courses')">
         <option value="" disabled selected>Add to course</option>
         <% for (let i = 0; i < system.courses.length; i++) { %>
           <option value="<%= system.courses[i] %>">
@@ -66,7 +66,7 @@
       <li>
         <label>
           Image
-          <input name="content-" type="file" accept="image/*" onblur="setImageName()">
+          <input name="content-" type="file" accept="image/*" onblur="input.set.image.name()">
         </label>
         <% if (item.image) { %>
           <img src="/media/<%= item.image %>" alt="Image about <% item.image %>">

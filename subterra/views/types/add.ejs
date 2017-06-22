@@ -16,7 +16,7 @@
   Select all module you want to set as default modules if a new page with this type is created.
 </p>
 
-<form action="/subterra/types/add" method="post" onsubmit="submitForm()">
+<form action="/subterra/types/add" method="post" onsubmit="form.submit()">
   <fieldset>
     <legend>Name</legend>
 
@@ -34,7 +34,7 @@
 
     <label>
       Select a default module to include in this page type (multiple possible)
-      <select id="typeModuleSelect" onchange="addSelectList('modules')">
+      <select id="typeModuleSelect" onchange="list.add('modules')">
         <option value="" disabled selected>Add a module</option>
         <% for (let i = 0; i < system.modules.length; i++) { %>
           <option value="<%= system.modules[i] %>">
