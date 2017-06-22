@@ -343,7 +343,7 @@ function setButtonName() {
   const buttonAnchor = field.querySelector('select[name^="content-b-anchor"]').value;
   const buttonInput = field.querySelector('input[name^="content-b-link"]');
 
-  if (buttonAnchor.value) {
+  if (buttonAnchor) {
     buttonInput.value = `${ buttonName }|${ buttonAnchor }`;
   } else {
     buttonInput.value = `${ buttonName }|`;
