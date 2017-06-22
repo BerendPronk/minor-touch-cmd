@@ -16,11 +16,17 @@ router.get('/', (req, res) => {
       WHERE name = 'Index'
     `, [], (err, menus) => {
       const menu = menus[0].children.split(',');
+      let query = '';
+
+      // Add child to query string
+      menu.forEach(child => {
+        query += ` OR title LIKE '%${ child }%'`;
+      });
 
       // Fetch intro paragraphs for main menu
       connection.query(`
         SELECT * FROM pages
-        WHERE (title LIKE '%${ menu[0] }%' OR title LIKE '%${ menu[1] }%' OR title LIKE '%${ menu[2] }%')
+        WHERE (${ query.replace(' OR ', '') })
       `, [], (err, pages) => {
         let introText = [];
 
