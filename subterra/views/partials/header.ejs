@@ -2,20 +2,24 @@
 <body>
 
   <% if (username) { %>
-    <p>Logged in as <%= username %></p>
+    <header>
+      <p>Logged in as <%= username %></p>
 
-    <ul>
-      <li><a href="/subterra" <%= pathname === '/subterra' ? 'class="active"' : '' %>>Dashboard</a></li>
-      <li><a href="/subterra/menus" <%= pathname === '/subterra/menus' ? 'class="active"' : '' %>>Menus</a></li>
-      <li><a href="/subterra/types" <%= pathname === '/subterra/types' ? 'class="active"' : '' %>>Page types</a></li>
-      <li><a href="/subterra/pages" <%= pathname === '/subterra/pages' ? 'class="active"' : '' %>>Pages</a></li>
-      <li><a href="/subterra/portfolio" <%= pathname === '/subterra/portfolio' ? 'class="active"' : '' %>>Portfolio</a></li>
-      <li><a href="/subterra/faq" <%= pathname === '/subterra/faq' ? 'class="active"' : '' %>>FAQ</a></li>
-      <li><a href="/subterra/logout">Logout</a></li>
-    </ul>
+      <nav>
+        <ul>
+          <li><a href="/subterra" <%= pathname === '/subterra' ? 'class="active"' : '' %>>Dashboard</a></li>
+          <li><a href="/subterra/menus" <%= pathname === '/subterra/menus' ? 'class="active"' : '' %>>Menus</a></li>
+          <li><a href="/subterra/types" <%= pathname === '/subterra/types' ? 'class="active"' : '' %>>Page types</a></li>
+          <li><a href="/subterra/pages" <%= pathname === '/subterra/pages' ? 'class="active"' : '' %>>Pages</a></li>
+          <li><a href="/subterra/portfolio" <%= pathname === '/subterra/portfolio' ? 'class="active"' : '' %>>Portfolio</a></li>
+          <li><a href="/subterra/faq" <%= pathname === '/subterra/faq' ? 'class="active"' : '' %>>FAQ</a></li>
+          <li><a href="/subterra/logout">Logout</a></li>
+        </ul>
+      </nav>
 
-    <form action="/subterra/search/" method="get">
-      <input name="query" type="search">
-      <input type="submit" value="Search">
-    </form>
+      <form action="/subterra/search/" method="get">
+        <input name="query" type="search">
+        <input type="submit" value="Search">
+      </form>
+    </header>
   <% } %>
