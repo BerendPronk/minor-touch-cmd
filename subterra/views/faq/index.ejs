@@ -26,7 +26,7 @@
         <a href="/subterra/faq/edit/<%= system.faq[i].id %>">
           <%= system.faq[i].question + '?' %>
         </a>
-        <button data-action="delete type" onclick="deleteItem('faq', <%= system.faq[i].id %>)">delete</button>
+        <button data-action="delete type" onclick="utils.removeItem('faq', <%= system.faq[i].id %>)">delete</button>
       </li>
     <% } %>
   </ul>

@@ -16,7 +16,7 @@
   Select the course(s) your want this portfolio item to appear on and set it's paragraph, image and embedded video, if desired.
 </p>
 
-<form enctype="multipart/form-data" action="/subterra/portfolio/add" method="post" onsubmit="submitForm()">
+<form enctype="multipart/form-data" action="/subterra/portfolio/add" method="post" onsubmit="form.submit()">
   <fieldset>
     <legend>Title</legend>
 
@@ -34,7 +34,7 @@
 
     <label>
       Select a course you want this portfolio item to appear on (multiple possible)
-      <select id="itemCourseSelect" onchange="addSelectList('courses')">
+      <select id="itemCourseSelect" onchange="list.add('courses')">
         <option value="" disabled selected>Add to course</option>
         <% for (let i = 0; i < system.courses.length; i++) { %>
           <option value="<%= system.courses[i] %>">
@@ -57,7 +57,7 @@
       <li>
         <label>
           Image
-          <input name="content-" type="file" accept="image/*" onblur="setImageName()">
+          <input name="content-" type="file" accept="image/*" onblur="input.set.image.name()">
         </label>
         <input name="content-i-name" type="hidden">
       </li>

@@ -27,7 +27,7 @@
           <%= system.menus[i].name %>
         </a>
         | <%= system.menus[i].children.replace(/,/g, ', ') %>
-        <button data-action="delete menu" onclick="deleteItem('menus', <%= system.menus[i].id %>)">delete</button>
+        <button data-action="delete menu" onclick="utils.removeItem('menus', <%= system.menus[i].id %>)">delete</button>
       </li>
     <% } %>
   </ul>

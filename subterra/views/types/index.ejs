@@ -27,7 +27,7 @@
           <%= system.types[i].name %>
         </a>
         | <%= system.types[i].defaultModules.replace(/,/g, ', ') %>
-        <button data-action="delete type" onclick="deleteItem('types', <%= system.types[i].id %>)">delete</button>
+        <button data-action="delete type" onclick="utils.removeItem('types', <%= system.types[i].id %>)">delete</button>
       </li>
     <% } %>
   </ul>

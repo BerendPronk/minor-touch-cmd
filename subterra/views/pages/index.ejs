@@ -17,7 +17,7 @@
   Add a page by pressing the 'Add new page' button, or edit one by selecting it's title.
 </p>
 
-<button data-add="page" onclick="toggleShow('#pageTypes')">Add new page</button>
+<button data-add="page" onclick="utils.toggleShow('#pageTypes')">Add new page</button>
 
 <ul id="pageTypes" class="hidden">
   <% for (let i = 0; i < system.types.length; i++) { %>
@@ -35,7 +35,7 @@
           <%= system.pages[i].title %>
         </a>
         | <%= system.pages[i].type %>
-        <button data-action="delete page" onclick="deleteItem('pages', <%= system.pages[i].id %>)">delete</button>
+        <button data-action="delete page" onclick="utils.removeItem('pages', <%= system.pages[i].id %>)">delete</button>
       </li>
     <% } %>
   </ul>

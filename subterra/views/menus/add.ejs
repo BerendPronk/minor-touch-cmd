@@ -16,7 +16,7 @@
   Select the pages you want to attach to this menu.
 </p>
 
-<form action="/subterra/menus/add" method="post" onsubmit="submitForm()">
+<form action="/subterra/menus/add" method="post" onsubmit="form.submit()">
   <fieldset>
     <legend>Name</legend>
 
@@ -34,7 +34,7 @@
 
     <label>
       Select a page you want to attach as child (multiple possible)
-      <select id="childSelect" onchange="addSelectList('children')">
+      <select id="childSelect" onchange="list.add('children')">
         <option value="" disabled selected>Add a child</option>
         <% for (let i = 0; i < system.pages.length; i++) { %>
           <option value="<%= system.pages[i] %>">

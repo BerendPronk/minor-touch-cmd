@@ -16,9 +16,9 @@
   Edit the question in the title field and edit the answer in the field below that.
 </p>
 
-<button data-action="delete type" onclick="deleteItem('faq', <%= question.id %>)">Delete question</button>
+<button data-action="delete type" onclick="utils.removeItem('faq', <%= question.id %>)">Delete question</button>
 
-<form action="/subterra/faq/edit/<%= question.id %>" method="post" onsubmit="submitForm()">
+<form action="/subterra/faq/edit/<%= question.id %>" method="post" onsubmit="form.submit()">
   <fieldset>
     <legend>Question</legend>
 
