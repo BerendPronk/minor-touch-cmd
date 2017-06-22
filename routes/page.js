@@ -29,8 +29,11 @@ router.get('/:page', (req, res) => {
       page.content.split('|-|').forEach(block => {
         switch (block.charAt(1)) {
           case 'H':
+            // Divide content based on h3 input from subterra
             contentBlocks.push(`
-              <h3>${ block.replace('|H|', '') }</h3>
+              </section>
+              <section>
+                <h3>${ block.replace('|H|', '') }</h3>
             `);
           break;
           case 'P':
@@ -58,8 +61,11 @@ router.get('/:page', (req, res) => {
               `;
             });
 
+            // Divide content based on list-name input from subterra
             contentBlocks.push(`
-              <h4>${ listName }</h4>
+              </section>
+              <section>
+              <h3>${ listName }</h3>
               <ul>
                 ${ listString }
               </ul>
@@ -79,7 +85,7 @@ router.get('/:page', (req, res) => {
               `);
             } else {
               contentBlocks.push(`
-                <a href="${ host }">${ host }</a>
+                <a href="${ host }" class="button">Bekijk video</a>
               `)
             }
           break;

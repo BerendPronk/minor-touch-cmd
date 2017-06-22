@@ -9,10 +9,6 @@ router.use('/page', require('./page'));
 router.get('/', (req, res) => {
   debug(`[${ req.method }] /index`);
 
-  if (req.session.tv) {
-    console.log('You are on a tv')
-  }
-
   req.getConnection((err, connection) => {
     // Select menu with name 'Index' from database
     connection.query(`

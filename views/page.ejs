@@ -10,18 +10,18 @@
 
   <main>
     <% if (page.content.length > 0) { %>
-      <% for (let i = 0; i < page.content.length; i++) { %>
-        <section data-type="content" data-order="<%= i %>">
+      <article>
+        <% for (let i = 0; i < page.content.length; i++) { %>
           <%- page.content[i] %>
-        </section>
-      <% } %>
+        <% } %>
+      </article>
     <% } %>
 
     <% if (page.menus.length > 0) { %>
       <% for (let i = 0; i < page.menus.length; i++) { %>
-        <section data-type="menu" data-order="<%= i %>">
-          <h3><%= page.menus[i] %></h3>
-          <nav data-nav="children">
+        <section data-type="menu">
+          <nav data-nav="children" class="<%= page.menuChildren[i].length > 12 ? 'carousel' : '' %>">
+            <h3><%= page.menus[i] %></h3>
             <ul>
               <% for (let j = 0; j < page.menuChildren[i].length; j++) { %>
                 <li class="<%= page.menuChildren[i][j].type %>">

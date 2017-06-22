@@ -1,12 +1,12 @@
 // Object containing slug objects of pages
 const pageData = {
-  'Wat maken': {
+  'Ontdekken': {
     parent: ''
   },
-  'Wat kiezen': {
+  'Verdiepen': {
     parent: ''
   },
-  'Wat worden': {
+  'Afstuderen': {
     parent: ''
   },
   'Alle vakken': {
