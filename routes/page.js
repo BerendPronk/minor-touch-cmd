@@ -110,47 +110,63 @@ router.get('/:page', (req, res) => {
           SELECT * FROM pages
         `, [], (err, pages) => {
 
-          // Pushes array of each page menu's children
-          pageMenus.forEach(pageMenu => {
-            menus.forEach(menu => {
-              if (menu.name === pageMenu) {
-                const children = menu.children.split(',');
-                let pageData = [];
+          connection.query(`
+            SELECT * FROM portfolio
+            WHERE courses LIKE '%${ page.title }%'
+          `, [], (err, portfolio) => {
+            let portfolioItems = [];
 
-                // Retrieve type from children
-                children.forEach(child => {
-                  pages.forEach(page => {
-                    if (page.title === child) {
-                      // Push both type and title in array
-                      pageData.push({
-                        type: page.type,
-                        title: child
-                      });
-                    }
+            // Push portfolio item titles in array
+            portfolio.forEach(item => {
+              portfolioItems.push({
+                title: item.title,
+                image: item.image
+              });
+            });
+
+            // Pushes array of each page menu's children
+            pageMenus.forEach(pageMenu => {
+              menus.forEach(menu => {
+                if (menu.name === pageMenu) {
+                  const children = menu.children.split(',');
+                  let pageData = [];
+
+                  // Retrieve type from children
+                  children.forEach(child => {
+                    pages.forEach(page => {
+                      if (page.title === child) {
+                        // Push both type and title in array
+                        pageData.push({
+                          type: page.type,
+                          title: child
+                        });
+                      }
+                    });
                   });
-                });
 
-                // Add page data array to menu chidlren array
-                menuChildren.push(pageData);
+                  // Add page data array to menu chidlren array
+                  menuChildren.push(pageData);
+                }
+              });
+            });
+
+            // Render page view
+            res.render('page', {
+              tv: req.session.tv,
+              pathname: '/page',
+              page: {
+                category: page.category,
+                type: page.type.replace(/ /g, '-'),
+                title: page.title,
+                menus: pageMenus.filter(e => {
+                  // Removes empty data fields
+                  return e;
+                }),
+                menuChildren: menuChildren,
+                content: contentBlocks,
+                portfolio: portfolioItems
               }
             });
-          });
-
-          // Render page view
-          res.render('page', {
-            tv: req.session.tv,
-            pathname: '/page',
-            page: {
-              category: page.category,
-              type: page.type.replace(/ /g, '-'),
-              title: page.title,
-              menus: pageMenus.filter(e => {
-                // Removes empty data fields
-                return e;
-              }),
-              menuChildren: menuChildren,
-              content: contentBlocks
-            }
           });
         });
       });

@@ -85,9 +85,11 @@ const retrieve = (connection, opts) => {
                 });
               break;
               case 'portfolio':
-                // Push pages in system object
+                const courseTypes = ['course', 'project', 'minor', 'internship'];
+
+                // Push course pages in system object
                 pages.forEach(page => {
-                  if (page.type === 'course') {
+                  if (courseTypes.includes(page.type)) {
                     system.courses.push(page.title);
                   }
                 });
