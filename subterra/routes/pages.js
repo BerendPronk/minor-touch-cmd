@@ -247,7 +247,7 @@ router.post('/add', (req, res) => {
 
       // Check if page title already exists
       pages.forEach(page => {
-        if (page.title === data.title) {
+        if (page.title.toLowerCase() === data.title.toLowerCase()) {
           exists = true;
         }
       });
@@ -266,7 +266,7 @@ router.post('/add', (req, res) => {
         });
       } else {
         // Provide feedback that page title already exists
-        res.redirect(`/subterra/pages/add/${ data.type }?feedback=Page with title '${ data.title }' already exists.&state=negative`);
+        res.redirect(`/subterra/pages/add/${ data.type }?feedback=Page with title '${ data.title.toLowerCase() }' already exists.&state=negative`);
       }
     });
   });
@@ -495,7 +495,7 @@ router.post('/edit/:id', (req, res) => {
 
       // Check if page title already exists
       pages.forEach(page => {
-        if (page.id != req.params.id && page.title === data.title) {
+        if (page.id != req.params.id && page.title.toLowerCase() === data.title.toLowerCase()) {
           exists = true;
         }
       });
@@ -529,7 +529,7 @@ router.post('/edit/:id', (req, res) => {
         });
       } else {
         // Provide feedback that page title already exists
-        res.redirect(`/subterra/pages/edit/${ req.params.id }?feedback=Page with title '${ data.title }' already exists.&state=negative`);
+        res.redirect(`/subterra/pages/edit/${ req.params.id }?feedback=Page with title '${ data.title.toLowerCase() }' already exists.&state=negative`);
       }
     });
   });

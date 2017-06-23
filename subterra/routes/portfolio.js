@@ -94,7 +94,7 @@ router.post('/add', (req, res) => {
 
       // Check if portfolio item title already exists
       portfolio.forEach(item => {
-        if (item.title === data.title) {
+        if (item.title.toLowerCase() === data.title.toLowerCase()) {
           exists = true;
         }
       });
@@ -113,7 +113,7 @@ router.post('/add', (req, res) => {
         });
       } else {
         // Provide feedback that portfolio item title already exisits
-        res.redirect(`/subterra/portfolio/add?feedback='Portfolio item with title '${ data.title }' already exists.&state=negative`);
+        res.redirect(`/subterra/portfolio/add?feedback='Portfolio item with title '${ data.title.toLowerCase() }' already exists.&state=negative`);
       }
     });
   });
@@ -187,7 +187,7 @@ router.post('/edit/:id', (req, res) => {
 
       // Check if portfolio item title already exists
       portfolio.forEach(item => {
-        if (item.id != req.params.id && item.title === data.title) {
+        if (item.id != req.params.id && item.title.toLowerCase() === data.title.toLowerCase()) {
           exists = true;
         }
       });
@@ -208,7 +208,7 @@ router.post('/edit/:id', (req, res) => {
         });
       } else {
         // Provice feedback that portfolio item title already exists
-        res.redirect(`/subterra/portfolio/edit/${ req.params.id }?feedback=Portfolio item with title '${ data.title }' already exists.&state=negative`);
+        res.redirect(`/subterra/portfolio/edit/${ req.params.id }?feedback=Portfolio item with title '${ data.title.toLowerCase() }' already exists.&state=negative`);
       }
     });
   });
