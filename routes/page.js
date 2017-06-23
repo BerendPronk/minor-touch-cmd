@@ -140,6 +140,7 @@ router.get('/:page', (req, res) => {
           // Render page view
           res.render('page', {
             tv: req.session.tv,
+            pathname: '/page',
             parent: breadcrumb.retrieve(page.title),
             page: {
               type: page.type.replace(/ /g, '-'),
