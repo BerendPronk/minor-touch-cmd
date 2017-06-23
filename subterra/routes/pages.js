@@ -64,7 +64,7 @@ router.get('/add/:type', (req, res) => {
     // Fetch system data from database
     database.retrieve(connection, {
       category: 'pages',
-      tables: ['types', 'menus', 'pages', 'modules'],
+      tables: ['types', 'categories', 'menus', 'pages', 'modules'],
       callback: systemData => {
         // Fetch default modules from specific page type
         connection.query(`
@@ -233,6 +233,7 @@ router.post('/add', (req, res) => {
   const data = {
     type: req.body.type,
     title: req.body.title.replace(/'/g, '"'),
+    category: req.body.category,
     menus: req.body.menus,
     content: content.join('|-|').replace(/'/g, '"')
   };
@@ -287,7 +288,7 @@ router.get('/edit/:id', (req, res) => {
       // Fetch all system page types from database
       database.retrieve(connection, {
         category: 'pages',
-        tables: ['types', 'menus', 'pages', 'modules'],
+        tables: ['types', 'categories', 'menus', 'pages', 'modules'],
         callback: systemData => {
           // Process output to content fields
           page.content.split('|-|').forEach((field, index) => {
@@ -402,6 +403,7 @@ router.get('/edit/:id', (req, res) => {
               page: {
                 id: page.id,
                 type: page.type,
+                category: page.category,
                 title: page.title,
                 menus: page.menus.split(',').filter(e => {
                   // Removes empty data fields
@@ -471,6 +473,7 @@ router.post('/edit/:id', (req, res) => {
   const data = {
     type: req.body.type,
     title: req.body.title.replace(/'/g, '"'),
+    category: req.body.category,
     menus: req.body.menus,
     content: content.join('|-|').replace(/'/g, '"')
   };
@@ -516,10 +519,9 @@ router.post('/edit/:id', (req, res) => {
 
             // Update data from page
             connection.query(`
-              UPDATE pages
-              SET type = '${ data.type }', title = '${ data.title }', menus = '${ data.menus }', content = '${ data.content }'
+              UPDATE pages SET ?
               WHERE id = ${ req.params.id }
-            `, [], (err, log) => {
+            `, [data], (err, log) => {
               // Navigate to /subterra/pages overview and provide feedback that page was successfully edited
               res.redirect(`/subterra/pages?feedback='${ data.title }' was successfully edited.&state=positive`);
             });

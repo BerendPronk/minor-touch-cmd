@@ -13,6 +13,8 @@ const retrieve = (connection, opts) => {
     // Define system storage
     let system = {
       types: [],
+      categories: [],
+      categoryPages: [],
       menus: [],
       pages: [],
       courses: [],
@@ -24,7 +26,7 @@ const retrieve = (connection, opts) => {
     const category = opts.category || undefined;
 
     // Define tables to query based on given options, or set default to all
-    const tables = opts.tables || ['types', 'menus', 'pages', 'modules'];
+    const tables = opts.tables || ['types', 'categories', 'menus', 'pages', 'modules'];
 
     // Apply queries to set database content in system variable
     // -
@@ -48,6 +50,15 @@ const retrieve = (connection, opts) => {
               system.types.push(type.name);
             });
         }
+      }
+
+      // Push categories in system object
+      if (tables.includes('categories')) {
+        types.forEach(type => {
+          if (type.isCategory) {
+            system.categories.push(type.name);
+          }
+        });
       }
 
       // Fetch all system page menus from database
@@ -87,6 +98,15 @@ const retrieve = (connection, opts) => {
                   system.pages.push(page.title);
                 });
             }
+          }
+
+          // Push categories in system object
+          if (tables.includes('categories')) {
+            pages.forEach(page => {
+              if (system.categories.includes(page.type)) {
+                system.categoryPages.push(page.title);
+              }
+            });
           }
 
           // Fetch all system modules from database

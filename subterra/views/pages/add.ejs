@@ -37,6 +37,21 @@
     </label>
   </fieldset>
   <fieldset>
+    <legend>Category</legend>
+
+    <label>
+      Select the page category
+      <select name="category">
+        <option value="" disabled selected>Select a category</option>
+        <% for (let i = 0; i < system.categoryPages.length; i++) { %>
+          <option value="<%= system.categoryPages[i] %>">
+            <%= system.categoryPages[i] %>
+          </option>
+        <% } %>
+      </select>
+    </label>
+  </fieldset>
+  <fieldset>
     <legend>Menus</legend>
 
     <ul data-list="selection"></ul>

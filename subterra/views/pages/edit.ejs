@@ -42,6 +42,22 @@
     </label>
   </fieldset>
   <fieldset>
+    <legend>Category</legend>
+
+    <label>
+      Edit the page category
+      <select name="category">
+        <option value="" disabled selected>Select a category</option>
+        <% for (let i = 0; i < system.categoryPages.length; i++) { %>
+          // Set current category to selected
+          <option value="<%= system.categoryPages[i] %>" <%= system.categoryPages[i] === page.category ? 'selected' : '' %>>
+            <%= system.categoryPages[i] %>
+          </option>
+        <% } %>
+      </select>
+    </label>
+  </fieldset>
+  <fieldset>
     <legend>Menus</legend>
 
     <ul data-list="selection">
