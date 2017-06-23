@@ -81,6 +81,10 @@ legend {
   font-size: 1.2em;
 }
 
+label {
+  cursor: pointer;
+}
+
 label,
 input,
 textarea,
@@ -103,6 +107,32 @@ label input,
 label textarea,
 label select {
   margin-top: 1em;
+}
+
+input[type="checkbox"] {
+  height: 0;
+}
+
+input[type="checkbox"] + label {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+}
+input[type="checkbox"] + label::before {
+  width: 2em;
+  height: 2em;
+  margin-right: 1em;
+  content: "";
+  border-radius: .25rem;
+  background-color: #fff;
+}
+input[type="checkbox"]:checked + label::after {
+  position: absolute;
+  top: -.3em;
+  left: 0;
+  font-size: 2em;
+  color: #6ea94b;
+  content: "✔";
 }
 
 textarea {
