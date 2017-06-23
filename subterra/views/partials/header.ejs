@@ -1,23 +1,31 @@
 </head>
-<body>
+<body <%= feedback ? 'class=feedback-active' : '' %>>
+  <% if (feedback) { %>
+    <p data-type="feedback" class="<%= feedbackState %>">
+      <%= feedback %>
+    </p>
+  <% } %>
 
   <% if (username) { %>
     <header>
-      <p>Logged in as <%= username %></p>
+      <p data-type="user">
+        Logged in as <span><%= username %></span>
+        <a href="/subterra/logout" class="button">Log out</a>
+      </p>
 
       <nav>
         <ul>
-          <li><a href="/subterra" <%= pathname === '/subterra' ? 'class="active"' : '' %>>Dashboard</a></li>
-          <li><a href="/subterra/menus" <%= pathname === '/subterra/menus' ? 'class="active"' : '' %>>Menus</a></li>
-          <li><a href="/subterra/types" <%= pathname === '/subterra/types' ? 'class="active"' : '' %>>Page types</a></li>
-          <li><a href="/subterra/pages" <%= pathname === '/subterra/pages' ? 'class="active"' : '' %>>Pages</a></li>
-          <li><a href="/subterra/portfolio" <%= pathname === '/subterra/portfolio' ? 'class="active"' : '' %>>Portfolio</a></li>
-          <li><a href="/subterra/faq" <%= pathname === '/subterra/faq' ? 'class="active"' : '' %>>FAQ</a></li>
-          <li><a href="/subterra/logout">Logout</a></li>
+          <li <%= pathname === '/subterra' ? 'data-active=true' : '' %>><a href="/subterra">Dashboard</a></li>
+          <li <%= pathname === '/subterra/menus' ? 'data-active=true' : '' %>><a href="/subterra/menus">Menus</a></li>
+          <li <%= pathname === '/subterra/types' ? 'data-active=true' : '' %>><a href="/subterra/types">Page types</a></li>
+          <li <%= pathname === '/subterra/pages' ? 'data-active=true' : '' %>><a href="/subterra/pages">Pages</a></li>
+          <li <%= pathname === '/subterra/portfolio' ? 'data-active=true' : '' %>><a href="/subterra/portfolio">Portfolio</a></li>
+          <li <%= pathname === '/subterra/faq' ? 'data-active=true' : '' %>><a href="/subterra/faq">FAQ</a></li>
         </ul>
       </nav>
 
       <form action="/subterra/search/" method="get">
+        <label for="query">Search content</label>
         <input name="query" type="search">
         <input type="submit" value="Search">
       </form>

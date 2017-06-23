@@ -4,23 +4,17 @@
 
 <%- include partials/header -%>
 
-<% if (feedback) { %>
-  <div id="feedback" class="<%= feedbackState %>">
-    <%= feedback %>
-  </div>
-<% } %>
-
 <form action="/subterra/login" method="post">
   <fieldset>
     <label>
-      Username:
+      Username
       <input type="text" name="username">
     </label>
     <label>
-      Password:
+      Password
       <input type="password" name="password">
     </label>
-    <input type="submit" value="Submit">
+    <input type="submit" value="Log in">
   </fieldset>
 </form>
 

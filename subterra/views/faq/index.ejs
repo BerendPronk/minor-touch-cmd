@@ -4,12 +4,6 @@
 
 <%- include ../partials/header -%>
 
-<% if (feedback) { %>
-  <div id="feedback" class="<%= feedbackState %>">
-    <%= feedback %>
-  </div>
-<% } %>
-
 <h1>FAQ</h1>
 
 <p>
@@ -17,10 +11,10 @@
   Add a question by pressing the 'Add new question' button, or edit one by selecting it's title.
 </p>
 
-<a href="/subterra/faq/add">Add new question</a>
+<a href="/subterra/faq/add" class="button">Add new question</a>
 
 <% if (system.faq.length > 0) { %>
-  <ul>
+  <ul data-list="faq">
     <% for (let i = 0; i < system.faq.length; i++) { %>
       <li>
         <a href="/subterra/faq/edit/<%= system.faq[i].id %>">

@@ -4,12 +4,6 @@
 
 <%- include ../partials/header -%>
 
-<% if (feedback) { %>
-  <div id="feedback" class="<%= feedbackState %>">
-    <%= feedback %>
-  </div>
-<% } %>
-
 <h1>Add a page type</h1>
 
 <p>
@@ -28,13 +22,13 @@
   <fieldset>
     <legend>Modules</legend>
 
-    <ul id="typeModules"></ul>
+    <ul data-list="selection"></ul>
 
     <input name="modules" type="hidden">
 
     <label>
       Select a default module to include in this page type (multiple possible)
-      <select id="typeModuleSelect" onchange="list.add('modules')">
+      <select onchange="list.add('modules')">
         <option value="" disabled selected>Add a module</option>
         <% for (let i = 0; i < system.modules.length; i++) { %>
           <option value="<%= system.modules[i] %>">
@@ -45,7 +39,7 @@
     </label>
   </fieldset>
 
-  <input type="submit" value="Submit">
+  <input type="submit" value="Publish">
 </form>
 
 <%- include ../partials/footer -%>

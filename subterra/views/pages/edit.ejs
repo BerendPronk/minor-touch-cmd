@@ -4,20 +4,17 @@
 
 <%- include ../partials/header -%>
 
-<% if (feedback) { %>
-  <div id="feedback" class="<%= feedbackState %>">
-    <%= feedback %>
-  </div>
-<% } %>
-
-<h1>Edit '<%= page.title %>'</h1>
+<h1>
+  Edit page<br>
+  '<%= page.title %>'
+</h1>
 
 <p>
   Edit the list of menu's you want this page to have and edit content to your desire.<br>
   You can add more modules by pressing the 'Add Module' button.
 </p>
 
-<button data-action="delete page" onclick="utils.removeItem('pages', <%= page.id %>)">Delete <%= page.title %></button>
+<button data-action="delete page" onclick="utils.removeItem('pages', <%= page.id %>)">Delete '<%= page.title %>'</button>
 
 <form enctype="multipart/form-data" action="/subterra/pages/edit/<%= page.id %>" method="post" onsubmit="form.submit()">
   <fieldset>
@@ -47,7 +44,7 @@
   <fieldset>
     <legend>Menus</legend>
 
-    <ul id="pageMenus">
+    <ul data-list="selection">
       <% for (let i = 0; i < page.menus.length; i++) { %>
         <li>
           <span data-type="menus-name"><%= page.menus[i] %></span>
@@ -60,7 +57,7 @@
 
     <label>
       Edit the menus attached to this page (multiple possible)
-      <select id="menuSelect" onchange="list.add('menus')">
+      <select onchange="list.add('menus')">
         <option value="" disabled selected>Add another menu</option>
         <% for (let i = 0; i < system.menus.length; i++) { %>
           <option value="<%= system.menus[i] %>">
@@ -73,21 +70,33 @@
   <fieldset>
     <legend>Content</legend>
 
-    <ul id="pageContent">
+    <ul data-list="content">
       <% for (let i = 0; i < page.content.length; i++) { %>
         <li data-order="<%= i %>">
           <%- page.content[i] %>
-          <ul>
-            <li><button data-action="move-up" onclick="module.order('up')">up</button></li>
-            <li><button data-action="move-down" onclick="module.order('down')">down</button></li>
-            <li><button data-action="delete" onclick="module.delete()">delete</button></li>
+          <ul data-list="module-features">
+            <li>
+              <button data-action="move-up" title="Move module up" onclick="module.order('up')">
+                <span>Move up</span>
+              </button>
+            </li>
+            <li>
+              <button data-action="move-down" title="Move module down" onclick="module.order('down')">
+                <span>Move down</span>
+              </button>
+            </li>
+            <li>
+              <button data-action="delete" title="Delete module" onclick="module.delete()">
+                <span>Delete</span>
+              </button>
+            </li>
           </ul>
         </li>
       <% } %>
     </ul>
   </fieldset>
   <fieldset>
-    <button id="moduleButton" onclick="utils.toggleShow('#moduleSelect')">Add Module</button>
+    <button onclick="utils.toggleShow('#moduleSelect')">Add Module</button>
 
     <select id="moduleSelect" class="hidden" onchange="module.add()">
       <option value="" disabled selected>Choose a module</option>
@@ -99,9 +108,9 @@
     </select>
   </fieldset>
 
-  <input type="submit" value="Submit">
+  <input type="submit" value="Save">
 </form>
 
-<p id="systemPages" class="hidden"><%= system.pages %></p>
+<p data-type="system-pages" class="hidden"><%= system.pages %></p>
 
 <%- include ../partials/footer -%>

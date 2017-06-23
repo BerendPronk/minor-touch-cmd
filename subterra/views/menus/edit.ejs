@@ -4,19 +4,16 @@
 
 <%- include ../partials/header -%>
 
-<% if (feedback) { %>
-  <div id="feedback" class="<%= feedbackState %>">
-    <%= feedback %>
-  </div>
-<% } %>
-
-<h1>Edit menu '<%= menu.name %>'</h1>
+<h1>
+  Edit menu<br>
+  '<%= menu.name %>'
+</h1>
 
 <p>
   Edit the list of attached pages of this menu.
 </p>
 
-<button data-action="delete menu" onclick="utils.removeItem('menus', <%= menu.id %>)">Delete <%= menu.name %></button>
+<button data-action="delete menu" onclick="utils.removeItem('menus', <%= menu.id %>)">Delete '<%= menu.name %>'</button>
 
 <form action="/subterra/menus/edit/<%= menu.id %>" method="post" onsubmit="form.submit()">
   <fieldset>
@@ -30,7 +27,7 @@
   <fieldset>
     <legend>Modules</legend>
 
-    <ul id="menuChildren">
+    <ul data-list="selection">
       <% for (let i = 0; i < menu.children.length; i++) { %>
         <li>
           <span data-type="children-name"><%= menu.children[i] %></span>
@@ -43,7 +40,7 @@
 
     <label>
       Select a page you want to attach as child (multiple possible)
-      <select id="childSelect" onchange="list.add('children')">
+      <select onchange="list.add('children')">
         <option value="" disabled selected>Add another page</option>
         <% for (let i = 0; i < system.pages.length; i++) { %>
           <option value="<%= system.pages[i] %>">
@@ -54,7 +51,7 @@
     </label>
   </fieldset>
 
-  <input type="submit" value="Submit">
+  <input type="submit" value="Save">
 </form>
 
 <%- include ../partials/footer -%>

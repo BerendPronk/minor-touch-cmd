@@ -4,12 +4,6 @@
 
 <%- include ../partials/header -%>
 
-<% if (feedback) { %>
-  <div id="feedback" class="<%= feedbackState %>">
-    <%= feedback %>
-  </div>
-<% } %>
-
 <h1>Edit FAQ question</h1>
 
 <p>
@@ -30,7 +24,7 @@
   <fieldset>
     <legend>Content</legend>
 
-    <ul id="pageContent">
+    <ul data-list="content">
       <li>
         <label>
           Edit the answer
@@ -40,7 +34,7 @@
     </ul>
   </fieldset>
 
-  <input type="submit" value="Submit">
+  <input type="submit" value="Save">
 </form>
 
 <%- include ../partials/footer -%>

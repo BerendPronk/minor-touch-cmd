@@ -4,12 +4,6 @@
 
 <%- include ../partials/header -%>
 
-<% if (feedback) { %>
-  <div id="feedback" class="<%= feedbackState %>">
-    <%= feedback %>
-  </div>
-<% } %>
-
 <h1>Add a new menu</h1>
 
 <p>
@@ -28,13 +22,13 @@
   <fieldset>
     <legend>Children</legend>
 
-    <ul id="menuChildren"></ul>
+    <ul data-list="selection"></ul>
 
     <input name="children" type="hidden">
 
     <label>
       Select a page you want to attach as child (multiple possible)
-      <select id="childSelect" onchange="list.add('children')">
+      <select onchange="list.add('children')">
         <option value="" disabled selected>Add a child</option>
         <% for (let i = 0; i < system.pages.length; i++) { %>
           <option value="<%= system.pages[i] %>">
@@ -45,7 +39,7 @@
     </label>
   </fieldset>
 
-  <input type="submit" value="Submit">
+  <input type="submit" value="Publish">
 </form>
 
 <%- include ../partials/footer -%>

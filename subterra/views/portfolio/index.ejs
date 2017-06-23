@@ -4,12 +4,6 @@
 
 <%- include ../partials/header -%>
 
-<% if (feedback) { %>
-  <div id="feedback" class="<%= feedbackState %>">
-    <%= feedback %>
-  </div>
-<% } %>
-
 <h1>Portfolio</h1>
 
 <p>
@@ -17,16 +11,16 @@
   Add a portfolio item by pressing the 'Add new portfolio item' button, or edit one by selecting it's title.
 </p>
 
-<a href="/subterra/portfolio/add">Add new portfolio item</a>
+<a href="/subterra/portfolio/add" class="button">Add new portfolio item</a>
 
 <% if (system.portfolio.length > 0) { %>
-  <ul>
+  <ul data-list="portfolio">
     <% for (let i = 0; i < system.portfolio.length; i++) { %>
       <li>
         <a href="/subterra/portfolio/edit/<%= system.portfolio[i].id %>">
           <%= system.portfolio[i].title %>
+          <span><%= system.portfolio[i].courses.replace(/,/g, ', ') %></span>
         </a>
-        | <%= system.portfolio[i].courses.replace(/,/g, ', ') %>
         <button data-action="delete type" onclick="utils.removeItem('portfolio', <%= system.portfolio[i].id %>)">delete</button>
       </li>
     <% } %>

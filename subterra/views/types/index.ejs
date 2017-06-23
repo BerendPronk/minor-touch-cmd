@@ -4,12 +4,6 @@
 
 <%- include ../partials/header -%>
 
-<% if (feedback) { %>
-  <div id="feedback" class="<%= feedbackState %>">
-    <%= feedback %>
-  </div>
-<% } %>
-
 <h1>Page types</h1>
 
 <p>
@@ -17,16 +11,16 @@
   Add a page type by pressing the 'Add new page type' button, or edit one by selecting it's name.
 </p>
 
-<a href="/subterra/types/add">Add new page type</a>
+<a href="/subterra/types/add" class="button">Add new page type</a>
 
 <% if (system.types.length > 0) { %>
-  <ul>
+  <ul data-list="types">
     <% for (let i = 0; i < system.types.length; i++) { %>
       <li>
         <a href="/subterra/types/edit/<%= system.types[i].id %>">
-          <%= system.types[i].name %>
+          <%= system.types[i].name %><br>
+          <span><%= system.types[i].defaultModules.replace(/,/g, ', ') %></span>
         </a>
-        | <%= system.types[i].defaultModules.replace(/,/g, ', ') %>
         <button data-action="delete type" onclick="utils.removeItem('types', <%= system.types[i].id %>)">delete</button>
       </li>
     <% } %>
