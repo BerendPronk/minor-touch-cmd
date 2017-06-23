@@ -2,9 +2,9 @@
   <title>Curriculum CMD</title>
 </head>
 
-<%- include partials/header -%>
-
 <body class="<%= tv === true ? 'tv ' : '' %> index">
+
+<%- include partials/header -%>
 
   <nav data-nav="main">
     <ul>
@@ -16,6 +16,10 @@
             <p>
               <%= introText[i] %>
             </p>
+
+            <a href="/page/<%= menu[i].replace(/ /g, '-').toLowerCase() %>" class="button">
+              Bekijk segment
+            </a>
           </a>
         </li>
       <% } %>

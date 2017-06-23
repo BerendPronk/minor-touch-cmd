@@ -46,6 +46,7 @@ router.get('/', (req, res) => {
         // Render index page
         res.render('index', {
           tv: req.session.tv,
+          pathname: '/',
           parent: false,
           menu: menu,
           introText: introText
@@ -79,6 +80,7 @@ router.get('/faq', (req, res) => {
       // Render FAQ view
       res.render('faq', {
         tv: req.session.tv,
+        pathname: '/faq',
         parent: false,
         faq: faq
       })
@@ -93,6 +95,7 @@ router.get('/:notfound', (req, res) => {
   // Render error page
   res.render('error', {
     tv: req.session.tv,
+    pathname: '/error',
     parent: false
   });
 });
