@@ -2,9 +2,9 @@
   <title><%= page.title %></title>
 </head>
 
-<%- include partials/header -%>
-
 <body class="<%= tv === true ? 'tv ' : '' %><%= page.type %>">
+
+<%- include partials/header -%>
 
   <h2><%= page.title %></h2>
 
@@ -36,5 +36,9 @@
       <% } %>
     <% } %>
   </main>
+
+  <footer>
+    <img src="/assets/images/icons/<%= page.type %>.png" alt="<%= page.type %> icoon">
+  </footer>
 
   <%- include partials/footer -%>
