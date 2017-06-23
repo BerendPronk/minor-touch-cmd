@@ -4,6 +4,7 @@ const router = express.Router();
 
 // Define page routing
 router.use('/page', require('./page'));
+router.use('/portfolio', require('./portfolio'));
 
 // [GET] index
 router.get('/', (req, res) => {

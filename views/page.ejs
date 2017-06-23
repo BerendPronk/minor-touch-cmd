@@ -9,13 +9,35 @@
   <h2><%= page.title %></h2>
 
   <main>
-    <% if (page.content.length > 0) { %>
-      <article>
+    <article>
+      <% if (page.content.length > 0) { %>
         <% for (let i = 0; i < page.content.length; i++) { %>
           <%- page.content[i] %>
         <% } %>
-      </article>
-    <% } %>
+      <% } %>
+
+      <% if (page.portfolio.length > 0) { %>
+        </section>
+        <section data-type="portfolio">
+          <h3>Studentenwerk</h3>
+
+          <ul>
+            <% for (let i = 0; i < page.portfolio.length; i++) { %>
+              <li>
+                <a href="/portfolio/<%= page.portfolio[i].title.toLowerCase() %>">
+                  <%= page.portfolio[i].title %>
+                </a>
+                
+                <% if (page.portfolio[i].image) { %>
+                  <img src="/media/<%= page.portfolio[i].image %>" alt="<%= page.portfolio[i].title %> afbeelding">
+                <% } %>
+              </li>
+            <% } %>
+          </ul>
+        </section>
+      <% } %>
+    </article>
+
 
     <% if (page.menus.length > 0) { %>
       <% for (let i = 0; i < page.menus.length; i++) { %>
@@ -25,7 +47,7 @@
             <ul>
               <% for (let j = 0; j < page.menuChildren[i].length; j++) { %>
                 <li class="<%= page.menuChildren[i][j].type %>">
-                  <a href="/page/<%= page.menuChildren[i][j].title.replace(/ /g, '-') %>">
+                  <a href="/page/<%= page.menuChildren[i][j].title.replace(/ /g, '-').toLowerCase() %>">
                     <%= page.menuChildren[i][j].title %>
                   </a>
                 </li>

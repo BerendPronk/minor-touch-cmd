@@ -80,7 +80,7 @@ router.post('/add', (req, res) => {
 
       // Check if FAQ question already exists
       faq.forEach(question => {
-        if (question.question === data.question) {
+        if (question.question.toLowerCase() === data.question.toLowerCase()) {
           exists = true;
         }
       });
@@ -99,7 +99,7 @@ router.post('/add', (req, res) => {
         });
       } else {
         // Provide feedback that FAQ question already exisits
-        res.redirect(`/subterra/faq/add?feedback='FAQ question with this title already exists.&state=negative`);
+        res.redirect(`/subterra/faq/add?feedback=FAQ question with this title already exists.&state=negative`);
       }
     });
   });
@@ -156,7 +156,7 @@ router.post('/edit/:id', (req, res) => {
 
       // Check if FAQ question already exists
       faq.forEach(question => {
-        if (question.id != req.params.id && question.question === data.question) {
+        if (question.id != req.params.id && question.question.toLowerCase() === data.question.toLowerCase()) {
           exists = true;
         }
       });

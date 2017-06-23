@@ -91,7 +91,7 @@ router.post('/add', (req, res) => {
 
       // Check if menu name already exists
       menus.forEach(menu => {
-        if (menu.name === data.name) {
+        if (menu.name.toLowerCase() === data.name.toLowerCase()) {
           exists = true;
         }
       });
@@ -110,7 +110,7 @@ router.post('/add', (req, res) => {
         });
       } else {
         // Provide feedback that menu name already exists
-        res.redirect(`/subterra/menus/add?feedback=Menu with name '${ data.name }' already exists.&state=negative`);
+        res.redirect(`/subterra/menus/add?feedback=Menu with name '${ data.name.toLowerCase() }' already exists.&state=negative`);
       }
     });
   });
@@ -186,7 +186,7 @@ router.post('/edit/:id', (req, res) => {
 
       // Check if menu name already exists
       menus.forEach(menu => {
-        if (menu.id != req.params.id && menu.name === data.name) {
+        if (menu.id != req.params.id && menu.name.toLowerCase() === data.name.toLowerCase()) {
           exists = true;
         }
       });
@@ -214,7 +214,7 @@ router.post('/edit/:id', (req, res) => {
         });
       } else {
         // Provide feedback that menu name already exists
-        res.redirect(`/subterra/menus/edit/${ req.params.id }?feedback=Menu with name '${ data.name }' already exists.&state=negative`);
+        res.redirect(`/subterra/menus/edit/${ req.params.id }?feedback=Menu with name '${ data.name.toLowerCase() }' already exists.&state=negative`);
       }
     });
   });

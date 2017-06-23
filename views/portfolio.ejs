@@ -1,0 +1,42 @@
+<%- include partials/head -%>
+  <title><%= page.title %></title>
+</head>
+
+<body class="<%= tv === true ? 'tv ' : '' %><%= page.type %>">
+
+<%- include partials/header -%>
+
+  <h2><%= page.title %></h2>
+
+  <main>
+    <article>
+      <% if (page.paragraph) { %>
+        <section>
+          <h3>Beschrijving</h3>
+          <p><%= page.paragraph %></p>
+        </section>
+      <% } %>
+
+      <% if (page.image) { %>
+        <section>
+          <h3>Afbeelding</h3>
+          <img src="/media/<%= page.image %>" alt="<%= page.title %> image">
+        </section>
+      <% } %>
+
+      <% if (page.video) { %>
+        <section>
+          <h3>Video</h3>
+          <% if (page.video.indexOf('youtube.com') !== -1) { %>
+            <iframe width="640" height="360" src="https://www.youtube.com/embed/<%= page.video.split('.com/watch?v=')[1] %>" frameborder="0" allowfullscreen></iframe>
+          <% } else if (page.video.indexOf('vimeo.com') !== -1) { %>
+            <iframe width="640" height="360" src="https://player.vimeo.com/video/<%= page.video.split('.com/')[1].replace('/', '') %>" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+          <% } else { %>
+            <a href="<%= page.video %>" class="button">Bekijk video</a>
+          <% } %>
+        </section>
+      <% } %>
+    </article>
+  </main>
+
+  <%- include partials/footer -%>

@@ -111,7 +111,7 @@ router.post('/add', (req, res) => {
         });
       } else {
         // Provide feedback that page type name already exists
-        res.redirect(`/subterra/types/add?feedback=Page type with name '${ data.name }' already exists.&state=negative`);
+        res.redirect(`/subterra/types/add?feedback=Page type with name '${ data.name.toLowerCase() }' already exists.&state=negative`);
       }
     });
   });
@@ -201,7 +201,7 @@ router.post('/edit/:id', (req, res) => {
         });
       } else {
         // Provide feedback that page type name already exists
-        res.redirect(`/subterra/types/edit/${ req.params.id }/?feedback=Page type with name '${ data.name }' already exists.&state=negative`);
+        res.redirect(`/subterra/types/edit/${ req.params.id }/?feedback=Page type with name '${ data.name.toLowerCase() }' already exists.&state=negative`);
       }
     });
   });

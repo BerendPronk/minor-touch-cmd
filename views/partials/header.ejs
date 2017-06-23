@@ -1,5 +1,5 @@
 <header>
-  <img data-img="logo" src="/assets/images/hva-logo_<%= tv ? 'white' : 'black' %>.png" alt="Hogeschool van Amsterdam Logo">
+  <img data-img="logo" src="/assets/image/hva-logo_<%= tv ? 'white' : 'black' %>.png" alt="Hogeschool van Amsterdam Logo">
 
   <h1><a href="/">Curriculum CMD</a></h1>
 </header>
@@ -12,7 +12,7 @@
         <li><a href="/">Home</a></li>
         <% if (page.category) { %>
           <li>/</li>
-          <li><a href="<%= page.category.replace(/ /g, '-') %>"><%= page.category %></a></li>
+          <li><a href="../page/<%= page.category.replace(/ /g, '-').toLowerCase() %>"><%= page.category %></a></li>
         <% } %>
       </ul>
     </nav>

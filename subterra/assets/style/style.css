@@ -456,13 +456,13 @@ ul[data-list="module-features"] button::before {
   transform: translateY(.2em);
 }
 ul[data-list="module-features"] button[data-action="move-up"]::before {
-  content: url("../images/icon-up.svg");
+  content: url("../image/icon-up.svg");
 }
 ul[data-list="module-features"] button[data-action="move-down"]::before {
-  content: url("../images/icon-down.svg");
+  content: url("../image/icon-down.svg");
 }
 ul[data-list="module-features"] button[data-action*="delete"]::before {
-  content: url("../images/icon-delete.svg");
+  content: url("../image/icon-delete.svg");
 }
 
 ul[data-list="module-features"] span {
