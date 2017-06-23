@@ -79,7 +79,8 @@ router.post('/add', (req, res) => {
 
   const data = {
     name: req.body.name.replace(/'/, '"').toLowerCase(),
-    defaultModules: req.body.modules
+    defaultModules: req.body.modules,
+    isCategory: req.body.category
   };
 
   req.getConnection((err, connection) => {
@@ -147,7 +148,8 @@ router.get('/edit/:id', (req, res) => {
                 modules: type.defaultModules.split(',').filter(e => {
                   // Removes empty data fields
                   return e;
-                })
+                }),
+                isCategory: type.isCategory
               }
             });
           } else {
@@ -166,7 +168,8 @@ router.post('/edit/:id', (req, res) => {
 
   const data = {
     name: req.body.name.replace(/'/, '"').toLowerCase(),
-    modules: req.body.modules
+    defaultModules: req.body.modules,
+    isCategory: req.body.category
   };
 
   req.getConnection((err, connection) => {
@@ -190,10 +193,9 @@ router.post('/edit/:id', (req, res) => {
       } else if (!exists) {
         // Update page type in database
         connection.query(`
-          UPDATE types
-          SET name = '${ data.name }', defaultModules = '${ data.modules }'
+          UPDATE types SET ?
           WHERE id = ${ req.params.id }
-        `, [], (err, log) => {
+        `, [data], (err, log) => {
           // Navigate to /subterra/types overview and provide feedback that page type was successfully edited
           res.redirect(`/subterra/types?feedback='${ data.name }' was successfully edited.&state=positive`);
         });
