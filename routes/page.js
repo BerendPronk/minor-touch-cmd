@@ -1,5 +1,4 @@
 const debug = require('debug')('TouchCMD');
-const breadcrumb = require('../assets/script/modules/breadcrumb');
 const express = require('express');
 const router = express.Router();
 
@@ -141,8 +140,8 @@ router.get('/:page', (req, res) => {
           res.render('page', {
             tv: req.session.tv,
             pathname: '/page',
-            parent: breadcrumb.retrieve(page.title),
             page: {
+              category: page.category,
               type: page.type.replace(/ /g, '-'),
               title: page.title,
               menus: pageMenus.filter(e => {
