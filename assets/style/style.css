@@ -258,6 +258,7 @@ header nav a {
 header nav[data-nav="breadcrumb"] li {
   margin-right: .5em;
   font-size: 1.8rem;
+  text-transform: capitalize;
 }
 header nav[data-nav="breadcrumb"] li:last-of-type {
   margin-right: 0;
@@ -298,6 +299,10 @@ main > article > section {
     margin-bottom: 0;
     margin-right: 3%;
   }
+}
+
+main li {
+  margin-top: .5em;
 }
 
 main img {
