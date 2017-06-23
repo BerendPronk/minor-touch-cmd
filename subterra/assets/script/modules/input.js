@@ -28,7 +28,7 @@ const input = (() => {
         list.insertAdjacentHTML(
           'beforeend',
           `<li>
-          <input type="text" oninput="input.add.list.item()" onblur="input.set.input()">
+            <input type="text" oninput="input.add.list.item()" onblur="input.set.input()">
           </li>`
         );
 

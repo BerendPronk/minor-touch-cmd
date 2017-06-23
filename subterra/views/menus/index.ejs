@@ -4,12 +4,6 @@
 
 <%- include ../partials/header -%>
 
-<% if (feedback) { %>
-  <div id="feedback" class="<%= feedbackState %>">
-    <%= feedback %>
-  </div>
-<% } %>
-
 <h1>Menus</h1>
 
 <p>
@@ -17,16 +11,15 @@
   Add a menu by pressing the 'Add new menu' button, or edit one by selecting it's name.
 </p>
 
-<a href="/subterra/menus/add">Add a menu</a>
+<a href="/subterra/menus/add" class="button">Add a menu</a>
 
 <% if (system.menus.length > 0) { %>
-  <ul>
+  <ul data-list="menus">
     <% for (let i = 0; i < system.menus.length; i++) { %>
       <li>
         <a href="/subterra/menus/edit/<%= system.menus[i].id %>">
           <%= system.menus[i].name %>
         </a>
-        | <%= system.menus[i].children.replace(/,/g, ', ') %>
         <button data-action="delete menu" onclick="utils.removeItem('menus', <%= system.menus[i].id %>)">delete</button>
       </li>
     <% } %>

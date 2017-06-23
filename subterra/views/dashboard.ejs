@@ -4,17 +4,16 @@
 
 <%- include partials/header -%>
 
-<% if (feedback) { %>
-  <div id="feedback" class="<%= feedbackState %>">
-    <%= feedback %>
-  </div>
-<% } %>
-
 <h1>Curriculum CMD: Subterra</h1>
 
-<button data-add="page" onclick="utils.toggleShow('#pageTypes')">Add new page</button>
+<p>
+  You are currently on the dashboard of this content management system.<br>
+  Navigate to the different features of Subterra, search for existing content on your website to make quick changes, or directly add a new page below.
+</p>
 
-<ul id="pageTypes" class="hidden">
+<h2>Add new page</h2>
+
+<ul data-list="fold">
   <% for (let i = 0; i < system.types.length; i++) { %>
     <li>
       <a href="/subterra/pages/add/<%= system.types[i] %>">Add <%= system.types[i] %></a>

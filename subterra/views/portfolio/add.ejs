@@ -4,12 +4,6 @@
 
 <%- include ../partials/header -%>
 
-<% if (feedback) { %>
-  <div id="feedback" class="<%= feedbackState %>">
-    <%= feedback %>
-  </div>
-<% } %>
-
 <h1>Add a portfolio item</h1>
 
 <p>
@@ -28,13 +22,13 @@
   <fieldset>
     <legend>Courses</legend>
 
-    <ul id="itemCourses"></ul>
+    <ul data-list="selection"></ul>
 
     <input name="courses" type="hidden">
 
     <label>
       Select a course you want this portfolio item to appear on (multiple possible)
-      <select id="itemCourseSelect" onchange="list.add('courses')">
+      <select onchange="list.add('courses')">
         <option value="" disabled selected>Add to course</option>
         <% for (let i = 0; i < system.courses.length; i++) { %>
           <option value="<%= system.courses[i] %>">
@@ -47,7 +41,7 @@
   <fieldset>
     <legend>Content</legend>
 
-    <ul id="pageContent">
+    <ul data-list="content">
       <li>
         <label>
           Paragraph
@@ -70,7 +64,7 @@
     </ul>
   </fieldset>
 
-  <input type="submit" value="Submit">
+  <input type="submit" value="Publish">
 </form>
 
 <%- include ../partials/footer -%>

@@ -4,12 +4,6 @@
 
 <%- include ../partials/header -%>
 
-<% if (feedback) { %>
-  <div id="feedback" class="<%= feedbackState %>">
-    <%= feedback %>
-  </div>
-<% } %>
-
 <h1>Pages</h1>
 
 <p>
@@ -19,7 +13,7 @@
 
 <button data-add="page" onclick="utils.toggleShow('#pageTypes')">Add new page</button>
 
-<ul id="pageTypes" class="hidden">
+<ul data-list="fold" id="pageTypes" class="hidden">
   <% for (let i = 0; i < system.types.length; i++) { %>
     <li>
       <a href="/subterra/pages/add/<%= system.types[i] %>">Add <%= system.types[i] %></a>
@@ -28,13 +22,13 @@
 </ul>
 
 <% if (system.pages.length > 0) { %>
-  <ul>
+  <ul data-list="pages">
     <% for (let i = 0; i < system.pages.length; i++) { %>
       <li>
         <a href="/subterra/pages/edit/<%= system.pages[i].id %>">
           <%= system.pages[i].title %>
+          <span><%= system.pages[i].type %></span>
         </a>
-        | <%= system.pages[i].type %>
         <button data-action="delete page" onclick="utils.removeItem('pages', <%= system.pages[i].id %>)">delete</button>
       </li>
     <% } %>

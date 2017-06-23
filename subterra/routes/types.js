@@ -78,7 +78,7 @@ router.post('/add', (req, res) => {
   debug(`[${ req.method }] /subterra/types/add`);
 
   const data = {
-    name: req.body.name.replace(/'/, '"'),
+    name: req.body.name.replace(/'/, '"').toLowerCase(),
     defaultModules: req.body.modules
   };
 
@@ -165,7 +165,7 @@ router.post('/edit/:id', (req, res) => {
   debug(`[${ req.method }] /subterra/types/edit/${ req.params.id }`);
 
   const data = {
-    name: req.body.name.replace(/'/, '"'),
+    name: req.body.name.replace(/'/, '"').toLowerCase(),
     modules: req.body.modules
   };
 
