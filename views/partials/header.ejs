@@ -10,9 +10,9 @@
       <ul>
         <li><img src="http://www.cmd-amsterdam.nl/wp-content/uploads/2016/10/cmd_icon_enter_key-e1476734051778.png" alt="Navigatie presentatie, erg mooi"></li>
         <li><a href="/">Home</a></li>
-        <% if (parent) { %>
+        <% if (page.category) { %>
           <li>/</li>
-          <li><a href="<%= parent.replace(/ /g, '-') %>"><%= parent %></a></li>
+          <li><a href="<%= page.category.replace(/ /g, '-') %>"><%= page.category %></a></li>
         <% } %>
       </ul>
     </nav>
