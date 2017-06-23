@@ -3,7 +3,7 @@ const module = (() => {
 
   // Add an empty module to the page content fields
   const add = () => {
-    const pageContent = document.querySelector('#pageContent');
+    const pageContent = document.querySelector('ul[data-list="content"]');
     const index = pageContent.children.length;
     let newModule;
 
@@ -52,13 +52,14 @@ const module = (() => {
       case 'embed':
         newModule = `
           <label>
-            Embedded video (YouTube or Vimeo)
+            Embedded video<br>
+            (YouTube or Vimeo)
             <input name="content-e-${ index }" type="url" onblur="input.set.input()">
           </label>
         `;
       break;
       case 'button':
-        const systemPages = document.querySelector('#systemPages').textContent.split(',');
+        const systemPages = document.querySelector('p[data-type="system-pages"]').textContent.split(',');
         let systemPagesString = null;
 
         // 'page' notation 'id-title'
@@ -95,10 +96,22 @@ const module = (() => {
       'beforeend',
       `<li data-order="${ index }">
         ${ newModule }
-        <ul>
-          <li><button data-action="move-up" onclick="module.order('up')">up</button></li>
-          <li><button data-action="move-down" onclick="module.order('down')">down</button></li>
-          <li><button data-action="delete" onclick="module.delete()">delete</button></li>
+        <ul data-list="module-features">
+          <li>
+            <button data-action="move-up" title="Move module up" onclick="module.order('up')">
+              <span>Move up</span>
+            </button>
+          </li>
+          <li>
+            <button data-action="move-down" title="Move module down" onclick="module.order('down')">
+              <span>Move down</span>
+            </button>
+          </li>
+          <li>
+            <button data-action="delete" title="Delete module" onclick="module.delete()">
+              <span>Delete</span>
+            </button>
+          </li>
         </ul>
       </li>`
     );
@@ -110,7 +123,7 @@ const module = (() => {
 
   // Delete a module from the page
   const remove = () => {
-    const pageContent = document.querySelector('#pageContent');
+    const pageContent = document.querySelector('ul[data-list="content"]');
     const field = event.target.parentNode.parentNode.parentNode;
 
     pageContent.removeChild(field);
@@ -118,7 +131,7 @@ const module = (() => {
 
   // Set module order based on given direction
   const order = direction => {
-    const pageContent = document.querySelector('#pageContent');
+    const pageContent = document.querySelector('ul[data-list="content"]');
     const fields = pageContent.querySelectorAll('li[data-order]');
     const targetField = event.target.parentNode.parentNode.parentNode;
     const curPos = Number(targetField.getAttribute('data-order'));
