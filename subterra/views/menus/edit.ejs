@@ -29,9 +29,25 @@
 
     <ul data-list="selection">
       <% for (let i = 0; i < menu.children.length; i++) { %>
-        <li>
+        <li data-order="<%= i %>">
           <span data-type="children-name"><%= menu.children[i] %></span>
-          <button data-type="children-delete" onclick="list.delete('children')">X</button>
+          <ul data-list="selection-features">
+            <li>
+              <button data-action="move-up" title="Move selection up" onclick="selection.order('children', 'up')" <%= i === 0 ? 'disabled' : '' %>>
+                <span>Move up</span>
+              </button>
+            </li>
+            <li>
+              <button data-action="move-down" title="Move selection down" onclick="selection.order('children', 'down')" <%= i === menu.children.length - 1 ? 'disabled' : '' %>>
+                <span>Move up</span>
+              </button>
+            </li>
+            <li>
+              <button data-action="delete" title="Delete selection" onclick="selection.delete('children')">
+                <span>Delete</span>
+              </button>
+            </li>
+          </ul>
         </li>
       <% } %>
     </ul>
@@ -40,7 +56,7 @@
 
     <label>
       Select a page you want to attach as child (multiple possible)
-      <select onchange="list.add('children')">
+      <select onchange="selection.add('children')">
         <option value="" disabled selected>Add another page</option>
         <% for (let i = 0; i < system.pages.length; i++) { %>
           <option value="<%= system.pages[i] %>">
