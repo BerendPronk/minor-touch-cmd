@@ -4,21 +4,25 @@
 
 <%- include partials/header -%>
 
-<h1>Results for '<%= query %>':</h1>
+<h1>
+  Results for<br>
+  '<%= query %>' :
+</h1>
 
-<%# Check if category contains result%>
 <% Object.keys(results).forEach(category => { %>
   <% if (results[category].length > 0) { %>
     <section>
       <h3><%= category === 'faq' ? category.toUpperCase() : category %></h3>
       <p><%= results[category].length %> <%= results[category].length === 1 ? 'item' : 'items' %> found</p>
 
-      <ul>
+      <ul data-list="search">
         <% for (let i = 0; i < results[category].length; i++) { %>
           <li>
-            <%= results[category][i].name %>
             <a href="/subterra/<%= category %>/edit/<%= results[category][i].id %>">
-              edit
+              <%= results[category][i].name %>
+              <button data-action="edit">
+                edit
+              </a>
             </a>
           </li>
         <% } %>
