@@ -61,8 +61,8 @@
     <% } %>
   </main>
 
-  <footer>
-    <img src="/assets/images/icons/<%= page.type %>.png" alt="<%= page.type %> icoon">
+  <footer data-type="image">
+    <img src="/assets/image/icon/<%= page.type %>-<%= Math.ceil(Math.random() * 3) %>.png" alt="<%= page.type %> icoon">
   </footer>
 
   <%- include partials/footer -%>
