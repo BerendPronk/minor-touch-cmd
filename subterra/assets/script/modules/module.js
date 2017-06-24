@@ -116,6 +116,9 @@ const module = (() => {
       </li>`
     );
 
+    // Check and update buttons to be disabled
+    updateButtons(pageContent);
+
     // Reset module selector
     event.target.classList.add('hidden');
     event.target.selectedIndex = 0;
@@ -127,6 +130,9 @@ const module = (() => {
     const field = event.target.parentNode.parentNode.parentNode;
 
     pageContent.removeChild(field);
+
+    // Check and update buttons to be disabled
+    updateButtons(pageContent);
   };
 
   // Set module order based on given direction
@@ -160,6 +166,7 @@ const module = (() => {
           if (order === newPos) {
             field.setAttribute('data-order', order + 1);
           } else if (order === curPos) {
+            // Set desired module in place
             field.setAttribute('data-order', newPos);
           }
         });
@@ -180,6 +187,7 @@ const module = (() => {
           if (order === newPos) {
             field.setAttribute('data-order', order - 1);
           } else if (order === curPos) {
+            // Set desired module in place
             field.setAttribute('data-order', newPos);
           }
         });
@@ -191,7 +199,7 @@ const module = (() => {
       pageContent.removeChild(pageContent.children[0]);
     }
 
-    // Sort newOrder array
+    // Sort new order array
     newOrder.sort((a, b) => {
       return Number(a.getAttribute('data-order')) - Number(b.getAttribute('data-order'));
     });
@@ -202,6 +210,23 @@ const module = (() => {
         'beforeend',
         field.outerHTML
       );
+    });
+
+    // Check and update buttons to be disabled
+    updateButtons(pageContent);
+  };
+
+  // Check and update buttons to be disabled
+  const updateButtons = list => {
+    const modules = list.querySelectorAll('li[data-order]');
+
+    // Check every single module
+    modules.forEach((module, index) => {
+      const moveUp = module.querySelector('button[data-action="move-up"]');
+      const moveDown = module.querySelector('button[data-action="move-down"]');
+
+      index === 0 ? moveUp.disabled = true : moveUp.disabled = false;
+      index === modules.length - 1 ? moveDown.disabled = true : moveDown.disabled = false;
     });
   };
 
