@@ -1,4 +1,4 @@
-<% if (admin) { %>
+<% if (admin && pathname !== '/') { %>
   <header data-type="admin">
     <% if (pathname === '/page') { %>
       <a href="/subterra/pages/edit/<%= page.id %>" class="button">Edit this page</a>
