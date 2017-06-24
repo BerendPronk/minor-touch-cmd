@@ -39,6 +39,7 @@ body {
   font-size: 1em;
   font-weight: 400;
   color: #000;
+  background: #ffcc00;
   background-image: -ms-linear-gradient(bottom right, #ffcc00 0%, #ffdb4d 100%);
   background-image: -moz-linear-gradient(bottom right, #ffcc00 0%, #ffdb4d 100%);
   background-image: -o-linear-gradient(bottom right, #ffcc00 0%, #ffdb4d 100%);
@@ -383,6 +384,7 @@ body.tv {
   height: 100vh;
   overflow: hidden;
   color: #fff;
+  background: #0033ff;
   background-image: -ms-linear-gradient(bottom right, #0033ff 0%, #8099ff 100%);
   background-image: -moz-linear-gradient(bottom right, #0033ff 0%, #8099ff 100%);
   background-image: -o-linear-gradient(bottom right, #0033ff 0%, #8099ff 100%);
