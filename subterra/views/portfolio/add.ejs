@@ -28,7 +28,7 @@
 
     <label>
       Select a course you want this portfolio item to appear on (multiple possible)
-      <select onchange="list.add('courses')">
+      <select onchange="selection.add('courses')">
         <option value="" disabled selected>Add to course</option>
         <% for (let i = 0; i < system.courses.length; i++) { %>
           <option value="<%= system.courses[i] %>">

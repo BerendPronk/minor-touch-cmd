@@ -28,7 +28,7 @@
 
     <label>
       Select a page you want to attach as child (multiple possible)
-      <select onchange="list.add('children')">
+      <select onchange="selection.add('children')">
         <option value="" disabled selected>Add a child</option>
         <% for (let i = 0; i < system.pages.length; i++) { %>
           <option value="<%= system.pages[i] %>">

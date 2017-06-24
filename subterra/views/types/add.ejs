@@ -36,7 +36,7 @@
 
     <label>
       Select a default module to include in this page type (multiple possible)
-      <select onchange="list.add('modules')">
+      <select onchange="selection.add('modules')">
         <option value="" disabled selected>Add a module</option>
         <% for (let i = 0; i < system.modules.length; i++) { %>
           <option value="<%= system.modules[i] %>">
