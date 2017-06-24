@@ -590,6 +590,13 @@ footer a {
 }
 
 /* Utility styles */
+p[data-type="no-results"] {
+  padding: 1em;
+  color: #121212;
+  border-radius: .25rem;
+  background-color: #fff;
+}
+
 .hidden {
   display: none !important;
   visibility: hidden !important;
