@@ -37,9 +37,25 @@
 
     <ul data-list="selection">
       <% for (let i = 0; i < type.modules.length; i++) { %>
-        <li>
+        <li data-order="<%= i %>">
           <span data-type="modules-name"><%= type.modules[i] %></span>
-          <button data-type="modules-delete" onclick="list.delete('modules')">X</button>
+          <ul data-list="selection-features">
+            <li>
+              <button data-action="move-up" title="Move selection up" onclick="selection.order('modules', 'up')" <%= i === 0 ? 'disabled' : '' %>>
+                <span>Move up</span>
+              </button>
+            </li>
+            <li>
+              <button data-action="move-down" title="Move selection down" onclick="selection.order('modules', 'down')" <%= i === type.modules.length - 1 ? 'disabled' : '' %>>
+                <span>Move up</span>
+              </button>
+            </li>
+            <li>
+              <button data-action="delete" title="Delete selection" onclick="selection.delete('modules')">
+                <span>Delete</span>
+              </button>
+            </li>
+          </ul>
         </li>
       <% } %>
     </ul>
@@ -48,7 +64,7 @@
 
     <label>
       Edit the default modules included in this page type (multiple possible)
-      <select onchange="list.add('modules')">
+      <select onchange="selection.add('modules')">
         <option value="" disabled selected>Add another module</option>
         <% for (let i = 0; i < system.modules.length; i++) { %>
           <option value="<%= system.modules[i] %>">

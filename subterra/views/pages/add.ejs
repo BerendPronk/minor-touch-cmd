@@ -59,7 +59,7 @@
 
     <label>
       Select a menu to attach to this page (multiple possible)
-      <select onchange="list.add('menus')">
+      <select onchange="selection.add('menus')">
         <option value="" disabled selected>Add another menu</option>
         <% for (let i = 0; i < system.menus.length; i++) { %>
           <option value="<%= system.menus[i] %>">
@@ -78,12 +78,12 @@
           <%- page.content[i] %>
           <ul data-list="module-features">
             <li>
-              <button data-action="move-up" title="Move module up" onclick="module.order('up')">
+              <button data-action="move-up" title="Move module up" onclick="module.order('up')" <%= i === 0 ? 'disabled' : '' %>>
                 <span>Move up</span
               </button>
             </li>
             <li>
-              <button data-action="move-down" title="Move module down" onclick="module.order('down')">
+              <button data-action="move-down" title="Move module down" onclick="module.order('down')" <%= i === page.content.length - 1 ? 'disabled' : '' %>>
                 <span>Move down</span>
               </button>
             </li>

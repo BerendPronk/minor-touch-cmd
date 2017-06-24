@@ -29,9 +29,25 @@
 
     <ul data-list="selection">
       <% for (let i = 0; i < item.courses.length; i++) { %>
-        <li>
+        <li data-order="<%= i %>">
           <span data-type="courses-name"><%= item.courses[i] %></span>
-          <button data-type="courses-delete" onclick="list.delete('courses')">X</button>
+          <ul data-list="selection-features">
+            <li>
+              <button data-action="move-up" title="Move selection up" onclick="selection.order('courses', 'up')" <%= i === 0 ? 'disabled' : '' %>>
+                <span>Move up</span>
+              </button>
+            </li>
+            <li>
+              <button data-action="move-down" title="Move selection down" onclick="selection.order('courses', 'down')" <%= i === item.courses.length - 1 ? 'disabled' : '' %>>
+                <span>Move up</span>
+              </button>
+            </li>
+            <li>
+              <button data-action="delete" title="Delete selection" onclick="selection.delete('courses')">
+                <span>Delete</span>
+              </button>
+            </li>
+          </ul>
         </li>
       <% } %>
     </ul>
@@ -40,7 +56,7 @@
 
     <label>
       Edit the courses this page appears on (multiple possible)
-      <select onchange="list.add('courses')">
+      <select onchange="selection.add('courses')">
         <option value="" disabled selected>Add to course</option>
         <% for (let i = 0; i < system.courses.length; i++) { %>
           <option value="<%= system.courses[i] %>">
