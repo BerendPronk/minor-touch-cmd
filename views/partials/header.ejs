@@ -1,3 +1,13 @@
+<% if (admin) { %>
+  <header data-type="admin">
+    <% if (pathname === '/page') { %>
+      <a href="/subterra/pages/edit/<%= page.id %>" class="button">Edit this page</a>
+    <% } else if (pathname === '/portfolio') { %>
+      <a href="/subterra/portfolio/edit/<%= page.id %>" class="button">Edit this item</a>
+    <% } %>
+  </header>
+<% } %>
+
 <header>
   <img data-img="logo" src="/assets/image/hva-logo_<%= tv ? 'white' : 'black' %>.png" alt="Hogeschool van Amsterdam Logo">
 
