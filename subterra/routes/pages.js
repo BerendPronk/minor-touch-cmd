@@ -323,7 +323,10 @@ router.get('/edit/:id', (req, res) => {
                 // Divide content string into separate fields
                 const listContent = field.replace('|L|', '').split('|');
                 const fieldListName = listContent[0];
-                const fieldList = listContent[1].split(',');
+                const fieldList = listContent[1].split(',').filter(e => {
+                  // Removes empty data fields
+                  return e;
+                });
                 let fieldListString = '';
 
                 // Give HTML to each item in list
@@ -517,13 +520,20 @@ router.post('/edit/:id', (req, res) => {
             SET courses = REPLACE(courses, '${ currentTitle }', '${ data.title }')
           `, [], (err, portfolioLog) => {
 
-            // Update data from page
+            // Rename page included in button modules
             connection.query(`
-              UPDATE pages SET ?
-              WHERE id = ${ req.params.id }
-            `, [data], (err, log) => {
-              // Navigate to /subterra/pages overview and provide feedback that page was successfully edited
-              res.redirect(`/subterra/pages?feedback='${ data.title }' was successfully edited.&state=positive`);
+              UPDATE pages
+              SET content = REPLACE(content, '${ currentTitle }', '${ data.title }')
+            `, [], (err, pagesLog) => {
+
+              // Update data from page
+              connection.query(`
+                UPDATE pages SET ?
+                WHERE id = ${ req.params.id }
+              `, [data], (err, log) => {
+                // Navigate to /subterra/pages overview and provide feedback that page was successfully edited
+                res.redirect(`/subterra/pages?feedback='${ data.title }' was successfully edited.&state=positive`);
+              });
             });
           });
         });
