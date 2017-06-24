@@ -25,7 +25,6 @@
       <select name="type">
         <option value="" disabled selected>Select a page type</option>
         <% for (let i = 0; i < system.types.length; i++) { %>
-          // Set current page type to selected
           <option value="<%= system.types[i] %>" <%= system.types[i] === page.type ? 'selected' : '' %>>
             <%= system.types[i] %>
           </option>
@@ -49,7 +48,6 @@
       <select name="category">
         <option value="" disabled selected>Select a category</option>
         <% for (let i = 0; i < system.categoryPages.length; i++) { %>
-          // Set current category to selected
           <option value="<%= system.categoryPages[i] %>" <%= system.categoryPages[i] === page.category ? 'selected' : '' %>>
             <%= system.categoryPages[i] %>
           </option>
