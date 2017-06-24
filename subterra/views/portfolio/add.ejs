@@ -7,7 +7,8 @@
 <h1>Add a portfolio item</h1>
 
 <p>
-  Select the course(s) your want this portfolio item to appear on and set it's paragraph, image and embedded video, if desired.
+  Select the course(s) your want this portfolio item to appear on and set it's paragraph, image and embedded video, if desired.<br>
+  Empty inputs will not be shown to visitors of your website.
 </p>
 
 <form enctype="multipart/form-data" action="/subterra/portfolio/add" method="post" onsubmit="form.submit()">
@@ -42,24 +43,45 @@
     <legend>Content</legend>
 
     <ul data-list="content">
-      <li>
+      <li data-content="paragraph">
         <label>
           Paragraph
           <textarea name="content-p"></textarea>
         </label>
+        <ul data-list="portfolio-features">
+          <li>
+            <button data-action="clear" title="Clear input" onclick="input.clear.input()">
+              <span>Clear</span>
+            </button>
+          </li>
+        </ul>
       </li>
-      <li>
+      <li data-content="image">
         <label>
           Image
-          <input name="content-" type="file" accept="image/*" onblur="input.set.image.name()">
+          <input name="content-i" type="file" accept="image/*" onblur="input.set.image.name()">
         </label>
         <input name="content-i-name" type="hidden">
+        <ul data-list="module-features">
+          <li>
+            <button data-action="clear" title="Clear input" onclick="input.clear.input()">
+              <span>Clear</span>
+            </button>
+          </li>
+        </ul>
       </li>
-      <li>
+      <li data-content="embed">
         <label>
           Embedded video (YouTube or Vimeo)
           <input name="content-e" type="url">
         </label>
+        <ul data-list="module-features">
+          <li>
+            <button data-action="clear" title="Clear input" onclick="input.clear.input()">
+              <span>Clear</span>
+            </button>
+          </li>
+        </ul>
       </li>
     </ul>
   </fieldset>
