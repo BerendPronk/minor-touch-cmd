@@ -367,7 +367,7 @@ ul[data-list] li:hover {
   color: #fff;
   background-color: #5375b2;
 }
-ul[data-list] li:hover span {
+ul[data-list] li:hover a > span {
   color: #fff;
 }
 
@@ -488,23 +488,27 @@ ul[data-list="selection-features"] {
   margin-top: 0;
 }
 
-ul[data-list="module-features"] {
+ul[data-list="module-features"],
+ul[data-list="portfolio-features"] {
   align-self: flex-end;
   width: 100%;
 }
 
 ul[data-list="module-features"],
+ul[data-list="portfolio-features"],
 ul[data-list="selection-features"] {
   flex-direction: row;
   justify-content: space-between;
 }
 ul[data-list="module-features"]::before,
+ul[data-list="portfolio-features"]::before,
 ul[data-list="selection-features"]::before {
   flex: 1;
   content: "";
 }
 
 ul[data-list="module-features"] li,
+ul[data-list="portfolio-features"] li,
 ul[data-list="selection-features"] li {
   display: flex;
   margin-left: 1rem;
@@ -512,19 +516,29 @@ ul[data-list="selection-features"] li {
   border: none;
 }
 ul[data-list="module-features"] li::before,
+ul[data-list="portfolio-features"] li::before,
 ul[data-list="selection-features"] li::before {
   display: none;
 }
 
+ul[data-list="portfolio-features"] button {
+  padding: .25em .5em;
+}
+
 ul[data-list="module-features"] button,
+ul[data-list="selection-features"] button {
+  width: 2em;
+  height: 2em;
+  padding: 0;
+}
+
+ul[data-list="module-features"] button,
+ul[data-list="portfolio-features"] button,
 ul[data-list="selection-features"] button {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2em;
-  height: 2em;
   margin: 0;
-  padding: 0;
 }
 ul[data-list="module-features"] button:disabled,
 ul[data-list="selection-features"] button:disabled {
@@ -547,6 +561,12 @@ ul[data-list="selection-features"] button[data-action="move-down"]::before {
 ul[data-list="module-features"] button[data-action*="delete"]::before,
 ul[data-list="selection-features"] button[data-action*="delete"]::before {
   content: url("../image/icon-delete.svg");
+}
+
+ul[data-list="portfolio-features"] span {
+  font-weight: 700;
+  color: #121212;
+  pointer-events: none;
 }
 
 ul[data-list="module-features"] span,
