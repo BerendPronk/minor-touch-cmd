@@ -152,9 +152,11 @@ router.get('/:page', (req, res) => {
 
             // Render page view
             res.render('page', {
+              admin: req.session.username,
               tv: req.session.tv,
               pathname: '/page',
               page: {
+                id: page.id,
                 category: page.category,
                 type: page.type.replace(/ /g, '-'),
                 title: page.title,

@@ -46,6 +46,7 @@ router.get('/', (req, res) => {
 
         // Render index page
         res.render('index', {
+          admin: req.session.username,
           tv: req.session.tv,
           pathname: '/',
           page: {
@@ -82,6 +83,7 @@ router.get('/faq', (req, res) => {
 
       // Render FAQ view
       res.render('faq', {
+        admin: req.session.username,
         tv: req.session.tv,
         pathname: '/faq',
         page: {
@@ -99,6 +101,7 @@ router.get('/:notfound', (req, res) => {
 
   // Render error page
   res.render('error', {
+    admin: req.session.username,
     tv: req.session.tv,
     pathname: '/error',
     page: {

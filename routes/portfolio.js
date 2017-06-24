@@ -24,9 +24,11 @@ router.get('/:item', (req, res) => {
 
       // Render portfolio item view
       res.render('portfolio', {
+        admin: req.session.username,
         tv: req.session.tv,
         pathname: '/portfolio',
         page: {
+          id: item.id,
           category: parent,
           title: item.title,
           paragraph: item.paragraph,
