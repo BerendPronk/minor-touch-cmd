@@ -415,7 +415,6 @@ ul[data-list="content"] ul li {
   flex-wrap: wrap;
   padding: 0;
   padding-bottom: 1em;
-  /*justify-content: space-between;*/
 }
 
 ul[data-list="content"] ul li {
