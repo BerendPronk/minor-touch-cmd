@@ -21,19 +21,21 @@
         <section data-type="portfolio">
           <h3>Studentenwerk</h3>
 
-          <ul>
-            <% for (let i = 0; i < page.portfolio.length; i++) { %>
-              <li>
-                <a href="/portfolio/<%= page.portfolio[i].title.toLowerCase() %>">
-                  <%= page.portfolio[i].title %>
-                </a>
+          <nav data-nav="portfolio">
+            <ul>
+              <% for (let i = 0; i < page.portfolio.length; i++) { %>
+                <li>
+                  <a href="/portfolio/<%= page.portfolio[i].title.toLowerCase() %>">
+                    <p><%= page.portfolio[i].title %></p>
 
-                <% if (page.portfolio[i].image) { %>
-                  <img src="/media/<%= page.portfolio[i].image %>" alt="<%= page.portfolio[i].title %> afbeelding">
-                <% } %>
-              </li>
-            <% } %>
-          </ul>
+                    <% if (page.portfolio[i].image) { %>
+                      <img src="/media/<%= page.portfolio[i].image %>" alt="<%= page.portfolio[i].title %> afbeelding">
+                    <% } %>
+                  </a>
+                </li>
+              <% } %>
+            </ul>
+          </nav>
         </section>
       <% } %>
     </article>
