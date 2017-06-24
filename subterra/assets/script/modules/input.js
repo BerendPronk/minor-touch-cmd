@@ -114,9 +114,35 @@ const input = (() => {
     }
   };
 
+  const clear = {
+    // Remove input from specific input type
+    input: input => {
+      event.preventDefault();
+      const field = event.target.parentNode.parentNode.parentNode;
+
+      switch (field.getAttribute('data-content')) {
+        case 'paragraph':
+          field.querySelector('textarea').textContent = '';
+        break;
+        case 'image':
+          field.querySelector('input[name="content-i"]').value = '';
+          field.querySelector('input[name="content-i-name"]').value = '';
+
+          if (field.querySelector('img')) { 
+            field.querySelector('img').remove();
+          }
+        break;
+        case 'embed':
+          field.querySelector('input[name="content-e"]').value = '';
+        break;
+      }
+    }
+  };
+
   // Export functions
   return {
     add: add,
-    set: set
+    set: set,
+    clear: clear
   };
 })();
