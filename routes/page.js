@@ -48,7 +48,10 @@ router.get('/:page', (req, res) => {
           case 'L':
             const listContent = block.replace('|L|', '').split('|');
             const listName = listContent[0];
-            const list = listContent[1].split(',');
+            const list = listContent[1].split(',').filter(e => {
+              // Removes empty data fields
+              return e;
+            });
             let listString = '';
 
             // Give HTML to each item in list
