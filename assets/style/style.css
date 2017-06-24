@@ -142,10 +142,10 @@ nav li {
 }
 
 /* Page type specific styles */
-nav li.course { border-top: 4px solid #bbb2aa; }
-nav li.project { border-top: 4px solid #f3c239; }
-nav li.minor { border-top: 4px solid #7bbda3; }
-nav li.internship { border-top: 4px solid #ec4f48; }
+nav li[data-page-type="course"] { border-top: 4px solid #bbb2aa; }
+nav li[data-page-type="project"] { border-top: 4px solid #f3c239; }
+nav li[data-page-type="minor"] { border-top: 4px solid #7bbda3; }
+nav li[data-page-type="internship"] { border-top: 4px solid #ec4f48; }
 
 nav li::before {
   position: absolute;
@@ -156,19 +156,19 @@ nav li::before {
   font-weight: bold;
   color: #fff;
 }
-nav li.course::before {
+nav li[data-page-type="course"]::before {
   content: "Vak";
   background-color: #bbb2aa;
 }
-nav li.project::before {
+nav li[data-page-type="project"]::before {
   content: "Project";
   background-color: #f3c239;
 }
-nav li.minor::before {
+nav li[data-page-type="minor"]::before {
   content: "Minor";
   background-color: #7bbda3;
 }
-nav li.internship::before {
+nav li[data-page-type="internship"]::before {
   content: "Stage";
   background-color: #ec4f48;
 }

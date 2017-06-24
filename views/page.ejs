@@ -27,7 +27,7 @@
                 <a href="/portfolio/<%= page.portfolio[i].title.toLowerCase() %>">
                   <%= page.portfolio[i].title %>
                 </a>
-                
+
                 <% if (page.portfolio[i].image) { %>
                   <img src="/media/<%= page.portfolio[i].image %>" alt="<%= page.portfolio[i].title %> afbeelding">
                 <% } %>
@@ -46,7 +46,7 @@
             <h3><%= page.menus[i] %></h3>
             <ul>
               <% for (let j = 0; j < page.menuChildren[i].length; j++) { %>
-                <li class="<%= page.menuChildren[i][j].type %>">
+                <li data-page-type="<%= page.menuChildren[i][j].type %>">
                   <a href="/page/<%= page.menuChildren[i][j].title.replace(/ /g, '-').toLowerCase() %>">
                     <%= page.menuChildren[i][j].title %>
                   </a>
