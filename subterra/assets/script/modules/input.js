@@ -116,7 +116,7 @@ const input = (() => {
 
   const clear = {
     // Remove input from specific input type
-    input: input => {
+    input: () => {
       event.preventDefault();
       const field = event.target.parentNode.parentNode.parentNode;
 
@@ -128,7 +128,7 @@ const input = (() => {
           field.querySelector('input[name="content-i"]').value = '';
           field.querySelector('input[name="content-i-name"]').value = '';
 
-          if (field.querySelector('img')) { 
+          if (field.querySelector('img')) {
             field.querySelector('img').remove();
           }
         break;
