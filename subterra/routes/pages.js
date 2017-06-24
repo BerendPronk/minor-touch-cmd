@@ -323,7 +323,10 @@ router.get('/edit/:id', (req, res) => {
                 // Divide content string into separate fields
                 const listContent = field.replace('|L|', '').split('|');
                 const fieldListName = listContent[0];
-                const fieldList = listContent[1].split(',');
+                const fieldList = listContent[1].split(',').filter(e => {
+                  // Removes empty data fields
+                  return e;
+                });
                 let fieldListString = '';
 
                 // Give HTML to each item in list
