@@ -14,7 +14,7 @@
 <a href="/subterra/portfolio/add" class="button">Add new portfolio item</a>
 
 <% if (system.portfolio.length > 0) { %>
-  <ul data-list="portfolio">
+  <ul data-list="overview">
     <% for (let i = 0; i < system.portfolio.length; i++) { %>
       <li>
         <a href="/subterra/portfolio/edit/<%= system.portfolio[i].id %>">

@@ -14,7 +14,7 @@
 <a href="/subterra/faq/add" class="button">Add new question</a>
 
 <% if (system.faq.length > 0) { %>
-  <ul data-list="faq">
+  <ul data-list="overview">
     <% for (let i = 0; i < system.faq.length; i++) { %>
       <li>
         <a href="/subterra/faq/edit/<%= system.faq[i].id %>">
