@@ -17,8 +17,8 @@
 
 /* General styles */
 body {
-  width: 100vw;
-  max-width: 40em;
+  width: 100%;
+  /*max-width: 40em;*/
   min-height: 100vh;
   overflow-x: hidden;
   margin: 0 auto;
@@ -38,6 +38,11 @@ body {
 }
 body.feedback-active {
   padding-top: 0;
+}
+@media (min-width: 50em) {
+  body {
+    padding: 2em 5em;
+  }
 }
 
 hgroup > * {
@@ -84,6 +89,13 @@ li {
 }
 
 /* Form styles */
+form {
+  max-width: 40em;
+}
+@media (min-width: 50em) {
+
+}
+
 fieldset {
   margin-left: 0;
   margin-right: 0;
@@ -222,6 +234,8 @@ button[data-action*="edit"] {
 /* Feedback styles */
 p[data-type="feedback"] {
   width: 100%;
+  max-width: 40em;
+  margin: 0 auto;
   margin-bottom: 1rem;
   padding: 1em;
   font-weight: 700;
@@ -249,7 +263,14 @@ header {
 }
 @media (min-width: 50em) {
   header {
-    border: none;
+    margin-top: 0;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  header > * {
+    margin-top: 0;
   }
 }
 
@@ -258,7 +279,13 @@ header * > * {
 }
 
 header p[data-type="user"] {
-  align-self: flex-end;
+  text-align: right;
+}
+@media (min-width: 50em) {
+  header p[data-type="user"] {
+    order: 2;
+    width: 20em;
+  }
 }
 
 header p[data-type="user"] span {
@@ -274,6 +301,12 @@ header p[data-type="user"] .button {
 /* Header navigation styles */
 header nav {
   margin-top: 2rem;
+}
+@media (min-width: 50em) {
+  header nav {
+    max-width: 50%;
+    margin-top: 0;
+  }
 }
 
 header nav ul {
@@ -298,6 +331,11 @@ header nav li:hover {
   color: #fff;
   background-color: #5375b2;
 }
+@media (min-width: 50em) {
+  header nav li:first-of-type {
+    margin-right: 1rem;
+  }
+}
 
 header nav li[data-active="true"] {
   box-shadow: inset 0 0 0 .25rem var(--theme-color);
@@ -317,6 +355,13 @@ header form {
   flex-wrap: wrap;
   flex: 1;
 }
+@media (min-width: 50em) {
+  header form {
+    flex-wrap: nowrap;
+    flex: initial;
+    align-items: center;
+  }
+}
 
 header form label {
   width: 100%;
@@ -324,20 +369,33 @@ header form label {
   margin-bottom: .5em;
   font-size: 1.2em;
 }
+@media (min-width: 50em) {
+  header form label {
+    margin-bottom: 0;
+    margin-right: 1em;
+  }
+}
 
 header form input[type="search"] {
   width: calc(100% - 7em);
   margin-top: 0;
   border-radius: .25rem 0 0 .25rem;
 }
+@media (min-width: 50em) {
+  header form input[type="search"] {
+    width: initial;
+  }
+}
 
 header form input[type="submit"] {
   flex: 1;
   margin: 0;
-  font-weight: 700;
   border-radius: 0 .25rem .25rem 0;
-  border: none;
-  background-color: var(--theme-color);
+}
+@media (min-width: 50em) {
+  header form input[type="submit"] {
+    line-height: initial;
+  }
 }
 
 /* General list styles */
@@ -392,12 +450,35 @@ ul[data-list] button {
 
 /* Folding list styles */
 ul[data-list="fold"] {
-  max-height: 1000vh;
+  max-width: 40em;
+  max-height: 9999vh;
   overflow: hidden;
   transition: .3s ease;
 }
 ul[data-list="fold"].hidden {
   max-height: 0 !important;
+}
+
+/* Overview list styles*/
+@media (min-width: 50em) {
+  ul[data-list="overview"] {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    border-radius: 0;
+  }
+
+  ul[data-list="overview"] li {
+    width: calc(100% / 3 - 1rem);
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+    border-radius: .25rem;
+  }
+}
+@media (min-width: 70em) {
+  ul[data-list="overview"] li {
+    width: calc(100% / 5 - 1rem);
+  }
 }
 
 /* Content field list styles */
@@ -426,6 +507,7 @@ ul[data-list="content"] li:hover {
 }
 
 ul[data-list="content"] ul {
+  width: 100%;
   margin-top: 1rem;
 }
 
@@ -433,6 +515,7 @@ ul[data-list="content"] ul li {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  justify-content: flex-start;
   margin-top: 0;
   padding: 0;
   padding-bottom: 1em;
@@ -442,6 +525,7 @@ ul[data-list="content"] ul li {
   border: none
 }
 ul[data-list="content"] ul li::before {
+  width: 2em;
   content: "• ";
 }
 ul[data-list="content"] ul li:last-of-type {
@@ -449,7 +533,8 @@ ul[data-list="content"] ul li:last-of-type {
 }
 
 ul[data-list="content"] ul input {
-  width: 90%;
+  width: calc(100% - 2em);
+  max-width: 20em;
   margin-top: 0;
 }
 
@@ -591,6 +676,7 @@ footer a {
 
 /* Utility styles */
 p[data-type="no-results"] {
+  max-width: 40em;
   padding: 1em;
   color: #121212;
   border-radius: .25rem;
