@@ -312,6 +312,9 @@ header nav[data-nav="breadcrumb"] li {
   font-size: 1.8rem;
   text-transform: capitalize;
 }
+header nav[data-nav="breadcrumb"] li:first-of-type {
+  width: 1.2em;
+}
 header nav[data-nav="breadcrumb"] li:last-of-type {
   margin-right: 0;
 }
@@ -323,7 +326,8 @@ header nav[data-nav="breadcrumb"] a {
 header nav[data-nav="breadcrumb"] img {
   position: relative;
   top: .3em;
-  max-height: 2em;
+  width: 100%;
+  max-height: 2.4em;
 }
 
 /* Main content styles */
