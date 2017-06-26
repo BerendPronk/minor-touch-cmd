@@ -16,26 +16,39 @@ router.get('/:item', (req, res) => {
       WHERE title = '${ title }'
     `, [], (err, portfolio) => {
       const item = portfolio[0];
+      let parent;
 
       // Retrieve location user came from
-      const parent = req.header('Referer').split('/page/')[1].replace(/-/g, ' ');
+      if (req.header('Referer')) {
+        parent = req.header('Referer').split('/page/')[1].replace(/-/g, ' ');
+      }
 
-      console.log(parent);
-
-      // Render portfolio item view
-      res.render('portfolio', {
-        admin: req.session.username,
-        tv: req.session.tv,
-        pathname: '/portfolio',
-        page: {
-          id: item.id,
-          category: parent,
-          title: item.title,
-          paragraph: item.paragraph,
-          image: item.image,
-          video: item.video
-        }
-      });
+      if (item) {
+        // Render portfolio item view
+        res.render('portfolio', {
+          admin: req.session.username,
+          tv: req.session.tv,
+          pathname: '/portfolio',
+          page: {
+            id: item.id,
+            category: parent,
+            title: item.title,
+            paragraph: item.paragraph,
+            image: item.image,
+            video: item.video
+          }
+        });
+      } else {
+        // Render error page
+        res.render('error', {
+          admin: req.session.username,
+          tv: req.session.tv,
+          pathname: '/error',
+          page: {
+            category: false
+          }
+        });
+      }
     });
   });
 });
