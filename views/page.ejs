@@ -25,7 +25,7 @@
             <ul>
               <% for (let i = 0; i < page.portfolio.length; i++) { %>
                 <li>
-                  <a href="/portfolio/<%= page.portfolio[i].title.toLowerCase() %>">
+                  <a href="/portfolio/<%= page.portfolio[i].title.replace(/ /g, '-').toLowerCase() %>">
                     <p><%= page.portfolio[i].title %></p>
 
                     <% if (page.portfolio[i].image) { %>
