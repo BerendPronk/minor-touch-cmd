@@ -62,10 +62,27 @@ router.get('/', (req, res) => {
 
 // [GET] /tv
 router.get('/tv', (req, res) => {
-  debug(`[${ req.method }] /tv - Multi-touch screen mode active`);
+  // Toggle session if user entered URL
+  if (req.session.tv) {
+    debug(`[${ req.method }] /tv - Multi-touch screen mode inactive`);
 
-  // Activate session when user entered URL
-  req.session.tv = true;
+    req.session.destroy();
+  } else {
+    debug(`[${ req.method }] /tv - Multi-touch screen mode active`);
+
+    req.session.tv = true;
+  }
+
+  // Redirect back to the index pages
+  res.redirect('/');
+});
+
+// [GET] /no-tv
+router.get('/no-tv', (req, res) => {
+  debug(`[${ req.method }] /no-tv - Multi-touch screen mode inactive`);
+
+  // Destroy session when user entered URL
+  req.session.destroy();
 
   // Redirect back to the index pages
   res.redirect('/');
