@@ -172,8 +172,6 @@ const selection = (() => {
   const updateButtons = list => {
     const selectionItems = list.querySelectorAll('li[data-order]');
 
-    console.log(selectionItems);
-
     // Check every single item
     selectionItems.forEach((item, index) => {
       const moveUp = item.querySelector('button[data-action="move-up"]');
