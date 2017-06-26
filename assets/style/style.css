@@ -367,6 +367,10 @@ main > article > section {
   }
 }
 
+main section > img {
+  border-radius: .25rem;
+}
+
 main li {
   margin-top: .5em;
 }
