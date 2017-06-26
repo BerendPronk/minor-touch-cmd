@@ -123,6 +123,7 @@ const input = (() => {
       switch (field.getAttribute('data-content')) {
         case 'paragraph':
           field.querySelector('textarea').textContent = '';
+          field.querySelector('textarea').value = '';
         break;
         case 'image':
           field.querySelector('input[name="content-i"]').value = '';
