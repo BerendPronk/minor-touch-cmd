@@ -33,7 +33,7 @@ router.get('/:item', (req, res) => {
             id: item.id,
             category: parent,
             title: item.title,
-            paragraph: item.paragraph,
+            paragraph: item.paragraph.replace(/\n/g, '<br>'),
             image: item.image,
             video: item.video
           }
