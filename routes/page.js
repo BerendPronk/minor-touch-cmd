@@ -39,7 +39,7 @@ router.get('/:page', (req, res) => {
             break;
             case 'P':
               contentBlocks.push(`
-                <p>${ block.replace('|P|', '') }</p>
+                <p>${ block.replace('|P|', '').replace(/\n/g, '<br>') }</p>
               `);
             break;
             case 'I':
