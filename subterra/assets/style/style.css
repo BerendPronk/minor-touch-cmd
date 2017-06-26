@@ -451,12 +451,6 @@ ul[data-list] button {
 /* Folding list styles */
 ul[data-list="fold"] {
   max-width: 40em;
-  max-height: 9999vh;
-  overflow: hidden;
-  transition: .3s ease;
-}
-ul[data-list="fold"].hidden {
-  max-height: 0 !important;
 }
 
 /* Overview list styles*/
