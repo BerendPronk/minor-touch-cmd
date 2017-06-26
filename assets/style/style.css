@@ -241,24 +241,15 @@ nav[data-nav="portfolio"] ul {
   flex-wrap: wrap;
   justify-content: space-between;
 }
-@media (min-width: 50em) {
-  nav[data-nav="portfolio"] ul {
-    justify-content: flex-start;
-  }
-}
 
 nav[data-nav="portfolio"] li {
   flex-direction: column;
   width: 47.5%;
   overflow: hidden;
+  margin-right: 0;
   padding: .5em;
   border-radius: .25rem;
   background-color: #fff;
-}
-@media (min-width: 50em) {
-  nav[data-nav="portfolio"] li {
-    width: 8em;
-  }
 }
 
 nav[data-nav="portfolio"] a {
@@ -378,7 +369,7 @@ main li {
 
 main img {
   width: auto;
-  max-width: 30em;
+  max-width: 100%;
   height: auto;
   max-height: 65vh;
 }
