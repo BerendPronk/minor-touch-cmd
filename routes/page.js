@@ -44,7 +44,7 @@ router.get('/:page', (req, res) => {
             break;
             case 'I':
               contentBlocks.push(`
-                <img src="/media/${ block.replace('|I|', '') }" alt="Image about ${ page.title }">
+                <img src="/media/${ block.replace('|I|', '') }" alt="Image about ${ page.title }" onclick="modal.open()">
               `);
             break;
             case 'L':

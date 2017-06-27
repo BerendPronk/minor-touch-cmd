@@ -20,7 +20,7 @@
       <% if (page.image) { %>
         <section>
           <h3>Afbeelding</h3>
-          <img src="/media/<%= page.image %>" alt="<%= page.title %> image">
+          <img src="/media/<%= page.image %>" alt="<%= page.title %> image" onclick="modal.open()">
         </section>
       <% } %>
 
@@ -38,5 +38,13 @@
       <% } %>
     </article>
   </main>
+
+  <section data-modal="box" class="hidden">
+    <article>
+      <h4><%= page.title %></h4>
+      <span data-modal="close" onclick="modal.close()">&times;</span>
+      <img class="album__modal-content" src="" alt="">
+    </article>
+  </section>
 
   <%- include partials/footer -%>
