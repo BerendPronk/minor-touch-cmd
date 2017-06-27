@@ -61,27 +61,34 @@ const selection = (() => {
     formSelect.selectedIndex = 0;
   };
 
-  // Remove an option from the selection list items
+  // Remove an option from selection list items
   const remove = option => {
     const field = event.target.parentNode.parentNode.parentNode.parentNode.parentNode;
     const formInput = field.querySelector(`input[name="${ option }"]`);
-    const selectionList = field.querySelector(`ul`);
-    const currentItems = formInput.value.split(',');
+    const selectionList = field.querySelector('ul');
+    let selectionListItems;
+    const currentInput = formInput.value.split(',');
 
     const content = event.target.parentNode.parentNode.parentNode.querySelector(`[data-type="${ option }-name"]`).textContent;
-    const contentIndex = currentItems.indexOf(content);
+    const contentIndex = currentInput.indexOf(content);
 
     // Remove option from input values
-    currentItems.splice(contentIndex, 1);
+    currentInput.splice(contentIndex, 1);
 
     // Remove option from DOM list
     selectionList.removeChild(selectionList.children[contentIndex]);
 
-    // Check and update buttons to be disabled
+    // Reset order attribute of selection list items
+    selectionListItems= selectionList.querySelectorAll(':scope > li');
+    selectionListItems.forEach((item, index) => {
+      item.setAttribute('data-order', index);
+    });
+
+    // Check and update feature buttons to be disabled
     updateButtons(selectionList);
 
     // Remove option from hidden input
-    formInput.value = currentItems.join(',').replace(', ', ',');
+    formInput.value = currentInput.join(',').replace(', ', ',');
   };
 
   // Set selection order based on given direction
