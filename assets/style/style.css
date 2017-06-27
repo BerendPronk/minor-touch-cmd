@@ -369,6 +369,7 @@ main > article > section {
 }
 
 main section > img {
+  cursor: pointer;
   border-radius: .25rem;
 }
 
@@ -390,6 +391,52 @@ main iframe {
 
 main > section[data-type="menu"] {
   margin-top: 2rem;
+}
+
+/* Modal styles */
+section[data-modal="box"] {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 1;
+  transition: opacity .3s ease;
+}
+section[data-modal="box"].hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+section[data-modal="box"] article {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+section[data-modal="box"] h4 {
+  display: none;
+}
+
+section[data-modal="box"] span[data-modal="close"] {
+  align-self: flex-end;
+  margin: 0;
+  padding-left: .5em;
+  font-size: 3em;
+  color: #fff;
+  cursor: pointer;
+}
+section[data-modal="box"] img {
+  width: auto;
+  max-width: 90vw;
+  height: auto;
+  max-height: 70vh;
+  margin: 0;
 }
 
 /* FAQ page styles */
