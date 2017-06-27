@@ -92,6 +92,7 @@ a.button {
   padding: .6em;
   text-decoration: none;
   color: #fff;
+  cursor: pointer;
   border-radius: .25rem;
   background-color: rgba(0, 0, 0, .5);
 }
