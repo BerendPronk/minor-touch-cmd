@@ -116,7 +116,7 @@ const module = (() => {
       </li>`
     );
 
-    // Check and update buttons to be disabled
+    // Check and update feature buttons to be disabled
     updateButtons(pageContent);
 
     // Reset module selector
@@ -126,10 +126,17 @@ const module = (() => {
 
   // Delete a module from the page
   const remove = () => {
-    const pageContent = document.querySelector('ul[data-list="content"]');
     const field = event.target.parentNode.parentNode.parentNode;
+    const pageContent = document.querySelector('ul[data-list="content"]');
+    let pageContentFields;
 
     pageContent.removeChild(field);
+
+    // Reset order attribute of modules
+    pageContentFields = pageContent.querySelectorAll(':scope > li');
+    pageContentFields.forEach((field, index) => {
+      field.setAttribute('data-order', index);
+    });
 
     // Check and update buttons to be disabled
     updateButtons(pageContent);
