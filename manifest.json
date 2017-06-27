@@ -1,0 +1,27 @@
+{
+  "name": "Touch CMD - A full-screen application for both small and huge touchscreens",
+  "short_name": "Touch CMD",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#0033ff",
+  "background_color": "#ffcc00",
+  "description": "A full-screen application used on event and open days by the Communication and Multimedia Design study of the University of Applied Sciences of Amsterdam",
+  "icons": [{
+    "src": "/assets/image/meta/favicon-16x16.png",
+    "sizes": "16x16",
+    "type": "image/png"
+  }, {
+    "src": "/assets/image/meta/favicon-32x32.png",
+    "sizes": "32x32",
+    "type": "image/png"
+  }, {
+    "src": "/assets/image/meta/favicon-64x64.png",
+    "sizes": "64x64",
+    "type": "image/png"
+  }, {
+    "src": "/assets/image/meta/apple-touch-icon.png",
+    "sizes": "256x256",
+    "type": "image/png"
+  }]
+}
