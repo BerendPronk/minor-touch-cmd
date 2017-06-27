@@ -2,8 +2,12 @@ const debug = require('debug')('TouchCMD');
 const path = require('path');
 const multer = require('multer');
 const database = require('../../subterra/assets/script/modules/database');
+const password = require('../../subterra/assets/script/modules/password');
 const express = require('express');
 const router = express.Router();
+
+// Define encryption/decryption key
+const cryptoKey = process.env.CRYPTO_KEY;
 
 // Initialize multer storage
 const fileStorage = multer.diskStorage({
@@ -89,7 +93,7 @@ router.post('/login', (req, res) => {
 
   const data = {
     username: req.body.username,
-    password: req.body.password
+    password: password.encrypt(cryptoKey, req.body.password)
   };
 
   req.getConnection((err, connection) => {
