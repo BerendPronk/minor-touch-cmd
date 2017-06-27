@@ -60,6 +60,14 @@
     <% } %>
   </main>
 
+  <section data-modal="box" class="hidden" onclick="modal.close()">
+    <article>
+      <h4><%= page.title %></h4>
+      <span data-modal="close" onclick="modal.close()">&times;</span>
+      <img class="album__modal-content" src="" alt="">
+    </article>
+  </section>
+
   <footer data-type="image">
     <img src="/assets/image/icon/<%= page.type %>-<%= Math.ceil(Math.random() * 3) %>.svg" alt="<%= page.type %> icoon">
   </footer>
