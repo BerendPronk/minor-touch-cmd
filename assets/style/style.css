@@ -611,3 +611,20 @@ body.tv.division .carousel li:nth-child(24) { animation-delay: calc(.3s * 24); }
 body.tv.division .carousel li:nth-child(25) { animation-delay: calc(.3s * 25); }
 body.tv.division .carousel li:nth-child(26) { animation-delay: calc(.3s * 26); }
 body.tv.division .carousel li:nth-child(27) { animation-delay: calc(.3s * 27); }
+
+body.tv p[data-type="tooltip"] {
+  width: 13em;
+  text-align: center;
+  opacity: 1;
+  transition: .3s ease;
+  animation: rock 2s ease-in-out alternate infinite;
+}
+body.tv p[data-type="tooltip"]::after {
+  display: block;
+  width: 100%;
+  margin-top: .5em;
+  content: '----   V   ----------';
+}
+body.tv p[data-type="tooltip"].invisible {
+  opacity: 0;
+}
