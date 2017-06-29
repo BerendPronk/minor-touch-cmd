@@ -88,14 +88,16 @@ The application can be seen as two seperate systems, since the front-end view (C
 Time to dive into the more technical aspect of the application. Everything that's necessary to know before working on this project will be discussed here, starting with structure and flow, eventually reaching the installation process and code styles.
 
 ### Data model
-_intro to be added_
+The application uses the following list of tables to store the content from Subterra in it's database.
 
-_translation image of table-structure to be added_
+![Data model of Touch CMD](https://raw.githubusercontent.com/BerendPronk/minor-touch-cmd/master/assets/readme/touch-cmd_architecture.png)
 
 ### Architecture
-_intro to be added_
+Since the entire application is fully dynamic, the page structure is free for the administrator to alter.
 
-_relation of front-end with back-end image to be added_
+The main structure contains these nodes: `Menu`, `Page` and `Portfolio`; besides the static `FAQ` page.
+
+There are no strict rules to apply, though it's usual for every page, that is not a dead-end to contain a menu and content from Subterra.
 
 ### Style of code
 Before being able to work on this project yourself, you need to understand what you're allowed to do, and what your restrictions are, which are as follows:
