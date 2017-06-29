@@ -6,7 +6,7 @@ A large multi-touch television was to be added to the events given at the Univer
 ---
 
 _<p align="center">Author note   
-_"This repository is about the finale of the minor Web Development I followed in 2017. It features an internal project within the university the minor was given at. Everything was thought of, designed, built and tested within the span of five weeks."</p>_
+"This repository is about the finale of the minor Web Development I followed in 2017. It features an internal project within the university the minor was given at. Everything was thought of, designed, built and tested within the span of five weeks."</p>_
 
 ---
 
