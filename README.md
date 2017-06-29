@@ -3,6 +3,8 @@
 The online list, consisting of every project and course given yearly at the Communication and Multimedia Design study, needed a redesign. Not only that, the UX also needed to receive a boost, mainly because of a change in organisation the University, that provides the study, has though of making.  
 A large multi-touch television was to be added to the events given at the University, like open days, where high-school students are looking for a study to follow. The contents of the already existing curriculum list needed to be translated to a new design, so the multi-touch television could be used to it's full potential during these events.
 
+[Demo video of product in action](https://www.youtube.com/watch?v=6ioIJCfgP8k).
+
 ---
 
 _<p align="center">Author note   
