@@ -9,7 +9,7 @@ const encrypt = (key, string) => {
 
 // Decrypt a given string
 const decrypt = (key, string) => {
-  let result="";
+  let result = "";
   for (i = 0; i < string.length; i++) {
     result += String.fromCharCode(key^string.charCodeAt(i));
   }
