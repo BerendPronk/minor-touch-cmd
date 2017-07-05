@@ -45,7 +45,7 @@ router.get('/', (req, res) => {
             system: {
               pages: system.pages,
               types: system.types
-            },
+            }
           });
         } else {
           // Provide feedback that login session has ended
