@@ -82,7 +82,7 @@ router.get('/login', (req, res) => {
       username: false,
       pathname: '/login',
       feedback: req.query.feedback,
-      feedbackState: req.query.state,
+      feedbackState: req.query.state
     });
   }
 });
