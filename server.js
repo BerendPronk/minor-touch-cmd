@@ -19,8 +19,7 @@ let viewArray = [
 subterra.config(app, viewArray);
 
 // Define static-file serving
-app
-  .use('/', express.static(__dirname + '/'))
+app.use('/', express.static(__dirname + '/'))
 
 // Set view engine to EJS
 app
