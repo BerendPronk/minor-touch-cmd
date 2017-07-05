@@ -111,7 +111,7 @@ const retrieve = (connection, opts) => {
             });
           }
 
-          // Fetch all system modules from database
+          // Fetch all system portfolio items from database
           connection.query(`
             SELECT * FROM portfolio
           `, [], (err, portfolio) => {
