@@ -28,7 +28,6 @@ app
   .set('views', viewArray);
 
 // Define app routing
-app.use('/subterra', require('./subterra/routes/main'));
 app.use('/', require('./routes/main'));
 
 // Run the application
