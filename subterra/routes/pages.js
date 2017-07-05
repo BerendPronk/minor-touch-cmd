@@ -573,10 +573,10 @@ router.get('/delete/:id', (req, res) => {
           connection.query(`
             DELETE FROM pages
             WHERE id = ${ req.params.id }
-            `, [], (err, pagesLog) => {
-              // Redirect to page overview page
-              res.redirect('/subterra/pages?feedback=Successfully deleted the page.&state=positive');
-            });
+          `, [], (err, pagesLog) => {
+            // Redirect to page overview page
+            res.redirect('/subterra/pages?feedback=Successfully deleted the page.&state=positive');
+          });
         });
       });
     });
